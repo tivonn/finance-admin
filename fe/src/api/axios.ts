@@ -2,7 +2,7 @@ import axios from 'axios'
 import { message } from 'ant-design-vue'
 import { isDev } from '@/utils/common'
 
-axios.defaults.baseURL = isDev() ? '' : ''
+axios.defaults.baseURL = isDev() ? 'http://localhost:7001/api' : ''
 
 axios.interceptors.response.use(
   (res) => {

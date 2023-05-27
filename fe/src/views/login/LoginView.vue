@@ -16,11 +16,9 @@ const login = async () => {
     return
   }
 
-  const res = await axios.get('/login', {
-    params: {
-      account: account.value,
-      password: password.value
-    }
+  const res = await axios.post('/user/login', {
+    account: account.value,
+    password: password.value
   })
   console.log(res)
 }
