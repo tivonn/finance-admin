@@ -3,11 +3,15 @@ import { ref } from 'vue'
 import { Button as aButton, message } from 'ant-design-vue'
 import axios from '@/api/axios'
 import lodash from 'lodash'
-import Language from '@/components/Language.vue'
+import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import Language from '@/components/Language.vue'
+import type { AxiosError } from 'axios'
 
 const account = ref<string>('')
 const password = ref<string>('')
+
+const router = useRouter()
 const { t } = useI18n()
 
 const login = async () => {
@@ -15,12 +19,18 @@ const login = async () => {
     message.error(t('loginView.inputInValidMessage'))
     return
   }
-
-  const res = await axios.post('/user/login', {
-    account: account.value,
-    password: password.value
-  })
-  console.log(res)
+  try {
+    await axios.post('/user/login', {
+      account: account.value,
+      password: password.value
+    })
+  } catch (error) {
+    if ((error as AxiosError)?.response?.status === 401) {
+      message.error(t('loginView.dataInValidMessage'))
+    }
+    return
+  }
+  router.push({ name: 'main' })
 }
 </script>
 
@@ -37,6 +47,7 @@ const login = async () => {
             :bordered="false"
             :placeholder="$t('loginView.accountPlaceholder')"
             class="account-input"
+            @pressEnter="login"
           />
           <p class="password-title">{{ $t('loginView.password') }}</p>
           <a-input-password
@@ -44,6 +55,7 @@ const login = async () => {
             :bordered="false"
             :placeholder="$t('loginView.passwordPlaceholder')"
             class="password-input"
+            @pressEnter="login"
           />
           <div class="login-button-container">
             <a-button type="primary" class="login-button" @click="login">{{

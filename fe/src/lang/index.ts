@@ -9,12 +9,13 @@ export default createI18n({
   messages: {
     'zh-cn': {
       loginView: {
+        login: '登录',
         account: '账号',
         accountPlaceholder: '请输入账号',
         password: '密码',
         passwordPlaceholder: '请输入密码',
         inputInValidMessage: '请输入账号密码',
-        login: '登录'
+        dataInValidMessage: '请输入正确的账号密码'
       }
     },
     th: {

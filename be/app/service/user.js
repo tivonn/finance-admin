@@ -1,22 +1,62 @@
 "use strict";
 
 const Service = require("egg").Service;
+const dayjs = require("dayjs");
+const { v4: uuid } = require("uuid");
 
 class UserService extends Service {
-  get userModel() {
-    return this.app.model.User;
+  get usersModel() {
+    return this.app.model.Users;
   }
 
-  async login() {
+  get cookiesModel() {
+    return this.app.model.Cookies;
+  }
+
+  async login(params) {
     const { ctx } = this;
-    const id = 1;
-    const user = await this.userModel.findOne({
+    const { account, password } = params;
+    const user = await this.usersModel.findOne({
       where: {
-        id,
+        account,
+        password,
       },
     });
-    return user;
+    if (user) {
+      // 账号密码正确，登录
+
+      // 设置 cookie
+      const expires = dayjs().add(30, "day").toDate(); // cookie 一个月有效期
+      const cookieValue = uuid();
+      ctx.cookies.set("cookie", cookieValue, {
+        expires,
+      });
+
+      // 记录用户 cookie&expires
+      const cookie = await this.cookiesModel.findOne({
+        where: { user_id: user.id },
+      });
+      if (cookie) {
+        await cookie.update({
+          cookie: cookieValue,
+          expires,
+        });
+      } else {
+        await this.cookiesModel.create({
+          user_id: user.id,
+          cookie: cookieValue,
+          expires,
+        });
+      }
+
+      ctx.status = 200;
+    } else {
+      // 账号密码错误，登录失败
+      ctx.throw(401);
+    }
   }
+
+  async logout() {}
 }
 
 module.exports = UserService;

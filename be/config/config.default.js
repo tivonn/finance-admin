@@ -1,7 +1,7 @@
 "use strict";
 const secret = require("./config.secret");
 
-exports.keys = "logistics";
+exports.keys = secret.db.database;
 
 exports.mysql = {
   client: {
@@ -26,4 +26,4 @@ exports.sequelize = {
   },
 };
 
-exports.middleware = [];
+exports.middleware = ["setUser"];

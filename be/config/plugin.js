@@ -20,7 +20,12 @@ exports.routerPlus = {
   package: "egg-router-plus",
 };
 
-// exports.validate = {
-//   enable: true,
-//   package: 'egg-validate'
-// }
+exports.validate = {
+  enable: true,
+  package: "egg-validate",
+};
+
+exports.cookies = {
+  enable: true,
+  package: "egg-cookies",
+};
