@@ -12,11 +12,16 @@ axios.interceptors.response.use(
   },
   (err) => {
     switch (err.response.status) {
+      case 401: {
+        window.location.href = '/login'
+        break
+      }
       case 500: {
         message.error('系统错误')
         break
       }
       default: {
+        break
       }
     }
     return Promise.reject(err)

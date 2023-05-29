@@ -26,4 +26,4 @@ exports.sequelize = {
   },
 };
 
-exports.middleware = ["setUser"];
+exports.middleware = ["verifyLogin", "setUser"];

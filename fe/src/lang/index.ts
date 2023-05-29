@@ -14,8 +14,7 @@ export default createI18n({
         accountPlaceholder: '请输入账号',
         password: '密码',
         passwordPlaceholder: '请输入密码',
-        inputInValidMessage: '请输入账号密码',
-        dataInValidMessage: '请输入正确的账号密码'
+        inputInValidMessage: '请输入正确的账号密码'
       }
     },
     th: {

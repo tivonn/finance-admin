@@ -8,11 +8,11 @@ import { useI18n } from 'vue-i18n'
 import Language from '@/components/Language.vue'
 import type { AxiosError } from 'axios'
 
-const account = ref<string>('')
-const password = ref<string>('')
-
 const router = useRouter()
 const { t } = useI18n()
+
+const account = ref<string>('')
+const password = ref<string>('')
 
 const login = async () => {
   if (lodash.isEmpty(account.value) || lodash.isEmpty(password.value)) {
@@ -25,8 +25,8 @@ const login = async () => {
       password: password.value
     })
   } catch (error) {
-    if ((error as AxiosError)?.response?.status === 401) {
-      message.error(t('loginView.dataInValidMessage'))
+    if ((error as AxiosError)?.response?.status === 403) {
+      message.error(t('loginView.inputInValidMessage'))
     }
     return
   }

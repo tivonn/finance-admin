@@ -13,11 +13,11 @@ module.exports = () => {
           id: user_id,
         },
       });
-      ctx.state.user = Object.assign({}, user.dataValues, { password: "" });
+      const { account, role, username } = user;
+      ctx.state.user = { username, account, role };
     } catch {
       ctx.state.user = {};
     }
-
     await next();
   };
 };

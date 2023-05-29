@@ -13,6 +13,16 @@ class UserService extends Service {
     return this.app.model.Cookies;
   }
 
+  async info() {
+    const { ctx } = this;
+    return ctx.state.user;
+  }
+
+  async init() {
+    const { ctx } = this;
+    return "init";
+  }
+
   async login(params) {
     const { ctx } = this;
     const { account, password } = params;
@@ -52,7 +62,7 @@ class UserService extends Service {
       ctx.status = 200;
     } else {
       // 账号密码错误，登录失败
-      ctx.throw(401);
+      ctx.throw(403);
     }
   }
 

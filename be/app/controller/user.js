@@ -18,6 +18,18 @@ class UserController extends Controller {
     return this.ctx.service.user;
   }
 
+  async info() {
+    const { ctx } = this;
+    const res = await this.userService.info();
+    ctx.body = res;
+  }
+
+  async init() {
+    const { ctx } = this;
+    const res = await this.userService.init();
+    ctx.body = res;
+  }
+
   async login() {
     const { ctx } = this;
     ctx.validate(loginRules, ctx.request.body);
