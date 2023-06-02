@@ -1,19 +1,26 @@
 import './assets/css/main.less'
 
 import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-import router from './router'
+import pinia, { useStore } from '@/stores'
+import router from '@/router'
 import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css'
 import i18n from '@/lang'
 
 import App from './App.vue'
 
-const app = createApp(App)
+const init = async () => {
+  const app = createApp(App)
 
-app.use(createPinia())
-app.use(router)
-app.use(Antd)
-app.use(i18n)
+  const store = useStore()
+  await store.getUser()
 
-app.mount('#app')
+  app.use(pinia)
+  app.use(router)
+  app.use(Antd)
+  app.use(i18n)
+
+  app.mount('#app')
+}
+
+init()

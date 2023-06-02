@@ -5,32 +5,42 @@ import axios from '@/api/axios'
 import lodash from 'lodash'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { useStore } from '@/stores'
 import Language from '@/components/Language.vue'
 import type { AxiosError } from 'axios'
 
 const router = useRouter()
 const { t } = useI18n()
+const store = useStore()
 
 const account = ref<string>('')
 const password = ref<string>('')
 
 const login = async () => {
+  // 校验表单
   if (lodash.isEmpty(account.value) || lodash.isEmpty(password.value)) {
     message.error(t('loginView.inputInValidMessage'))
     return
   }
+
   try {
     await axios.post('/user/login', {
       account: account.value,
       password: password.value
     })
+    try {
+      // 设置用户信息
+      await store.getUser()
+
+      // 登录成功，跳转主页面
+      router.push({ name: 'overview' })
+    } catch {}
   } catch (error) {
     if ((error as AxiosError)?.response?.status === 403) {
+      // 账号密码错误
       message.error(t('loginView.inputInValidMessage'))
     }
-    return
   }
-  router.push({ name: 'main' })
 }
 </script>
 

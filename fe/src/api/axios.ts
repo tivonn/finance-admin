@@ -2,7 +2,9 @@ import axios from 'axios'
 import { message } from 'ant-design-vue'
 import { isDev } from '@/utils/common'
 
-axios.defaults.baseURL = isDev() ? 'http://localhost:7001/api' : 'http://43.139.233.254:7001/api'
+axios.defaults.baseURL = isDev()
+  ? `${location.protocol}//${location.hostname}:7001/api`
+  : 'http://43.139.233.254:7001/api'
 
 axios.defaults.withCredentials = true
 
