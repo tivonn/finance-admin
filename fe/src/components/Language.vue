@@ -25,6 +25,4 @@ const language = ref<string>(getLocalLanguage())
   </div>
 </template>
 
-<style lang="less">
-@import '@/assets/css/variables.less';
-</style>
+<style lang="less"></style>

@@ -36,17 +36,20 @@ class UserService extends Service {
 
   async login(params) {
     const { ctx } = this;
-    const user = await this.usersModel.findOne({
+    let user, password;
+    user = await this.usersModel.findOne({
       where: {
         account: params.account,
       },
     });
-    const password = await this.passwordsModel.findOne({
-      where: {
-        user_id: user.id,
-        password: params.password,
-      },
-    });
+    if (user) {
+      password = await this.passwordsModel.findOne({
+        where: {
+          user_id: user.id,
+          password: params.password,
+        },
+      });
+    }
 
     const isValid = !!user && !!password;
 

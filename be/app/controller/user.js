@@ -43,7 +43,7 @@ class UserController extends Controller {
       data: [
         {
           id: 1,
-          username: "1",
+          username: "122",
           account: "111",
           role: "admin",
         },
@@ -63,7 +63,7 @@ class UserController extends Controller {
           id: 4,
           username: "4",
           account: "444",
-          role: "user",
+          role: "external",
         },
         {
           id: 5,
@@ -87,7 +87,7 @@ class UserController extends Controller {
           id: 8,
           username: "4",
           account: "444",
-          role: "user",
+          role: "external",
         },
         {
           id: 9,

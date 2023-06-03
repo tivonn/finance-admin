@@ -7,7 +7,7 @@ declare module 'vue-router' {
   interface RouteMeta {
     auth: {
       required: boolean
-      allows?: Array<'admin' | 'staff' | 'finance' | 'user'>
+      allows?: Array<'admin' | 'finance' | 'staff' | 'external'>
     }
   }
 }
@@ -28,28 +28,28 @@ const router = createRouter({
       // 主页面
       path: '/main',
       component: () => import('@/views/main/MainView.vue'),
-      meta: { auth: { required: true, allows: ['admin', 'staff', 'finance', 'user'] } },
+      meta: { auth: { required: true, allows: ['admin', 'finance', 'staff', 'external'] } },
       children: [
         // 总览
         {
           path: 'overview',
           name: 'overview',
           component: () => import('@/views/main/overview/OverviewView.vue'),
-          meta: { auth: { required: true, allows: ['admin', 'staff', 'finance', 'user'] } }
+          meta: { auth: { required: true, allows: ['admin', 'finance', 'staff', 'external'] } }
         },
         // 订单
         {
           path: 'order',
           name: 'order',
           component: () => import('@/views/main/order/OrderView.vue'),
-          meta: { auth: { required: true, allows: ['admin', 'staff', 'finance', 'user'] } }
+          meta: { auth: { required: true, allows: ['admin', 'finance', 'staff', 'external'] } }
         },
         // 财务报表
         {
           path: 'report',
           name: 'report',
           component: () => import('@/views/main/report/ReportView.vue'),
-          meta: { auth: { required: true, allows: ['admin', 'staff', 'finance', 'user'] } }
+          meta: { auth: { required: true, allows: ['admin', 'finance', 'staff', 'external'] } }
         },
         // 管理页
         {

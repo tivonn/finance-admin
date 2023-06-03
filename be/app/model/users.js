@@ -15,7 +15,7 @@ module.exports = (app) => {
         allowNull: false,
       },
       role: {
-        type: DataTypes.ENUM("admin", "staff", "finance", "user"),
+        type: DataTypes.ENUM("admin", "finance", "staff", "external"),
         allowNull: false,
       },
       username: {

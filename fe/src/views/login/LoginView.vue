@@ -21,7 +21,7 @@ const loginForm = ref<{ account: string; password: string }>({
 const login = async () => {
   // 校验表单
   if (lodash.isEmpty(loginForm.value.account) || lodash.isEmpty(loginForm.value.password)) {
-    message.error(t('loginView.inputInValidMessage'))
+    message.error(t('loginView.message.inputInValid'))
     return
   }
 
@@ -40,7 +40,7 @@ const login = async () => {
   } catch (error) {
     if ((error as AxiosError)?.response?.status === 403) {
       // 账号密码错误
-      message.error(t('loginView.inputInValidMessage'))
+      message.error(t('loginView.message.inputInValid'))
     }
   }
 }
@@ -53,25 +53,25 @@ const login = async () => {
       <div class="login-background"></div>
       <div class="login-input">
         <div class="login-input-container">
-          <p class="account-title">{{ $t('loginView.account') }}</p>
+          <p class="account-title">{{ $t('loginView.info.account') }}</p>
           <a-input
             v-model:value="loginForm.account"
             :bordered="false"
-            :placeholder="$t('loginView.accountPlaceholder')"
+            :placeholder="$t('loginView.info.accountPlaceholder')"
             class="account-input"
             @pressEnter="login"
           />
-          <p class="password-title">{{ $t('loginView.password') }}</p>
+          <p class="password-title">{{ $t('loginView.info.password') }}</p>
           <a-input-password
             v-model:value="loginForm.password"
             :bordered="false"
-            :placeholder="$t('loginView.passwordPlaceholder')"
+            :placeholder="$t('loginView.info.passwordPlaceholder')"
             class="password-input"
             @pressEnter="login"
           />
           <div class="login-button-container">
             <a-button type="primary" class="login-button" @click="login">{{
-              $t('loginView.login')
+              $t('loginView.actions.login')
             }}</a-button>
           </div>
         </div>
