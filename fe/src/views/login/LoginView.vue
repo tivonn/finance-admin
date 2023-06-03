@@ -37,7 +37,7 @@ const login = async () => {
       router.push({ name: 'overview' })
     } catch {}
   } catch (error: any) {
-    switch (error?.response?.data?.error) {
+    switch (error?.response?.data?.message) {
       case '账号密码错误': {
         message.error(t('loginView.message.formInValid'))
         break

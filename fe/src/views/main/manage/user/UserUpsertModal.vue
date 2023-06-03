@@ -37,7 +37,7 @@ const handleOk = async () => {
         await axios.post('/user', values)
         success = true
       } catch (error: any) {
-        switch (error?.response?.data?.error) {
+        switch (error?.response?.data?.message) {
           case '无权限': {
             message.error(t('common.message.noAuth'))
             break

@@ -168,9 +168,9 @@ const deleteUser = (user: UserRes) => {
         <div style="padding: 8px">
           <a-input
             :placeholder="`${$t('userManageView.actions.search')}${column.title}`"
-            :value="selectedKeys[0]"
+            :value="selectedKeys"
             style="width: 188px; margin-bottom: 8px; display: block"
-            @change="(e: any) => setSelectedKeys(e.target.value ? [e.target.value] : [])"
+            @change="(e: any) => setSelectedKeys(e.target.value ? e.target.value : '')"
             @pressEnter="() => handleSearch(confirm)"
           />
           <a-button

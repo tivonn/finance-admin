@@ -18,6 +18,26 @@ const createRules = {
   },
 };
 
+const getListRules = {
+  page: {
+    type: "number",
+    required: true,
+  },
+  pageSize: {
+    type: "number",
+    required: true,
+  },
+  username: {
+    type: "string",
+    required: false,
+  },
+  role: {
+    type: "array",
+    itemType: "string",
+    required: false,
+  },
+};
+
 const loginRules = {
   account: {
     type: "string",
@@ -37,8 +57,12 @@ class UserController extends Controller {
   // 创建用户
   async create() {
     const { ctx } = this;
-    ctx.validate(createRules, ctx.request.body);
-    const res = await this.userService.create(ctx.request.body);
+    const params = ctx.helper.filterParams(
+      createRules,
+      Object.assign({}, ctx.request.body)
+    );
+    ctx.validate(createRules, params);
+    const res = await this.userService.create(params);
     ctx.body = res;
   }
 
@@ -52,7 +76,12 @@ class UserController extends Controller {
   // 获取用户列表
   async list() {
     const { ctx } = this;
-    // const res = await this.userService.list();
+    const params = ctx.helper.filterParams(
+      getListRules,
+      Object.assign({}, ctx.query)
+    );
+    ctx.validate(getListRules, params);
+    // const res = await this.userService.list(params);
     // ctx.body = res;
 
     ctx.body = {
@@ -132,8 +161,12 @@ class UserController extends Controller {
   // 登录
   async login() {
     const { ctx } = this;
-    ctx.validate(loginRules, ctx.request.body);
-    const res = await this.userService.login(ctx.request.body);
+    const params = ctx.helper.filterParams(
+      loginRules,
+      Object.assign({}, ctx.request.body)
+    );
+    ctx.validate(loginRules, params);
+    const res = await this.userService.login(params);
     ctx.body = res;
   }
 

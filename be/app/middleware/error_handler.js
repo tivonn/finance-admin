@@ -8,12 +8,12 @@ module.exports = () => {
       ctx.app.emit("error", err, ctx);
       const status = err.status || 500;
       // 线上不返回错误堆栈
-      const error =
+      const message =
         status === 500 && ctx.app.config.env === "prod"
           ? "Internal Server Error"
           : err.message;
       ctx.status = status;
-      ctx.body = { error };
+      ctx.body = { message };
     }
   };
 };
