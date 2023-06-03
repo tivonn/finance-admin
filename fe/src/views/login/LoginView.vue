@@ -13,20 +13,22 @@ const router = useRouter()
 const { t } = useI18n()
 const store = useStore()
 
-const account = ref<string>('')
-const password = ref<string>('')
+const loginForm = ref<{ account: string; password: string }>({
+  account: '',
+  password: ''
+})
 
 const login = async () => {
   // 校验表单
-  if (lodash.isEmpty(account.value) || lodash.isEmpty(password.value)) {
+  if (lodash.isEmpty(loginForm.value.account) || lodash.isEmpty(loginForm.value.password)) {
     message.error(t('loginView.inputInValidMessage'))
     return
   }
 
   try {
     await axios.post('/user/login', {
-      account: account.value,
-      password: password.value
+      account: loginForm.value.account,
+      password: loginForm.value.password
     })
     try {
       // 设置用户信息
@@ -53,7 +55,7 @@ const login = async () => {
         <div class="login-input-container">
           <p class="account-title">{{ $t('loginView.account') }}</p>
           <a-input
-            v-model:value="account"
+            v-model:value="loginForm.account"
             :bordered="false"
             :placeholder="$t('loginView.accountPlaceholder')"
             class="account-input"
@@ -61,7 +63,7 @@ const login = async () => {
           />
           <p class="password-title">{{ $t('loginView.password') }}</p>
           <a-input-password
-            v-model:value="password"
+            v-model:value="loginForm.password"
             :bordered="false"
             :placeholder="$t('loginView.passwordPlaceholder')"
             class="password-input"
