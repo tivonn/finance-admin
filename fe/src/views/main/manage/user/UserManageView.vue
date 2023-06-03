@@ -4,6 +4,19 @@ import { computed } from 'vue'
 import axios from 'axios'
 import type { UserRes } from '@/api/res/user'
 
+// 获取表格数据 START
+interface APIParams {
+  pageSize: number
+  page?: number
+  sortField?: string
+  sortOrder?: number
+  [key: string]: any
+}
+interface APIResult {
+  data: Array<UserRes>
+}
+
+// 自定义
 const columns = [
   {
     title: '用户名',
@@ -28,18 +41,8 @@ const columns = [
   }
 ]
 
-type APIParams = {
-  pageSize: number
-  page?: number
-  sortField?: string
-  sortOrder?: number
-  [key: string]: any
-}
-interface APIResult {
-  data: Array<UserRes>
-}
-
 const queryData = (params: APIParams) => {
+  // 自定义
   return axios.get<APIResult>('/user/list', { params })
 }
 
@@ -64,6 +67,9 @@ const pagination = computed(() => ({
   pageSize: pageSize.value
 }))
 
+// 获取表格数据 END
+
+// 操作表格
 const handleTableChange: any = (
   pag: { pageSize: number; current: number },
   filters: any,
@@ -82,7 +88,7 @@ const handleTableChange: any = (
 <template>
   <a-table
     :columns="columns"
-    :row-key="(record: any) => record.id"
+    :row-key="(row: any) => row.id"
     :data-source="dataSource?.data.data"
     :pagination="pagination"
     :loading="loading"
