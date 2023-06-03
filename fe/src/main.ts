@@ -5,6 +5,7 @@ import pinia, { useStore } from '@/stores'
 import router from '@/router'
 import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css'
+import '@/assets/css/antd.less'
 import i18n from '@/lang'
 
 import App from './App.vue'

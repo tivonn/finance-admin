@@ -9,8 +9,24 @@ class UserService extends Service {
     return this.app.model.Users;
   }
 
+  get passwordsModel() {
+    return this.app.model.Passwords;
+  }
+
   get cookiesModel() {
     return this.app.model.Cookies;
+  }
+
+  async create() {
+    return "create";
+  }
+
+  async update() {
+    return "update";
+  }
+
+  async list() {
+    return "list";
   }
 
   async info() {
@@ -18,21 +34,23 @@ class UserService extends Service {
     return ctx.state.user;
   }
 
-  async init() {
-    const { ctx } = this;
-    return "init";
-  }
-
   async login(params) {
     const { ctx } = this;
-    const { account, password } = params;
     const user = await this.usersModel.findOne({
       where: {
-        account,
-        password,
+        account: params.account,
       },
     });
-    if (user) {
+    const password = await this.passwordsModel.findOne({
+      where: {
+        user_id: user.id,
+        password: params.password,
+      },
+    });
+
+    const isValid = !!user && !!password;
+
+    if (isValid) {
       // 账号密码正确，登录
 
       // 设置 cookie
@@ -66,7 +84,13 @@ class UserService extends Service {
     }
   }
 
-  async logout() {}
+  async logout() {
+    return "logout";
+  }
+
+  async delete() {
+    return "delete";
+  }
 }
 
 module.exports = UserService;

@@ -105,6 +105,7 @@ const gotoNavigation = (navigation: Nav) => {
 <style lang="less">
 .main-view {
   width: 100%;
+  min-width: 960px;
   height: 100%;
   .main-header {
     height: 48px;

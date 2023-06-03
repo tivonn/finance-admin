@@ -2,15 +2,14 @@ import { computed, ref } from 'vue'
 import { createPinia, defineStore } from 'pinia'
 import axios from '@/api/axios'
 import lodash from 'lodash'
+import type { UserRes } from '@/api/res/user'
 
 const pinia = createPinia()
 
 export default pinia
 
 export const useStore = defineStore('store', () => {
-  const user = ref<
-    {} | { account: string; role: 'admin' | 'staff' | 'finance' | 'user'; username: string }
-  >({})
+  const user = ref<{} | UserRes>({})
 
   const isLogin = computed(() => !lodash.isEmpty(user.value))
 
@@ -24,7 +23,7 @@ export const useStore = defineStore('store', () => {
   }
 
   const setUser = async (value: any) => {
-    user.value = value
+    user.value = value || {}
   }
 
   return { user, isLogin, getUser, setUser }

@@ -1,5 +1,16 @@
-// 导航栏，去掉 hover/selected 颜色
-.ant-menu-item:hover,
-.ant-menu-item-selected {
-  background-color: unset !important;
+// 导航栏
+.ant-menu {
+  // 导航栏 hover/selected 聚焦项，去掉背景色
+  .ant-menu-item:hover,
+  .ant-menu-item-selected {
+    background-color: unset !important;
+  }
+}
+
+// 分页器
+.ant-pagination {
+  // 表格分页器，设置不贴边
+  &.ant-table-pagination-right {
+    margin-right: 16px;
+  }
 }

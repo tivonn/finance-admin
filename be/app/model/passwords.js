@@ -4,23 +4,23 @@ module.exports = (app) => {
   const DataTypes = app.Sequelize;
 
   const Model = app.model.define(
-    "users",
+    "passwords",
     {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
       },
-      account: {
-        type: DataTypes.STRING(32),
+      user_id: {
+        type: DataTypes.INTEGER,
         allowNull: false,
+        references: {
+          model: "users",
+          key: "id",
+        },
       },
-      role: {
-        type: DataTypes.ENUM("admin", "staff", "finance", "user"),
-        allowNull: false,
-      },
-      username: {
+      password: {
         type: DataTypes.STRING(64),
-        allowNull: true,
+        allowNull: false,
       },
       create_at: {
         type: DataTypes.TIME,
@@ -34,7 +34,7 @@ module.exports = (app) => {
       },
     },
     {
-      tableName: "users",
+      tableName: "passwords",
     }
   );
 
