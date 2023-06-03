@@ -4,8 +4,7 @@ import { useStore } from '@/stores'
 import pinia from '@/stores'
 import { isDev } from '@/utils/common'
 import { useRouter } from 'vue-router'
-
-const router = useRouter()
+import { useI18n } from 'vue-i18n'
 
 axios.defaults.baseURL = isDev()
   ? `${location.protocol}//${location.hostname}:7001/api`
@@ -24,11 +23,13 @@ axios.interceptors.response.use(
         const store = useStore(pinia)
         store.setUser({})
         // 跳转登录页
+        const router = useRouter()
         router.push({ name: 'login' })
         break
       }
       case 500: {
-        message.error('系统错误')
+        const { t } = useI18n()
+        message.error(t('common.message.netError'))
         break
       }
       default: {

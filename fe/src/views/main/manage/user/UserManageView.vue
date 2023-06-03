@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import { usePagination } from 'vue-request'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import axios from 'axios'
 import type { UserRes } from '@/api/res/user'
 import { SearchOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
+import UserUpsertModal from '@/views/main/manage/user/UserUpsertModal.vue'
 
 const { t } = useI18n()
+
+const showUserUpsertModal = ref<boolean>(false)
+const userUpsertId = ref<number>(0)
 
 // 获取表格数据 START
 interface APIParams {
@@ -23,28 +27,28 @@ interface APIResult {
 // 自定义
 const columns = [
   {
-    title: t('userManageView.info.username'),
+    title: t('commonBiz.user.username'),
     dataIndex: 'username',
     key: 'username',
     width: '35%',
     customFilterDropdown: true
   },
   {
-    title: t('userManageView.info.account'),
+    title: t('commonBiz.user.account'),
     dataIndex: 'account',
     key: 'account',
     width: '35%'
   },
   {
-    title: t('userManageView.info.role'),
+    title: t('commonBiz.user.role'),
     dataIndex: 'role',
     key: 'role',
     width: '20%',
     filters: [
-      { text: t('userManageView.info.roles.admin'), value: 'admin', color: 'green' },
-      { text: t('userManageView.info.roles.finance'), value: 'finance', color: 'purple' },
-      { text: t('userManageView.info.roles.staff'), value: 'staff', color: 'orange' },
-      { text: t('userManageView.info.roles.external'), value: 'external', color: 'red' }
+      { text: t('commonBiz.user.roles.admin'), value: 'admin', color: 'green' },
+      { text: t('commonBiz.user.roles.finance'), value: 'finance', color: 'purple' },
+      { text: t('commonBiz.user.roles.staff'), value: 'staff', color: 'orange' },
+      { text: t('commonBiz.user.roles.external'), value: 'external', color: 'red' }
     ]
   },
   {
@@ -108,7 +112,16 @@ const handleReset = (clearFilters: Function) => {
 }
 
 // 修改数据
-const addUser = () => {}
+const addUser = () => {
+  toggleUserUpsertModal(true)
+}
+
+const toggleUserUpsertModal = (isShow: boolean) => {
+  showUserUpsertModal.value = isShow
+  if (!isShow) {
+    userUpsertId.value = 0
+  }
+}
 
 const updateUser = (user: UserRes) => {}
 
@@ -202,6 +215,11 @@ const deleteUser = (user: UserRes) => {
       </template>
     </a-table>
   </div>
+  <UserUpsertModal
+    v-if="showUserUpsertModal"
+    :userUpsertId="userUpsertId"
+    @closeModal="() => toggleUserUpsertModal(false)"
+  ></UserUpsertModal>
 </template>
 
 <style lang="less">

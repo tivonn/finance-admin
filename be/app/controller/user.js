@@ -2,6 +2,22 @@
 
 const { Controller } = require("egg");
 
+const createRules = {
+  account: {
+    type: "string",
+    required: true,
+  },
+  username: {
+    type: "string",
+    required: true,
+  },
+  role: {
+    type: "enum",
+    required: true,
+    values: ["admin", "finance", "staff", "external"],
+  },
+};
+
 const loginRules = {
   account: {
     type: "string",
@@ -21,7 +37,8 @@ class UserController extends Controller {
   // 创建用户
   async create() {
     const { ctx } = this;
-    const res = await this.userService.create();
+    ctx.validate(createRules, ctx.request.body);
+    const res = await this.userService.create(ctx.request.body);
     ctx.body = res;
   }
 

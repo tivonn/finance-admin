@@ -7,7 +7,6 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useStore } from '@/stores'
 import Language from '@/components/Language.vue'
-import type { AxiosError } from 'axios'
 
 const router = useRouter()
 const { t } = useI18n()
@@ -21,7 +20,7 @@ const loginForm = ref<{ account: string; password: string }>({
 const login = async () => {
   // 校验表单
   if (lodash.isEmpty(loginForm.value.account) || lodash.isEmpty(loginForm.value.password)) {
-    message.error(t('loginView.message.inputInValid'))
+    message.error(t('loginView.message.formInValid'))
     return
   }
 
@@ -37,10 +36,14 @@ const login = async () => {
       // 登录成功，跳转主页面
       router.push({ name: 'overview' })
     } catch {}
-  } catch (error) {
-    if ((error as AxiosError)?.response?.status === 403) {
-      // 账号密码错误
-      message.error(t('loginView.message.inputInValid'))
+  } catch (error: any) {
+    switch (error?.response?.data?.error) {
+      case '账号密码错误': {
+        message.error(t('loginView.message.formInValid'))
+        break
+      }
+      default: {
+      }
     }
   }
 }
@@ -53,7 +56,7 @@ const login = async () => {
       <div class="login-background"></div>
       <div class="login-input">
         <div class="login-input-container">
-          <p class="account-title">{{ $t('loginView.info.account') }}</p>
+          <p class="account-title">{{ $t('commonBiz.user.account') }}</p>
           <a-input
             v-model:value="loginForm.account"
             :bordered="false"
@@ -61,7 +64,7 @@ const login = async () => {
             class="account-input"
             @pressEnter="login"
           />
-          <p class="password-title">{{ $t('loginView.info.password') }}</p>
+          <p class="password-title">{{ $t('commonBiz.user.password') }}</p>
           <a-input-password
             v-model:value="loginForm.password"
             :bordered="false"

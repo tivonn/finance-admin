@@ -17,8 +17,55 @@ class UserService extends Service {
     return this.app.model.Cookies;
   }
 
-  async create() {
-    return "create";
+  async create(params) {
+    const { ctx } = this;
+    // 权限校验
+    const role = ctx.state.user.role;
+    const safeRoles = ["admin"];
+    if (!safeRoles.includes(role)) {
+      ctx.throw(403, "无权限");
+    }
+    // 账号判重
+    const existingUser = await this.usersModel.findOne({
+      where: {
+        account: params.account,
+      },
+    });
+    if (existingUser) {
+      ctx.throw(422, "账号已存在");
+    } else {
+      let transaction = null;
+      try {
+        transaction = await this.ctx.model.transaction();
+
+        // 创建账号
+        await this.usersModel.create(params, { transaction });
+
+        // 获取创建账号结果
+        const user = await this.usersModel.findOne({
+          where: {
+            account: params.account,
+          },
+          transaction,
+        });
+
+        // 创建密码
+        await this.passwordsModel.create(
+          {
+            user_id: user.id,
+            password: "1",
+          },
+          { transaction }
+        );
+
+        await transaction.commit();
+
+        ctx.status = 200;
+      } catch (error) {
+        await transaction.rollback();
+        ctx.throw(500);
+      }
+    }
   }
 
   async update() {
@@ -83,7 +130,7 @@ class UserService extends Service {
       ctx.status = 200;
     } else {
       // 账号密码错误，登录失败
-      ctx.throw(403);
+      ctx.throw(403, "账号密码错误");
     }
   }
 
