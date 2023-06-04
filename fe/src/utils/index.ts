@@ -107,10 +107,12 @@ export default createI18n({
     },
     th: {
       common: {
-        info: {
-          logout: 'ออกจากระบบ',
-          confirmModal: 'ยืนยัน',
-          cancelModal: 'ยกเลิก'
+        info: {},
+        action: {
+          confirm: 'ยืนยัน',
+          cancel: 'ยกเลิก',
+          reset: 'รีเซ็ต',
+          logout: 'ออกจากระบบ'
         },
         message: {
           netError: 'ข้อผิดพลาดของระบบ',
@@ -132,43 +134,50 @@ export default createI18n({
           }
         }
       },
+      route: {
+        overview: 'ภาพรวม',
+        order: 'รายละเอียดการสั่งซื้อ',
+        report: 'รายงานการเงิน',
+        manage: 'การจัดการ',
+        manages: { userManage: 'การจัดการผู้ใช้' }
+      },
       loginView: {
         info: {
-          accountPlaceholder: 'กรุณากรอกบัญชี',
-          passwordPlaceholder: 'กรุณากรอกรหัสผ่าน'
+          accountPlaceholder: 'กรุณาใส่บัญชีผู้ใช้',
+          passwordPlaceholder: 'กรุณาใส่รหัสผ่าน'
         },
         actions: {
           login: 'เข้าสู่ระบบ'
         },
         message: {
-          formInValid: 'กรุณากรอกบัญชีและรหัสผ่านที่ถูกต้อง',
+          formInValid: 'กรุณาใส่บัญชีผู้ใช้และรหัสผ่านที่ถูกต้อง',
           loginFailed: 'เข้าสู่ระบบไม่สำเร็จ'
         }
       },
       overviewView: {
         info: {
-          empty: 'กำลังพัฒนาหน้าสรุป'
+          empty: 'หน้าภาพรวมกำลังพัฒนา'
         }
       },
       orderView: {
         info: {
-          empty: 'กำลังพัฒนาหน้ารายละเอียดการสั่งซื้อ'
+          empty: 'หน้ารายละเอียดการสั่งซื้อกำลังพัฒนา'
         }
       },
       reportView: {
         info: {
-          empty: 'กำลังพัฒนาหน้ารายงานการเงิน'
+          empty: 'หน้ารายงานการเงินกำลังพัฒนา'
         }
       },
       userManageView: {
         info: {
-          action: 'การดำเนินการ'
+          action: 'ดำเนินการ'
         },
         actions: {
           addUser: 'เพิ่มผู้ใช้',
           search: 'ค้นหา',
           reset: 'รีเซ็ต',
-          confirmDeleteUser: 'ยืนยันการลบผู้ใช้?'
+          confirmDeleteUser: 'คุณแน่ใจหรือไม่ว่าต้องการลบผู้ใช้?'
         },
         message: {
           deleteUserSuccess: 'ลบผู้ใช้สำเร็จ',
@@ -181,9 +190,9 @@ export default createI18n({
           updateUser: 'แก้ไขผู้ใช้'
         },
         message: {
-          usernameInvalid: 'ต้องระบุชื่อผู้ใช้',
-          accountInvalid: 'ต้องระบุบัญชี',
-          roleInvalid: 'ต้องระบุบทบาท',
+          usernameInvalid: 'กรุณาใส่ชื่อผู้ใช้',
+          accountInvalid: 'กรุณาใส่บัญชี',
+          roleInvalid: 'กรุณาเลือกบทบาท',
           accountIsExist: 'บัญชีนี้มีอยู่แล้ว',
           createUserSuccess: 'สร้างผู้ใช้สำเร็จ',
           createUserFailed: 'สร้างผู้ใช้ไม่สำเร็จ',
