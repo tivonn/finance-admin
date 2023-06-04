@@ -19,7 +19,7 @@ const createRules = {
 };
 
 const getListRules = {
-  page: {
+  pageIndex: {
     type: "number",
     required: true,
   },
@@ -33,7 +33,12 @@ const getListRules = {
   },
   role: {
     type: "array",
-    itemType: "string",
+    itemType: "enum",
+    rule: {
+      type: "enum",
+      required: false,
+      values: ["admin", "finance", "staff", "external"],
+    },
     required: false,
   },
 };
@@ -78,77 +83,11 @@ class UserController extends Controller {
     const { ctx } = this;
     const params = ctx.helper.filterParams(
       getListRules,
-      Object.assign({}, ctx.query)
+      Object.assign({}, ctx.request.body)
     );
     ctx.validate(getListRules, params);
-    // const res = await this.userService.list(params);
-    // ctx.body = res;
-
-    ctx.body = {
-      total: 55,
-      data: [
-        {
-          id: 1,
-          username: "122",
-          account: "111",
-          role: "admin",
-        },
-        {
-          id: 2,
-          username: "2",
-          account: "222",
-          role: "staff",
-        },
-        {
-          id: 3,
-          username: "3",
-          account: "333",
-          role: "finance",
-        },
-        {
-          id: 4,
-          username: "4",
-          account: "444",
-          role: "external",
-        },
-        {
-          id: 5,
-          username: "1",
-          account: "111",
-          role: "admin",
-        },
-        {
-          id: 6,
-          username: "2",
-          account: "222",
-          role: "staff",
-        },
-        {
-          id: 7,
-          username: "3",
-          account: "333",
-          role: "finance",
-        },
-        {
-          id: 8,
-          username: "4",
-          account: "444",
-          role: "external",
-        },
-        {
-          id: 9,
-          username: "1",
-          account: "111",
-          role: "admin",
-        },
-        {
-          id: 10,
-          username: "2",
-          account: "222",
-          role: "staff",
-        },
-      ],
-    };
+    const res = await this.userService.list(params);
+    ctx.body = res;
   }
 
   // 获取用户信息

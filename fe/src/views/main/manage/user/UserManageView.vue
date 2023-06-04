@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePagination } from 'vue-request'
 import { computed, ref } from 'vue'
-import axios from 'axios'
+import axios from '@/api/axios'
 import type { UserRes } from '@/api/res/user'
 import { SearchOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
@@ -14,14 +14,15 @@ const userUpsertId = ref<number>(0)
 
 // 获取表格数据 START
 interface APIParams {
+  pageIndex: number
   pageSize: number
-  page?: number
   sortField?: string
   sortOrder?: number
   [key: string]: any
 }
 interface APIResult {
-  data: Array<UserRes>
+  counts: number
+  rows: Array<UserRes>
 }
 
 // 自定义
@@ -60,7 +61,7 @@ const columns = [
 
 const queryData = (params: APIParams) => {
   // 自定义
-  return axios.get<APIResult>('/user/list', { params })
+  return axios.post<APIResult>('/user/list', params)
 }
 
 const {
@@ -72,9 +73,9 @@ const {
   total
 } = usePagination(queryData, {
   pagination: {
-    currentKey: 'page',
+    currentKey: 'pageIndex',
     pageSizeKey: 'pageSize',
-    totalKey: 'data.total'
+    totalKey: 'data.count'
   }
 })
 
@@ -93,12 +94,21 @@ const handleTableChange: any = (
   filters: any,
   sorter: any
 ) => {
+  const _filters = Object.assign(
+    {},
+    filters,
+    filters.username
+      ? {
+          username: filters.username[0]
+        }
+      : {}
+  )
   run({
-    page: pag?.current,
-    pageSize: pag.pageSize!,
+    pageIndex: pag.current,
+    pageSize: pag.pageSize,
     sortField: sorter.field,
     sortOrder: sorter.order,
-    ...filters
+    ..._filters
   })
 }
 
@@ -140,7 +150,7 @@ const deleteUser = (user: UserRes) => {
     <a-table
       :columns="columns"
       :row-key="(row: any) => row.id"
-      :data-source="dataSource?.data.data"
+      :data-source="dataSource?.data.rows"
       :pagination="pagination"
       :loading="loading"
       @change="handleTableChange"
@@ -168,9 +178,9 @@ const deleteUser = (user: UserRes) => {
         <div style="padding: 8px">
           <a-input
             :placeholder="`${$t('userManageView.actions.search')}${column.title}`"
-            :value="selectedKeys"
+            :value="selectedKeys[0]"
             style="width: 188px; margin-bottom: 8px; display: block"
-            @change="(e: any) => setSelectedKeys(e.target.value ? e.target.value : '')"
+            @change="(e: any) => setSelectedKeys(e.target.value ? [e.target.value] : [])"
             @pressEnter="() => handleSearch(confirm)"
           />
           <a-button

@@ -12,6 +12,8 @@ axios.defaults.baseURL = isDev()
 
 axios.defaults.withCredentials = true
 
+axios.defaults.headers.post['Content-Type'] = 'application/json'
+
 axios.interceptors.response.use(
   (res) => {
     return Promise.resolve(res)

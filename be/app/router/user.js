@@ -5,7 +5,7 @@ module.exports = (app) => {
   const routerNamespace = router.namespace("/api/user");
   routerNamespace.post("/", controller.user.create);
   routerNamespace.put("/:id", controller.user.update);
-  routerNamespace.get("/list", controller.user.list);
+  routerNamespace.post("/list", controller.user.list);
   routerNamespace.get("/info", controller.user.info);
   routerNamespace.post("/login", controller.user.login);
   routerNamespace.post("/logout", controller.user.logout);

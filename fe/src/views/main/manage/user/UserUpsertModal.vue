@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { message, type FormInstance } from 'ant-design-vue'
-import axios from 'axios'
+import axios from '@/api/axios'
 import lodash from 'lodash'
 import { computed, defineEmits, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'

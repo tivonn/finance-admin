@@ -72,8 +72,40 @@ class UserService extends Service {
     return "update";
   }
 
-  async list() {
-    return "list";
+  async list(params) {
+    const { ctx, app } = this;
+    // 权限校验
+    const role = ctx.state.user.role;
+    const safeRoles = ["admin"];
+    if (!safeRoles.includes(role)) {
+      ctx.throw(403, "无权限");
+    }
+    // 查询
+    const { Op } = app.Sequelize;
+    const users = await this.usersModel.findAndCountAll({
+      where: Object.assign(
+        {},
+        params.username
+          ? {
+              username: {
+                [Op.like]: `%${params.username}%`,
+              },
+            }
+          : {},
+        params.role
+          ? {
+              role: {
+                [Op.in]: params.role,
+              },
+            }
+          : {}
+      ),
+      ...ctx.helper.getPageParams(params.pageIndex, params.pageSize),
+      attributes: {
+        exclude: ["create_at", "update_at"],
+      },
+    });
+    return users;
   }
 
   async info() {
