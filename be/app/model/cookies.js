@@ -24,7 +24,7 @@ module.exports = (app) => {
       },
       expires: {
         type: DataTypes.TIME,
-        allowNull: true,
+        allowNull: false,
       },
       create_at: {
         type: DataTypes.TIME,

@@ -32,6 +32,10 @@ module.exports = (app) => {
         allowNull: false,
         defaultValue: DataTypes.literal("CURRENT_TIMESTAMP"),
       },
+      salt: {
+        type: DataTypes.STRING(64),
+        allowNull: false,
+      },
     },
     {
       tableName: "passwords",

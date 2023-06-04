@@ -3,6 +3,7 @@
 const Service = require("egg").Service;
 const dayjs = require("dayjs");
 const { v4: uuid } = require("uuid");
+const md5 = require("md5");
 
 class UserService extends Service {
   get usersModel() {
@@ -53,10 +54,14 @@ class UserService extends Service {
         });
 
         // 创建密码
+        const salt = uuid();
+        const defaultPassword = "1";
+        const password = md5(defaultPassword + salt);
         await this.passwordsModel.create(
           {
             user_id: user.id,
-            password: "1",
+            password,
+            salt,
           },
           { transaction: createUserTransaction }
         );
@@ -147,21 +152,27 @@ class UserService extends Service {
   async login(params) {
     const { ctx } = this;
     let user, password;
+    let isUserValid = false;
+    let isPasswordValid = false;
     user = await this.usersModel.findOne({
       where: {
         account: params.account,
         is_delete: false,
       },
     });
-    if (user) {
+    isUserValid = !!user;
+    if (isUserValid) {
       password = await this.passwordsModel.findOne({
         where: {
           user_id: user.id,
-          password: params.password,
         },
       });
+      if (password) {
+        isPasswordValid =
+          md5(params.password + password.salt) === password.password;
+      }
     }
-    const isValid = !!user && !!password;
+    const isValid = isUserValid && isPasswordValid;
     if (isValid) {
       // 账号密码正确，登录
 
