@@ -50,9 +50,9 @@ module.exports = {
   },
 
   // 获取分页参数
-  getPageParams(page, pageSize) {
+  getPageParams(pageIndex, pageSize) {
     return {
-      offset: (page - 1) * pageSize,
+      offset: (pageIndex - 1) * pageSize,
       limit: pageSize,
     };
   },

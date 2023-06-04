@@ -6,6 +6,7 @@ const createUserRules = {
   account: {
     type: "string",
     required: true,
+    format: /^[a-zA-Z0-9_]{6,20}$/,
   },
   username: {
     type: "string",
@@ -15,6 +16,11 @@ const createUserRules = {
     type: "enum",
     required: true,
     values: ["admin", "finance", "staff", "external"],
+  },
+  phone_number: {
+    type: "string",
+    required: true,
+    format: /^[\d\-+]{7,20}$/,
   },
 };
 
@@ -26,11 +32,11 @@ const updateUserRules = Object.assign({}, createUserRules, {
 });
 
 const getUsersRules = {
-  pageIndex: {
+  page_index: {
     type: "number",
     required: true,
   },
-  pageSize: {
+  page_size: {
     type: "number",
     required: true,
   },

@@ -33,7 +33,8 @@ export default createI18n({
             staff: '内部员工',
             finance: '财务',
             external: '外部用户'
-          }
+          },
+          phoneNumber: '电话号码'
         }
       },
       route: {
@@ -94,7 +95,10 @@ export default createI18n({
         message: {
           usernameInvalid: '用户名必填',
           accountInvalid: '账号必填',
+          accountPatternInvalid: '账号要求由字母、数字、下划线组成，长度在6-20个字符之间',
           roleInvalid: '角色必填',
+          phoneNumberInvalid: '电话号码必填',
+          phoneNumberPatternInvalid: '请输入正确的电话号码',
           accountIsExist: '账号已存在',
           createUserSuccess: '创建用户成功',
           createUserFailed: '创建用户失败',

@@ -6,7 +6,7 @@ import router from '@/router'
 import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css'
 import '@/assets/css/antd.less'
-import i18n from '@/utils'
+import i18n from '@/utils/language'
 
 import App from './App.vue'
 

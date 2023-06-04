@@ -15,8 +15,8 @@ const userUpsert = ref<UserRes | {}>({})
 
 // 获取表格数据 START
 interface APIParams {
-  pageIndex: number
-  pageSize: number
+  page_index: number
+  page_size: number
   sortField?: string
   sortOrder?: number
   [key: string]: any
@@ -32,26 +32,32 @@ const columns = [
     dataIndex: 'username',
     key: 'username',
     title: t('commonBiz.user.username'),
-    width: '35%',
+    width: '25%',
     customFilterDropdown: true
   },
   {
     dataIndex: 'account',
     key: 'account',
     title: t('commonBiz.user.account'),
-    width: '35%'
+    width: '25%'
   },
   {
     dataIndex: 'role',
     key: 'role',
     title: t('commonBiz.user.role'),
-    width: '20%',
+    width: '10%',
     filters: [
       { text: t('commonBiz.user.roles.admin'), value: 'admin', color: 'green' },
       { text: t('commonBiz.user.roles.finance'), value: 'finance', color: 'purple' },
       { text: t('commonBiz.user.roles.staff'), value: 'staff', color: 'orange' },
       { text: t('commonBiz.user.roles.external'), value: 'external', color: 'red' }
     ]
+  },
+  {
+    dataIndex: 'phone_number',
+    key: 'phone_number',
+    title: t('commonBiz.user.phoneNumber'),
+    width: '30%'
   },
   { key: 'action', title: t('userManageView.info.action'), fixed: 'right', width: '10%' }
 ]
@@ -70,8 +76,8 @@ const {
   total
 } = usePagination(queryData, {
   pagination: {
-    currentKey: 'pageIndex',
-    pageSizeKey: 'pageSize',
+    currentKey: 'page_index',
+    pageSizeKey: 'page_size',
     totalKey: 'data.count'
   }
 })
@@ -101,8 +107,8 @@ const handleTableChange: any = (
       : {}
   )
   run({
-    pageIndex: pag.current,
-    pageSize: pag.pageSize,
+    page_index: pag.current,
+    page_size: pag.pageSize,
     sortField: sorter.field,
     sortOrder: sorter.order,
     ..._filters

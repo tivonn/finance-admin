@@ -22,12 +22,14 @@ const formState = reactive<{
   username: string
   account: string
   role: string
+  phone_number: string
 }>(
   isCreate.value
     ? {
         username: '',
         account: '',
-        role: ''
+        role: '',
+        phone_number: ''
       }
     : { ...(props.userUpsert as UserRes) }
 )
@@ -125,7 +127,13 @@ const close = () => {
       <a-form-item
         :label="$t('commonBiz.user.account')"
         name="account"
-        :rules="[{ required: true, message: $t('userUpsertModal.message.accountInvalid') }]"
+        :rules="[
+          { required: true, message: $t('userUpsertModal.message.accountInvalid') },
+          {
+            pattern: /^[a-zA-Z0-9_]{6,20}$/,
+            message: $t('userUpsertModal.message.accountPatternInvalid')
+          }
+        ]"
       >
         <a-input v-model:value="formState.account" :disabled="!isCreate" />
       </a-form-item>
@@ -144,6 +152,21 @@ const close = () => {
             $t('commonBiz.user.roles.external')
           }}</a-radio-button>
         </a-radio-group>
+      </a-form-item>
+
+      <!-- 电话号码 -->
+      <a-form-item
+        :label="$t('commonBiz.user.phoneNumber')"
+        name="phone_number"
+        :rules="[
+          { required: true, message: $t('userUpsertModal.message.phoneNumberInvalid') },
+          {
+            pattern: /^[\d\-+]{7,20}$/,
+            message: $t('userUpsertModal.message.phoneNumberPatternInvalid')
+          }
+        ]"
+      >
+        <a-input v-model:value="formState.phone_number" />
       </a-form-item>
     </a-form>
   </a-modal>

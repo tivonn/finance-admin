@@ -38,6 +38,10 @@ module.exports = (app) => {
         allowNull: false,
         defaultValue: "0",
       },
+      phone_number: {
+        type: DataTypes.STRING(32),
+        allowNull: false,
+      },
     },
     {
       tableName: "users",

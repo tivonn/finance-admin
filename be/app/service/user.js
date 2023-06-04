@@ -135,7 +135,7 @@ class UserService extends Service {
             }
           : {}
       ),
-      ...ctx.helper.getPageParams(params.pageIndex, params.pageSize),
+      ...ctx.helper.getPageParams(params.page_index, params.page_size),
       // 过滤返回数据
       attributes: {
         exclude: ["is_delete", "create_at", "update_at"],
