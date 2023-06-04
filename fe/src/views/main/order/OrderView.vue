@@ -1,7 +1,9 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div>订单详情</div>
+  <div style="margin-top: 256px">
+    <a-empty :description="$t('orderView.info.empty')" />
+  </div>
 </template>
 
 <style lang="less"></style>

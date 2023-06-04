@@ -7,8 +7,12 @@ import avatarImg from '@/assets/images/avatar.png'
 import axios from '@/api/axios'
 import { useI18n } from 'vue-i18n'
 import { message } from 'ant-design-vue'
+import { auth } from '@/utils/auth'
+import { useStore } from '@/stores'
+import type { UserRes } from '@/api/res/user'
 
 const { t } = useI18n()
+const store = useStore()
 
 interface Nav {
   key: string
@@ -26,33 +30,33 @@ const navigations = ref<
   >
 >([
   {
-    key: '/overview',
-    text: '总览',
+    key: 'overview',
+    text: t('route.overview'),
     route: {
       name: 'overview'
     }
   },
   {
-    key: '/order',
-    text: '订单详情',
+    key: 'order',
+    text: t('route.order'),
     route: {
       name: 'order'
     }
   },
   {
-    key: '/report',
-    text: '财务报表',
+    key: 'report',
+    text: t('route.report'),
     route: {
       name: 'report'
     }
   },
   {
-    key: '/manage',
-    text: '管理',
+    key: 'manage',
+    text: t('route.manage'),
     subs: [
       {
-        key: '/manage/user',
-        text: '用户管理',
+        key: 'userManage',
+        text: t('route.manages.userManage'),
         route: {
           name: 'userManage'
         }
@@ -61,6 +65,10 @@ const navigations = ref<
   }
 ])
 const selectedKeys = ref<[string]>([route.path.slice('/main'.length)])
+
+const hasAuthNavigation = (name: string) => {
+  return (auth[name].allows || []).includes((store.user as UserRes).role)
+}
 
 const gotoNavigation = (navigation: Nav) => {
   router.push({ name: navigation.route?.name })
@@ -84,7 +92,11 @@ const logout = () => {
         mode="horizontal"
         class="main-navigation"
       >
-        <template v-for="navigation in navigations">
+        <template
+          v-for="navigation in navigations.filter((navigation) =>
+            hasAuthNavigation(navigation.key)
+          )"
+        >
           <a-menu-item
             v-if="!navigation.subs"
             :key="navigation.key"
@@ -102,7 +114,9 @@ const logout = () => {
             </template>
             <!-- 二级路由 -->
             <a-menu-item
-              v-for="subNavigation in navigation.subs"
+              v-for="subNavigation in navigation.subs.filter((subNavigation) =>
+                hasAuthNavigation(subNavigation.key)
+              )"
               :key="subNavigation.key"
               @click="() => gotoNavigation(subNavigation)"
               >{{ subNavigation.text }}</a-menu-item
@@ -117,7 +131,7 @@ const logout = () => {
           <template #overlay>
             <a-menu>
               <a-menu-item>
-                <span @click="() => logout()">{{ $t('common.info.logout') }}</span>
+                <span @click="() => logout()">{{ $t('common.action.logout') }}</span>
               </a-menu-item>
             </a-menu>
           </template>

@@ -2,12 +2,13 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useStore } from '@/stores'
 import pinia from '@/stores'
 import type { UserRes } from '@/api/res/user'
+import { auth } from '@/utils/auth'
 
 declare module 'vue-router' {
   interface RouteMeta {
     auth: {
       required: boolean
-      allows?: Array<'admin' | 'finance' | 'staff' | 'external'>
+      allows?: Array<string>
     }
   }
 }
@@ -22,45 +23,48 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: () => import('@/views/login/LoginView.vue'),
-      meta: { auth: { required: false } }
+      meta: { auth: auth['login'] }
     },
     {
       // 主页面
       path: '/main',
+      name: 'main',
       component: () => import('@/views/main/MainView.vue'),
-      meta: { auth: { required: true, allows: ['admin', 'finance', 'staff', 'external'] } },
+      meta: { auth: auth['main'] },
       children: [
         // 总览
         {
           path: 'overview',
           name: 'overview',
           component: () => import('@/views/main/overview/OverviewView.vue'),
-          meta: { auth: { required: true, allows: ['admin', 'finance', 'staff', 'external'] } }
+          meta: { auth: auth['overview'] }
         },
         // 订单
         {
           path: 'order',
           name: 'order',
           component: () => import('@/views/main/order/OrderView.vue'),
-          meta: { auth: { required: true, allows: ['admin', 'finance', 'staff', 'external'] } }
+          meta: { auth: auth['order'] }
         },
         // 财务报表
         {
           path: 'report',
           name: 'report',
           component: () => import('@/views/main/report/ReportView.vue'),
-          meta: { auth: { required: true, allows: ['admin', 'finance', 'staff', 'external'] } }
+          meta: { auth: auth['report'] }
         },
         // 管理页
         {
           path: 'manage',
+          name: 'manage',
+          meta: { auth: auth['manage'] },
           children: [
             // 员工管理
             {
               path: 'user',
               name: 'userManage',
               component: () => import('@/views/main/manage/user/UserManageView.vue'),
-              meta: { auth: { required: true, allows: ['admin'] } }
+              meta: { auth: auth['userManage'] }
             }
           ]
         }

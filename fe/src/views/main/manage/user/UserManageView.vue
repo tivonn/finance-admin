@@ -157,6 +157,10 @@ const deleteUser = async (user: UserRes) => {
       :columns="columns"
       :row-key="(row: any) => row.id"
       :data-source="dataSource?.data.rows"
+      :locale="{
+        filterConfirm: $t('common.action.confirm'),
+        filterReset: $t('common.action.reset')
+      }"
       :pagination="pagination"
       :loading="loading"
       @change="handleTableChange"

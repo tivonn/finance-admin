@@ -9,10 +9,12 @@ export default createI18n({
   messages: {
     'zh-cn': {
       common: {
-        info: {
-          logout: '退出登录',
-          confirmModal: '确认',
-          cancelModal: '取消'
+        info: {},
+        action: {
+          confirm: '确定',
+          cancel: '取消',
+          reset: '重置',
+          logout: '退出登录'
         },
         message: {
           netError: '系统错误',
@@ -34,6 +36,13 @@ export default createI18n({
           }
         }
       },
+      route: {
+        overview: '总览',
+        order: '订单详情',
+        report: '财务报表',
+        manage: '管理',
+        manages: { userManage: '用户管理' }
+      },
       loginView: {
         info: {
           accountPlaceholder: '请输入账号',
@@ -45,6 +54,21 @@ export default createI18n({
         message: {
           formInValid: '请输入正确的账号密码',
           loginFailed: '登录失败'
+        }
+      },
+      overviewView: {
+        info: {
+          empty: '总览页开发中'
+        }
+      },
+      orderView: {
+        info: {
+          empty: '订单详情页开发中'
+        }
+      },
+      reportView: {
+        info: {
+          empty: '财务报表页开发中'
         }
       },
       userManageView: {
@@ -82,9 +106,92 @@ export default createI18n({
       }
     },
     th: {
+      common: {
+        info: {
+          logout: 'ออกจากระบบ',
+          confirmModal: 'ยืนยัน',
+          cancelModal: 'ยกเลิก'
+        },
+        message: {
+          netError: 'ข้อผิดพลาดของระบบ',
+          noAuth: 'ไม่มีสิทธิ์',
+          logoutFailed: 'ออกจากระบบไม่สำเร็จ'
+        }
+      },
+      commonBiz: {
+        user: {
+          username: 'ชื่อผู้ใช้',
+          account: 'บัญชี',
+          password: 'รหัสผ่าน',
+          role: 'บทบาท',
+          roles: {
+            admin: 'ผู้ดูแลระบบ',
+            staff: 'พนักงานภายใน',
+            finance: 'การเงิน',
+            external: 'ผู้ใช้ภายนอก'
+          }
+        }
+      },
       loginView: {
-        account: 'account',
-        password: 'password'
+        info: {
+          accountPlaceholder: 'กรุณากรอกบัญชี',
+          passwordPlaceholder: 'กรุณากรอกรหัสผ่าน'
+        },
+        actions: {
+          login: 'เข้าสู่ระบบ'
+        },
+        message: {
+          formInValid: 'กรุณากรอกบัญชีและรหัสผ่านที่ถูกต้อง',
+          loginFailed: 'เข้าสู่ระบบไม่สำเร็จ'
+        }
+      },
+      overviewView: {
+        info: {
+          empty: 'กำลังพัฒนาหน้าสรุป'
+        }
+      },
+      orderView: {
+        info: {
+          empty: 'กำลังพัฒนาหน้ารายละเอียดการสั่งซื้อ'
+        }
+      },
+      reportView: {
+        info: {
+          empty: 'กำลังพัฒนาหน้ารายงานการเงิน'
+        }
+      },
+      userManageView: {
+        info: {
+          action: 'การดำเนินการ'
+        },
+        actions: {
+          addUser: 'เพิ่มผู้ใช้',
+          search: 'ค้นหา',
+          reset: 'รีเซ็ต',
+          confirmDeleteUser: 'ยืนยันการลบผู้ใช้?'
+        },
+        message: {
+          deleteUserSuccess: 'ลบผู้ใช้สำเร็จ',
+          deleteUserFailed: 'ลบผู้ใช้ไม่สำเร็จ'
+        }
+      },
+      userUpsertModal: {
+        info: {
+          createUser: 'สร้างผู้ใช้',
+          updateUser: 'แก้ไขผู้ใช้'
+        },
+        message: {
+          usernameInvalid: 'ต้องระบุชื่อผู้ใช้',
+          accountInvalid: 'ต้องระบุบัญชี',
+          roleInvalid: 'ต้องระบุบทบาท',
+          accountIsExist: 'บัญชีนี้มีอยู่แล้ว',
+          createUserSuccess: 'สร้างผู้ใช้สำเร็จ',
+          createUserFailed: 'สร้างผู้ใช้ไม่สำเร็จ',
+          updateUserSuccess: 'แก้ไขผู้ใช้สำเร็จ',
+          updateUserFailed: 'แก้ไขผู้ใช้ไม่สำเร็จ',
+          userNotFount: 'ไม่พบผู้ใช้',
+          accountCanNotUpdate: 'ไม่สามารถแก้ไขบัญชีได้'
+        }
       }
     }
   }

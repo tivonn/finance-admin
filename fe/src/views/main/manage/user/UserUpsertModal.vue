@@ -96,12 +96,13 @@ const close = () => {
 
 <template>
   <a-modal
+    style="width: 640px"
     :visible="true"
     :title="
       isCreate ? $t('userUpsertModal.info.createUser') : $t('userUpsertModal.info.updateUser')
     "
-    :cancelText="$t('common.info.cancelModal')"
-    :okText="$t('common.info.confirmModal')"
+    :cancelText="$t('common.action.cancel')"
+    :okText="$t('common.action.confirm')"
     @ok="() => handleOk()"
     @cancel="() => handleCancel()"
   >
@@ -136,10 +137,12 @@ const close = () => {
         :rules="[{ required: true, message: $t('userUpsertModal.message.roleInvalid') }]"
       >
         <a-radio-group v-model:value="formState.role">
-          <a-radio-button value="admin">管理员</a-radio-button>
-          <a-radio-button value="finance">财务</a-radio-button>
-          <a-radio-button value="staff">内部员工</a-radio-button>
-          <a-radio-button value="external">外部用户</a-radio-button>
+          <a-radio-button value="admin">{{ $t('commonBiz.user.roles.admin') }}</a-radio-button>
+          <a-radio-button value="finance">{{ $t('commonBiz.user.roles.staff') }}</a-radio-button>
+          <a-radio-button value="staff">{{ $t('commonBiz.user.roles.finance') }}</a-radio-button>
+          <a-radio-button value="external">{{
+            $t('commonBiz.user.roles.external')
+          }}</a-radio-button>
         </a-radio-group>
       </a-form-item>
     </a-form>
