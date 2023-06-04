@@ -55,7 +55,7 @@ class UserService extends Service {
 
         // 创建密码
         const salt = uuid();
-        const defaultPassword = "1";
+        const defaultPassword = params.phone_number;
         const password = md5(defaultPassword + salt);
         await this.passwordsModel.create(
           {
