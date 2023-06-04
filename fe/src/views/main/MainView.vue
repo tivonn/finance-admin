@@ -2,6 +2,13 @@
 import router from '@/router'
 import { ref } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
+import Language from '@/components/Language.vue'
+import avatarImg from '@/assets/images/avatar.png'
+import axios from '@/api/axios'
+import { useI18n } from 'vue-i18n'
+import { message } from 'ant-design-vue'
+
+const { t } = useI18n()
 
 interface Nav {
   key: string
@@ -58,6 +65,14 @@ const selectedKeys = ref<[string]>([route.path.slice('/main'.length)])
 const gotoNavigation = (navigation: Nav) => {
   router.push({ name: navigation.route?.name })
 }
+
+const logout = () => {
+  try {
+    axios.post('/user/logout')
+  } catch (error) {
+    message.error(t('common.message.logoutFailed'))
+  }
+}
 </script>
 
 <template>
@@ -95,6 +110,19 @@ const gotoNavigation = (navigation: Nav) => {
           </a-sub-menu>
         </template>
       </a-menu>
+      <div class="main-actions">
+        <Language class="language"></Language>
+        <a-dropdown>
+          <img :src="avatarImg" class="avatar" @click.prevent />
+          <template #overlay>
+            <a-menu>
+              <a-menu-item>
+                <span @click="() => logout()">{{ $t('common.info.logout') }}</span>
+              </a-menu-item>
+            </a-menu>
+          </template>
+        </a-dropdown>
+      </div>
     </a-layout-header>
     <a-layout-content class="main-content">
       <RouterView />
@@ -111,9 +139,27 @@ const gotoNavigation = (navigation: Nav) => {
     height: 48px;
     position: sticky;
     top: 0;
+    display: flex;
+    flex-direction: row;
   }
   .main-navigation {
     line-height: 48px;
+  }
+  .main-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+  }
+  .language {
+    line-height: 48px;
+  }
+  .avatar {
+    width: 24px;
+    height: 24px;
+    margin-left: 24px;
+    object-fit: cover;
+    border-radius: 50%;
+    cursor: pointer;
   }
   .main-content {
     min-height: calc(100% - 48px);

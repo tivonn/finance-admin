@@ -43,6 +43,7 @@ const handleOk = async () => {
         await axios.post('/user', formState)
         message.success(t('userUpsertModal.message.createUserSuccess'))
         close()
+        window.location.reload()
       } catch (error: any) {
         switch (error?.response?.data?.message) {
           case '无权限': {
@@ -64,6 +65,7 @@ const handleOk = async () => {
         await axios.put(`/user/${formState.id}`, formState)
         message.success(t('userUpsertModal.message.updateUserSuccess'))
         close()
+        window.location.reload()
       } catch (error: any) {
         switch (error?.response?.data?.message) {
           case '无权限': {

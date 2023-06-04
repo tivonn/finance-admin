@@ -29,22 +29,22 @@ interface APIResult {
 // 自定义
 const columns = [
   {
-    title: t('commonBiz.user.username'),
     dataIndex: 'username',
     key: 'username',
+    title: t('commonBiz.user.username'),
     width: '35%',
     customFilterDropdown: true
   },
   {
-    title: t('commonBiz.user.account'),
     dataIndex: 'account',
     key: 'account',
+    title: t('commonBiz.user.account'),
     width: '35%'
   },
   {
-    title: t('commonBiz.user.role'),
     dataIndex: 'role',
     key: 'role',
+    title: t('commonBiz.user.role'),
     width: '20%',
     filters: [
       { text: t('commonBiz.user.roles.admin'), value: 'admin', color: 'green' },
@@ -53,11 +53,7 @@ const columns = [
       { text: t('commonBiz.user.roles.external'), value: 'external', color: 'red' }
     ]
   },
-  {
-    key: 'action',
-    fixed: 'right',
-    width: '10%'
-  }
+  { key: 'action', title: t('userManageView.info.action'), fixed: 'right', width: '10%' }
 ]
 
 const queryData = (params: APIParams) => {
@@ -143,6 +139,7 @@ const deleteUser = async (user: UserRes) => {
   try {
     await axios.delete(`/user/${user.id}`)
     message.success(t('userManageView.message.deleteUserSuccess'))
+    window.location.reload()
   } catch (error) {
     message.error(t('userManageView.message.deleteUserFailed'))
   }
@@ -165,17 +162,6 @@ const deleteUser = async (user: UserRes) => {
       @change="handleTableChange"
     >
       <!-- 表头 -->
-      <template #headerCell="{ column }">
-        <!-- 操作 -->
-        <template v-if="column.key === 'action'">
-          <span
-            :style="{
-              fontWeight: 'bold'
-            }"
-            >{{ $t('userManageView.info.action') }}</span
-          >
-        </template>
-      </template>
       <!-- 重写筛选入口 -->
       <template #customFilterIcon="{ filtered }">
         <search-outlined :style="{ color: filtered ? '#108ee9' : undefined }" />

@@ -3,7 +3,6 @@ import { message } from 'ant-design-vue'
 import { useStore } from '@/stores'
 import pinia from '@/stores'
 import { isDev } from '@/utils/common'
-import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 axios.defaults.baseURL = isDev()
@@ -25,8 +24,9 @@ axios.interceptors.response.use(
         const store = useStore(pinia)
         store.setUser({})
         // 跳转登录页
-        const router = useRouter()
-        router.push({ name: 'login' })
+        if (window.location.pathname !== '/login') {
+          window.location.href = '/login'
+        }
         break
       }
       case 500: {

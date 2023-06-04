@@ -197,7 +197,21 @@ class UserService extends Service {
   }
 
   async logout() {
-    return "logout";
+    const { ctx } = this;
+    // 更新用户 cookie 过期时间
+    const cookie = await this.cookiesModel.findOne({
+      where: { user_id: ctx.state.user.id },
+    });
+    if (cookie) {
+      // 浏览器更新
+      ctx.cookies.set("cookie", null);
+      // 数据库更新
+      await cookie.destroy();
+
+      ctx.throw(401);
+    } else {
+      ctx.throw(401);
+    }
   }
 
   async deleteUser(params) {

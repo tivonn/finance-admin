@@ -10,12 +10,14 @@ export default createI18n({
     'zh-cn': {
       common: {
         info: {
+          logout: '退出登录',
           confirmModal: '确认',
           cancelModal: '取消'
         },
         message: {
           netError: '系统错误',
-          noAuth: '无权限'
+          noAuth: '无权限',
+          logoutFailed: '退出登录失败'
         }
       },
       commonBiz: {

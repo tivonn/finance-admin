@@ -18,11 +18,19 @@ const language = ref<string>(getLocalLanguage())
 
 <template>
   <div class="language">
-    <a-radio-group v-model:value="language" @change="setLocalLanguage">
+    <a-radio-group v-model:value="language" size="small" @change="setLocalLanguage">
       <a-radio-button value="zh-cn">中文</a-radio-button>
       <a-radio-button value="th">th</a-radio-button>
     </a-radio-group>
   </div>
 </template>
 
-<style lang="less"></style>
+<style lang="less">
+.language {
+  .ant-radio-button {
+    & + span {
+      font-size: 13px;
+    }
+  }
+}
+</style>
