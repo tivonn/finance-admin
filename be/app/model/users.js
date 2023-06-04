@@ -13,6 +13,7 @@ module.exports = (app) => {
       account: {
         type: DataTypes.STRING(32),
         allowNull: false,
+        unique: true,
       },
       role: {
         type: DataTypes.ENUM("admin", "finance", "staff", "external"),
@@ -31,6 +32,11 @@ module.exports = (app) => {
         type: DataTypes.TIME,
         allowNull: false,
         defaultValue: DataTypes.literal("CURRENT_TIMESTAMP"),
+      },
+      is_delete: {
+        type: DataTypes.INTEGER(1),
+        allowNull: false,
+        defaultValue: "0",
       },
     },
     {

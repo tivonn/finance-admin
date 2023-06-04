@@ -41,7 +41,8 @@ export default createI18n({
           login: '登录'
         },
         message: {
-          formInValid: '请输入正确的账号密码'
+          formInValid: '请输入正确的账号密码',
+          loginFailed: '登录失败'
         }
       },
       userManageView: {
@@ -53,6 +54,10 @@ export default createI18n({
           search: '搜索',
           reset: '重置',
           confirmDeleteUser: '确定删除用户？'
+        },
+        message: {
+          deleteUserSuccess: '删除用户成功',
+          deleteUserFailed: '删除用户失败'
         }
       },
       userUpsertModal: {
@@ -66,7 +71,9 @@ export default createI18n({
           roleInvalid: '角色必填',
           accountIsExist: '账号已存在',
           createUserSuccess: '创建用户成功',
+          createUserFailed: '创建用户失败',
           updateUserSuccess: '编辑用户成功',
+          updateUserFailed: '编辑用户失败',
           userNotFount: '不存在该用户',
           accountCanNotUpdate: '账号不可修改'
         }

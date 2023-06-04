@@ -43,6 +43,7 @@ const login = async () => {
         break
       }
       default: {
+        message.error(t('loginView.message.loginFailed'))
       }
     }
   }

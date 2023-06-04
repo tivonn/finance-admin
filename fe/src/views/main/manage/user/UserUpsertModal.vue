@@ -38,9 +38,10 @@ const handleOk = async () => {
     await formRef.value!.validateFields()
     // 提交数据
     if (isCreate.value) {
+      // 创建用户
       try {
         await axios.post('/user', formState)
-        message.info(t('userUpsertModal.message.createUserSuccess'))
+        message.success(t('userUpsertModal.message.createUserSuccess'))
         close()
       } catch (error: any) {
         switch (error?.response?.data?.message) {
@@ -53,13 +54,15 @@ const handleOk = async () => {
             break
           }
           default: {
+            message.error(t('userUpsertModal.message.createUserFailed'))
           }
         }
       }
     } else {
+      // 编辑用户
       try {
         await axios.put(`/user/${formState.id}`, formState)
-        message.info(t('userUpsertModal.message.updateUserSuccess'))
+        message.success(t('userUpsertModal.message.updateUserSuccess'))
         close()
       } catch (error: any) {
         switch (error?.response?.data?.message) {
@@ -72,6 +75,7 @@ const handleOk = async () => {
             break
           }
           default: {
+            message.error(t('userUpsertModal.message.updateUserFailed'))
           }
         }
       }

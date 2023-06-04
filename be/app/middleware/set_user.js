@@ -12,9 +12,12 @@ module.exports = () => {
         where: {
           id: user_id,
         },
+        // 过滤返回数据
+        attributes: {
+          exclude: ["is_delete", "create_at", "update_at"],
+        },
       });
-      const { account, role, username } = user;
-      ctx.state.user = { username, account, role };
+      ctx.state.user = user;
     } catch {
       ctx.state.user = {};
     }

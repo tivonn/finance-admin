@@ -2,7 +2,7 @@
 
 const { Controller } = require("egg");
 
-const createRules = {
+const createUserRules = {
   account: {
     type: "string",
     required: true,
@@ -18,14 +18,14 @@ const createRules = {
   },
 };
 
-const updateRules = Object.assign({}, createRules, {
+const updateUserRules = Object.assign({}, createUserRules, {
   id: {
     type: "number",
     required: true,
   },
 });
 
-const getListRules = {
+const getUsersRules = {
   pageIndex: {
     type: "number",
     required: true,
@@ -61,51 +61,58 @@ const loginRules = {
   },
 };
 
+const deleteUserRules = {
+  id: {
+    type: "number",
+    required: true,
+  },
+};
+
 class UserController extends Controller {
   get userService() {
     return this.ctx.service.user;
   }
 
   // 创建用户
-  async create() {
+  async createUser() {
     const { ctx } = this;
     const params = ctx.helper.filterParams(
-      createRules,
+      createUserRules,
       Object.assign({}, ctx.request.body)
     );
-    ctx.validate(createRules, params);
-    const res = await this.userService.create(params);
+    ctx.validate(createUserRules, params);
+    const res = await this.userService.createUser(params);
     ctx.body = res;
   }
 
   // 修改用户
-  async update() {
+  async updateUser() {
     const { ctx } = this;
     const params = ctx.helper.filterParams(
-      updateRules,
-      Object.assign({}, ctx.query, ctx.request.body)
+      updateUserRules,
+      Object.assign({}, ctx.params, ctx.request.body)
     );
-    ctx.validate(updateRules, params);
-    const res = await this.userService.update(params);
+    ctx.validate(updateUserRules, params);
+    const res = await this.userService.updateUser(params);
     ctx.body = res;
   }
 
   // 获取用户列表
-  async list() {
+  async getUsers() {
     const { ctx } = this;
     const params = ctx.helper.filterParams(
-      getListRules,
+      getUsersRules,
       Object.assign({}, ctx.request.body)
     );
-    ctx.validate(getListRules, params);
-    const res = await this.userService.list(params);
+    ctx.validate(getUsersRules, params);
+    const res = await this.userService.getUsers(params);
     ctx.body = res;
   }
 
   // 获取用户信息
-  async info() {
+  async getUserInfo() {
     const { ctx } = this;
-    const res = await this.userService.info();
+    const res = await this.userService.getUserInfo();
     ctx.body = res;
   }
 
@@ -129,9 +136,14 @@ class UserController extends Controller {
   }
 
   // 删除用户
-  async delete() {
+  async deleteUser() {
     const { ctx } = this;
-    const res = await this.userService.delete();
+    const params = ctx.helper.filterParams(
+      deleteUserRules,
+      Object.assign({}, ctx.params)
+    );
+    ctx.validate(deleteUserRules, params);
+    const res = await this.userService.deleteUser(params);
     ctx.body = res;
   }
 }

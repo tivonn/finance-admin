@@ -6,6 +6,7 @@ import type { UserRes } from '@/api/res/user'
 import { SearchOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
 import UserUpsertModal from '@/views/main/manage/user/UserUpsertModal.vue'
+import { message } from 'ant-design-vue'
 
 const { t } = useI18n()
 
@@ -138,8 +139,13 @@ const updateUser = (user: UserRes) => {
   toggleUserUpsertModal(true)
 }
 
-const deleteUser = (user: UserRes) => {
-  console.log(user)
+const deleteUser = async (user: UserRes) => {
+  try {
+    await axios.delete(`/user/${user.id}`)
+    message.success(t('userManageView.message.deleteUserSuccess'))
+  } catch (error) {
+    message.error(t('userManageView.message.deleteUserFailed'))
+  }
 }
 </script>
 
