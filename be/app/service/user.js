@@ -68,8 +68,32 @@ class UserService extends Service {
     }
   }
 
-  async update() {
-    return "update";
+  async update(params) {
+    const { ctx } = this;
+    // 权限校验
+    const role = ctx.state.user.role;
+    const safeRoles = ["admin"];
+    if (!safeRoles.includes(role)) {
+      ctx.throw(403, "无权限");
+    }
+    // 更新数据
+    const { id } = params;
+    const user = await this.usersModel.findOne({
+      where: {
+        id,
+      },
+    });
+    // 未找到数据
+    if (!user) {
+      ctx.throw(404, "不存在该用户");
+    }
+    // 校验不可修改项
+    if (user.account !== params.account) {
+      ctx.throw(422, "账号不可修改");
+    }
+    await user.update(params);
+
+    ctx.status = 200;
   }
 
   async list(params) {
@@ -80,7 +104,7 @@ class UserService extends Service {
     if (!safeRoles.includes(role)) {
       ctx.throw(403, "无权限");
     }
-    // 查询
+    // 查询数据
     const { Op } = app.Sequelize;
     const users = await this.usersModel.findAndCountAll({
       where: Object.assign(
@@ -129,9 +153,7 @@ class UserService extends Service {
         },
       });
     }
-
     const isValid = !!user && !!password;
-
     if (isValid) {
       // 账号密码正确，登录
 

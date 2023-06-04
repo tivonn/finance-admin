@@ -18,6 +18,13 @@ const createRules = {
   },
 };
 
+const updateRules = Object.assign({}, createRules, {
+  id: {
+    type: "number",
+    required: true,
+  },
+});
+
 const getListRules = {
   pageIndex: {
     type: "number",
@@ -74,7 +81,12 @@ class UserController extends Controller {
   // 修改用户
   async update() {
     const { ctx } = this;
-    const res = await this.userService.update();
+    const params = ctx.helper.filterParams(
+      updateRules,
+      Object.assign({}, ctx.query, ctx.request.body)
+    );
+    ctx.validate(updateRules, params);
+    const res = await this.userService.update(params);
     ctx.body = res;
   }
 

@@ -10,7 +10,7 @@ import UserUpsertModal from '@/views/main/manage/user/UserUpsertModal.vue'
 const { t } = useI18n()
 
 const showUserUpsertModal = ref<boolean>(false)
-const userUpsertId = ref<number>(0)
+const userUpsert = ref<UserRes | {}>({})
 
 // 获取表格数据 START
 interface APIParams {
@@ -122,18 +122,21 @@ const handleReset = (clearFilters: Function) => {
 }
 
 // 修改数据
+const toggleUserUpsertModal = (isShow: boolean) => {
+  showUserUpsertModal.value = isShow
+  if (!isShow) {
+    userUpsert.value = {}
+  }
+}
+
 const addUser = () => {
   toggleUserUpsertModal(true)
 }
 
-const toggleUserUpsertModal = (isShow: boolean) => {
-  showUserUpsertModal.value = isShow
-  if (!isShow) {
-    userUpsertId.value = 0
-  }
+const updateUser = (user: UserRes) => {
+  userUpsert.value = user
+  toggleUserUpsertModal(true)
 }
-
-const updateUser = (user: UserRes) => {}
 
 const deleteUser = (user: UserRes) => {
   console.log(user)
@@ -227,7 +230,7 @@ const deleteUser = (user: UserRes) => {
   </div>
   <UserUpsertModal
     v-if="showUserUpsertModal"
-    :userUpsertId="userUpsertId"
+    :userUpsert="userUpsert"
     @closeModal="() => toggleUserUpsertModal(false)"
   ></UserUpsertModal>
 </template>

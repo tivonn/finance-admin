@@ -65,7 +65,10 @@ export default createI18n({
           accountInvalid: '账号必填',
           roleInvalid: '角色必填',
           accountIsExist: '账号已存在',
-          createUserSuccess: '创建用户成功'
+          createUserSuccess: '创建用户成功',
+          updateUserSuccess: '编辑用户成功',
+          userNotFount: '不存在该用户',
+          accountCanNotUpdate: '账号不可修改'
         }
       }
     },

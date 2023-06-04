@@ -1,41 +1,47 @@
 <script setup lang="ts">
 import { message, type FormInstance } from 'ant-design-vue'
 import axios from '@/api/axios'
-import lodash from 'lodash'
 import { computed, defineEmits, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import lodash from 'lodash'
+import type { UserRes } from '@/api/res/user'
 
 const { t } = useI18n()
 
 const props = defineProps({
-  userUpsertId: Number
+  userUpsert: Object
 })
 const emit = defineEmits(['closeModal'])
 
-const isCreate = computed(() => lodash.isEmpty(props.userUpsertId))
+const isCreate = computed(() => lodash.isEmpty(props.userUpsert))
 
 const formRef = ref<FormInstance>()
+
 const formState = reactive<{
+  id?: number
   username: string
   account: string
   role: string
-}>({
-  username: '',
-  account: '',
-  role: ''
-})
+}>(
+  isCreate.value
+    ? {
+        username: '',
+        account: '',
+        role: ''
+      }
+    : { ...(props.userUpsert as UserRes) }
+)
 
 const handleOk = async () => {
-  // 校验表单
   try {
-    const values = await formRef.value!.validateFields()
-
+    // 校验表单
+    await formRef.value!.validateFields()
     // 提交数据
-    if (isCreate) {
-      let success = false
+    if (isCreate.value) {
       try {
-        await axios.post('/user', values)
-        success = true
+        await axios.post('/user', formState)
+        message.info(t('userUpsertModal.message.createUserSuccess'))
+        close()
       } catch (error: any) {
         switch (error?.response?.data?.message) {
           case '无权限': {
@@ -50,15 +56,25 @@ const handleOk = async () => {
           }
         }
       }
-      if (success) {
-        message.info(t('userUpsertModal.message.createUserSuccess'))
-        close()
-      }
     } else {
       try {
-        await axios.post('/put', Object.assign({}, values, { user_id: props.userUpsertId }))
+        await axios.put(`/user/${formState.id}`, formState)
+        message.info(t('userUpsertModal.message.updateUserSuccess'))
         close()
-      } catch (error) {}
+      } catch (error: any) {
+        switch (error?.response?.data?.message) {
+          case '无权限': {
+            message.error(t('common.message.noAuth'))
+            break
+          }
+          case '账号不可修改': {
+            message.error(t('userUpsertModal.message.accountCanNotUpdate'))
+            break
+          }
+          default: {
+          }
+        }
+      }
     }
   } catch (error) {}
 }
@@ -104,7 +120,7 @@ const close = () => {
         name="account"
         :rules="[{ required: true, message: $t('userUpsertModal.message.accountInvalid') }]"
       >
-        <a-input v-model:value="formState.account" />
+        <a-input v-model:value="formState.account" :disabled="!isCreate" />
       </a-form-item>
 
       <!-- 角色 -->
