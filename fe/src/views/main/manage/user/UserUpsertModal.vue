@@ -138,8 +138,8 @@ const close = () => {
       >
         <a-radio-group v-model:value="formState.role">
           <a-radio-button value="admin">{{ $t('commonBiz.user.roles.admin') }}</a-radio-button>
-          <a-radio-button value="finance">{{ $t('commonBiz.user.roles.staff') }}</a-radio-button>
-          <a-radio-button value="staff">{{ $t('commonBiz.user.roles.finance') }}</a-radio-button>
+          <a-radio-button value="finance">{{ $t('commonBiz.user.roles.finance') }}</a-radio-button>
+          <a-radio-button value="staff">{{ $t('commonBiz.user.roles.staff') }}</a-radio-button>
           <a-radio-button value="external">{{
             $t('commonBiz.user.roles.external')
           }}</a-radio-button>
