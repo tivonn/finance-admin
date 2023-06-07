@@ -111,7 +111,9 @@ class UserService extends Service {
         Object.assign(
           {},
           params,
-          user.is_modified_password ? {} : { is_modified_password: true }
+          !user.is_modified_password && params.password
+            ? { is_modified_password: true }
+            : {}
         ),
         { transaction: updateUserTransaction }
       );
