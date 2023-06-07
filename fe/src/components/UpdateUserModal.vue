@@ -3,7 +3,6 @@ import { message, type FormInstance } from 'ant-design-vue'
 import axios from '@/api/axios'
 import { defineEmits, onMounted, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import type { UserRes } from '@/api/res/user'
 import { useStore } from '@/stores'
 import type { Rule } from 'ant-design-vue/lib/form'
 
@@ -79,7 +78,7 @@ const handleCancel = () => {
 }
 
 const close = () => {
-  if ((store.user as UserRes).is_first_login) {
+  if (store.user.is_first_login) {
     message.error(t('common.message.firstLogin'))
   } else {
     emit('closeModal')
@@ -94,15 +93,15 @@ const close = () => {
     :title="`${$t('updateUserModal.info.updateUser')}${
       store.user.is_first_login ? `(${$t('common.message.firstLogin')})` : ''
     }`"
-    :maskClosable="!(store.user as UserRes).is_first_login"
+    :maskClosable="!store.user.is_first_login"
     :cancelText="$t('common.action.cancel')"
     :okText="$t('common.action.confirm')"
     @ok="() => handleOk()"
     @cancel="() => handleCancel()"
   >
     <p class="user-info">
-      <span class="username">{{ (store.user as UserRes).username }}</span>
-      <span class="account">({{ (store.user as UserRes).account }})</span>
+      <span class="username">{{ store.user.username }}</span>
+      <span class="account">({{ store.user.account }})</span>
     </p>
     <a-form
       ref="formRef"
@@ -133,7 +132,10 @@ const close = () => {
         :label="$t('commonBiz.user.password')"
         name="password"
         :rules="[
-          { required: (store.user as UserRes).is_first_login, message: $t('updateUserModal.message.passwordInvalid') },
+          {
+            required: store.user.is_first_login,
+            message: $t('updateUserModal.message.passwordInvalid')
+          },
           {
             pattern: /^[a-zA-Z0-9]{8,20}$/,
             message: $t('updateUserModal.message.passwordPatternInvalid')

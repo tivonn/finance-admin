@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useStore } from '@/stores'
 import pinia from '@/stores'
-import type { UserRes } from '@/api/res/user'
 import { auth } from '@/utils/auth'
 
 declare module 'vue-router' {
@@ -93,7 +92,7 @@ router.beforeEach((to, _, next) => {
       // 需要权限
       if (store.isLogin) {
         // 已登录
-        if (to.meta.auth?.allows?.includes((store.user as UserRes).role)) {
+        if (to.meta.auth?.allows?.includes(store.user.role)) {
           // 有权限访问页面，放行
           next()
         } else {

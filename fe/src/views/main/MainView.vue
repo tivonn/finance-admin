@@ -9,7 +9,6 @@ import { useI18n } from 'vue-i18n'
 import { message } from 'ant-design-vue'
 import { auth } from '@/utils/auth'
 import { useStore } from '@/stores'
-import type { UserRes } from '@/api/res/user'
 import UpdateUserModal from '@/components/UpdateUserModal.vue'
 
 const { t } = useI18n()
@@ -69,7 +68,7 @@ const navigations = ref<
 const selectedKeys = ref<[string]>([route.path.slice('/main'.length)])
 
 const hasAuthNavigation = (name: string) => {
-  return (auth[name].allows || []).includes((store.user as UserRes).role)
+  return (auth[name].allows || []).includes(store.user.role)
 }
 
 const gotoNavigation = (navigation: Nav) => {
