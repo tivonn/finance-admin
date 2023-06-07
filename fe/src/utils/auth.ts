@@ -23,5 +23,5 @@ export const auth: Auth = {
   // 管理
   manage: { required: true, allows: ['admin'] },
   // 员工管理
-  userManage: { required: true, allows: ['admin'] }
+  manageUser: { required: true, allows: ['admin'] }
 }

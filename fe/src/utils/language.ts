@@ -14,12 +14,14 @@ export default createI18n({
           confirm: '确定',
           cancel: '取消',
           reset: '重置',
+          updateUser: '编辑资料',
           logout: '退出登录'
         },
         message: {
           netError: '系统错误',
           noAuth: '无权限',
-          logoutFailed: '退出登录失败'
+          logoutFailed: '退出登录失败',
+          firstLogin: '首次登录请修改密码'
         }
       },
       commonBiz: {
@@ -27,6 +29,7 @@ export default createI18n({
           username: '用户名',
           account: '账号',
           password: '密码',
+          confirmPassword: '确认密码',
           role: '角色',
           roles: {
             admin: '管理员',
@@ -42,7 +45,22 @@ export default createI18n({
         order: '订单详情',
         report: '财务报表',
         manage: '管理',
-        manages: { userManage: '用户管理' }
+        manages: { manageUser: '用户管理' }
+      },
+      updateUserModal: {
+        info: {
+          updateUser: '编辑资料',
+          phoneNumberPlaceholder: '请输入电话号码',
+          passwordPlaceholder: '请输入新密码（仅需修改密码时填写）',
+          confirmPasswordPlaceholder: '请重新输入新密码（仅需修改密码时填写）'
+        },
+        message: {
+          passwordInvalid: '密码必填',
+          passwordPatternInvalid: '密码要求由字母、数字组成，长度在8-20个字符',
+          confirmPasswordInvalid: '两次密码输入需要一致',
+          updateUserSuccess: '编辑资料成功',
+          updateUserFailed: '编辑资料失败'
+        }
       },
       loginView: {
         info: {
@@ -72,7 +90,7 @@ export default createI18n({
           empty: '财务报表页开发中'
         }
       },
-      userManageView: {
+      manageUserView: {
         info: {
           action: '操作'
         },
@@ -87,15 +105,18 @@ export default createI18n({
           deleteUserFailed: '删除用户失败'
         }
       },
-      userUpsertModal: {
+      upsertUserModal: {
         info: {
           createUser: '创建用户',
-          updateUser: '编辑用户'
+          updateUser: '编辑用户',
+          usernamePlaceholder: '请输入用户名',
+          accountPlaceholder: '请输入账号',
+          phoneNumberPlaceholder: '请输入电话号码'
         },
         message: {
           usernameInvalid: '用户名必填',
           accountInvalid: '账号必填',
-          accountPatternInvalid: '账号要求由字母、数字、下划线组成，长度在6-20个字符之间',
+          accountPatternInvalid: '账号要求由字母、数字、下划线组成，长度在6-20个字符',
           roleInvalid: '角色必填',
           phoneNumberInvalid: '电话号码必填',
           phoneNumberPatternInvalid: '请输入正确的电话号码',
@@ -143,7 +164,7 @@ export default createI18n({
         order: 'รายละเอียดการสั่งซื้อ',
         report: 'รายงานการเงิน',
         manage: 'การจัดการ',
-        manages: { userManage: 'การจัดการผู้ใช้' }
+        manages: { manageUser: 'การจัดการผู้ใช้' }
       },
       loginView: {
         info: {
@@ -173,7 +194,7 @@ export default createI18n({
           empty: 'หน้ารายงานการเงินกำลังพัฒนา'
         }
       },
-      userManageView: {
+      manageUserView: {
         info: {
           action: 'ดำเนินการ'
         },
@@ -188,7 +209,7 @@ export default createI18n({
           deleteUserFailed: 'ลบผู้ใช้ไม่สำเร็จ'
         }
       },
-      userUpsertModal: {
+      upsertUserModal: {
         info: {
           createUser: 'สร้างผู้ใช้',
           updateUser: 'แก้ไขผู้ใช้'

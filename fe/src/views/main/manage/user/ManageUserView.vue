@@ -5,13 +5,10 @@ import axios from '@/api/axios'
 import type { UserRes } from '@/api/res/user'
 import { SearchOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
-import UserUpsertModal from '@/views/main/manage/user/UserUpsertModal.vue'
+import UpsertUserModal from '@/views/main/manage/user/UpsertUserModal.vue'
 import { message } from 'ant-design-vue'
 
 const { t } = useI18n()
-
-const showUserUpsertModal = ref<boolean>(false)
-const userUpsert = ref<UserRes | {}>({})
 
 // 获取表格数据 START
 interface APIParams {
@@ -59,7 +56,7 @@ const columns = [
     title: t('commonBiz.user.phoneNumber'),
     width: '30%'
   },
-  { key: 'action', title: t('userManageView.info.action'), fixed: 'right', width: '10%' }
+  { key: 'action', title: t('manageUserView.info.action'), fixed: 'right', width: '10%' }
 ]
 
 const queryData = (params: APIParams) => {
@@ -125,38 +122,41 @@ const handleReset = (clearFilters: Function) => {
 }
 
 // 修改数据
-const toggleUserUpsertModal = (isShow: boolean) => {
-  showUserUpsertModal.value = isShow
+const showUpsertUserModal = ref<boolean>(false)
+const upsertUser = ref<UserRes | {}>({})
+
+const toggleUpsertUserModal = (isShow: boolean) => {
+  showUpsertUserModal.value = isShow
   if (!isShow) {
-    userUpsert.value = {}
+    upsertUser.value = {}
   }
 }
 
 const addUser = () => {
-  toggleUserUpsertModal(true)
+  toggleUpsertUserModal(true)
 }
 
 const updateUser = (user: UserRes) => {
-  userUpsert.value = user
-  toggleUserUpsertModal(true)
+  upsertUser.value = user
+  toggleUpsertUserModal(true)
 }
 
 const deleteUser = async (user: UserRes) => {
   try {
     await axios.delete(`/user/${user.id}`)
-    message.success(t('userManageView.message.deleteUserSuccess'))
+    message.success(t('manageUserView.message.deleteUserSuccess'))
     window.location.reload()
   } catch (error) {
-    message.error(t('userManageView.message.deleteUserFailed'))
+    message.error(t('manageUserView.message.deleteUserFailed'))
   }
 }
 </script>
 
 <template>
-  <div class="user-manage-view">
-    <div class="user-manage-header">
+  <div class="manage-user-view">
+    <div class="manage-user-header">
       <a-button type="primary" class="add-user-button" @click="addUser">{{
-        $t('userManageView.actions.addUser')
+        $t('manageUserView.actions.addUser')
       }}</a-button>
     </div>
     <a-table
@@ -182,7 +182,7 @@ const deleteUser = async (user: UserRes) => {
       >
         <div style="padding: 8px">
           <a-input
-            :placeholder="`${$t('userManageView.actions.search')}${column.title}`"
+            :placeholder="`${$t('manageUserView.actions.search')}${column.title}`"
             :value="selectedKeys[0]"
             style="width: 188px; margin-bottom: 8px; display: block"
             @change="(e: any) => setSelectedKeys(e.target.value ? [e.target.value] : [])"
@@ -195,10 +195,10 @@ const deleteUser = async (user: UserRes) => {
             @click="() => handleSearch(confirm)"
           >
             <template #icon><search-outlined /></template>
-            {{ $t('userManageView.actions.search') }}
+            {{ $t('manageUserView.actions.search') }}
           </a-button>
           <a-button size="small" style="width: 90px" @click="() => handleReset(clearFilters)">
-            {{ $t('userManageView.actions.reset') }}
+            {{ $t('manageUserView.actions.reset') }}
           </a-button>
         </div>
       </template>
@@ -218,7 +218,7 @@ const deleteUser = async (user: UserRes) => {
             <edit-outlined class="edit-action" @click="() => updateUser(record)" />
             <a-divider type="vertical" />
             <a-popconfirm
-              :title="$t('userManageView.actions.confirmDeleteUser')"
+              :title="$t('manageUserView.actions.confirmDeleteUser')"
               ok-text="Yes"
               cancel-text="No"
               @confirm="() => deleteUser(record)"
@@ -230,18 +230,18 @@ const deleteUser = async (user: UserRes) => {
       </template>
     </a-table>
   </div>
-  <UserUpsertModal
-    v-if="showUserUpsertModal"
-    :userUpsert="userUpsert"
-    @closeModal="() => toggleUserUpsertModal(false)"
-  ></UserUpsertModal>
+  <UpsertUserModal
+    v-if="showUpsertUserModal"
+    :upsertUser="upsertUser"
+    @closeModal="() => toggleUpsertUserModal(false)"
+  ></UpsertUserModal>
 </template>
 
 <style lang="less">
 @import '@/assets/css/variables.less';
 
-.user-manage-view {
-  .user-manage-header {
+.manage-user-view {
+  .manage-user-header {
     height: 60px;
     padding: 0 16px;
     display: flex;

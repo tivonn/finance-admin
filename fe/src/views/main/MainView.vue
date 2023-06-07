@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import router from '@/router'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
 import Language from '@/components/Language.vue'
 import avatarImg from '@/assets/images/avatar.png'
@@ -10,10 +10,12 @@ import { message } from 'ant-design-vue'
 import { auth } from '@/utils/auth'
 import { useStore } from '@/stores'
 import type { UserRes } from '@/api/res/user'
+import UpdateUserModal from '@/components/UpdateUserModal.vue'
 
 const { t } = useI18n()
 const store = useStore()
 
+// 路由相关
 interface Nav {
   key: string
   text: string
@@ -55,10 +57,10 @@ const navigations = ref<
     text: t('route.manage'),
     subs: [
       {
-        key: 'userManage',
-        text: t('route.manages.userManage'),
+        key: 'manageUser',
+        text: t('route.manages.manageUser'),
         route: {
-          name: 'userManage'
+          name: 'manageUser'
         }
       }
     ]
@@ -72,6 +74,25 @@ const hasAuthNavigation = (name: string) => {
 
 const gotoNavigation = (navigation: Nav) => {
   router.push({ name: navigation.route?.name })
+}
+
+// 用户设置
+const showUpdateUserModal = ref<boolean>(false)
+
+// TODO:
+setTimeout(() => {
+  store.setUser({})
+}, 3000)
+watch(store.user, async (newValue, oldValue) => {
+  console.log(newValue, oldValue)
+})
+
+const toggleUpdateUserModal = (isShow: boolean) => {
+  showUpdateUserModal.value = isShow
+}
+
+const updateUser = () => {
+  toggleUpdateUserModal(true)
 }
 
 const logout = () => {
@@ -129,9 +150,12 @@ const logout = () => {
         <a-dropdown>
           <img :src="avatarImg" class="avatar" @click.prevent />
           <template #overlay>
-            <a-menu>
-              <a-menu-item>
-                <span @click="() => logout()">{{ $t('common.action.logout') }}</span>
+            <a-menu
+              ><a-menu-item @click="() => updateUser()">
+                <span>{{ $t('common.action.updateUser') }}</span>
+              </a-menu-item>
+              <a-menu-item @click="() => logout()">
+                <span>{{ $t('common.action.logout') }}</span>
               </a-menu-item>
             </a-menu>
           </template>
@@ -141,6 +165,10 @@ const logout = () => {
     <a-layout-content class="main-content">
       <RouterView />
     </a-layout-content>
+    <UpdateUserModal
+      v-if="showUpdateUserModal"
+      @closeModal="() => toggleUpdateUserModal(false)"
+    ></UpdateUserModal>
   </a-layout>
 </template>
 

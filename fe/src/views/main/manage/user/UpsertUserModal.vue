@@ -9,11 +9,11 @@ import type { UserRes } from '@/api/res/user'
 const { t } = useI18n()
 
 const props = defineProps({
-  userUpsert: Object
+  upsertUser: Object
 })
 const emit = defineEmits(['closeModal'])
 
-const isCreate = computed(() => lodash.isEmpty(props.userUpsert))
+const isCreate = computed(() => lodash.isEmpty(props.upsertUser))
 
 const formRef = ref<FormInstance>()
 
@@ -31,7 +31,7 @@ const formState = reactive<{
         role: '',
         phone_number: ''
       }
-    : { ...(props.userUpsert as UserRes) }
+    : { ...(props.upsertUser as UserRes) }
 )
 
 const handleOk = async () => {
@@ -43,7 +43,7 @@ const handleOk = async () => {
       // 创建用户
       try {
         await axios.post('/user', formState)
-        message.success(t('userUpsertModal.message.createUserSuccess'))
+        message.success(t('upsertUserModal.message.createUserSuccess'))
         close()
         window.location.reload()
       } catch (error: any) {
@@ -53,11 +53,11 @@ const handleOk = async () => {
             break
           }
           case '账号已存在': {
-            message.error(t('userUpsertModal.message.accountIsExist'))
+            message.error(t('upsertUserModal.message.accountIsExist'))
             break
           }
           default: {
-            message.error(t('userUpsertModal.message.createUserFailed'))
+            message.error(t('upsertUserModal.message.createUserFailed'))
           }
         }
       }
@@ -65,7 +65,7 @@ const handleOk = async () => {
       // 编辑用户
       try {
         await axios.put(`/user/${formState.id}`, formState)
-        message.success(t('userUpsertModal.message.updateUserSuccess'))
+        message.success(t('upsertUserModal.message.updateUserSuccess'))
         close()
         window.location.reload()
       } catch (error: any) {
@@ -75,11 +75,11 @@ const handleOk = async () => {
             break
           }
           case '账号不可修改': {
-            message.error(t('userUpsertModal.message.accountCanNotUpdate'))
+            message.error(t('upsertUserModal.message.accountCanNotUpdate'))
             break
           }
           default: {
-            message.error(t('userUpsertModal.message.updateUserFailed'))
+            message.error(t('upsertUserModal.message.updateUserFailed'))
           }
         }
       }
@@ -98,10 +98,10 @@ const close = () => {
 
 <template>
   <a-modal
-    style="width: 640px"
+    class="upsert-user-modal"
     :visible="true"
     :title="
-      isCreate ? $t('userUpsertModal.info.createUser') : $t('userUpsertModal.info.updateUser')
+      isCreate ? $t('upsertUserModal.info.createUser') : $t('upsertUserModal.info.updateUser')
     "
     :cancelText="$t('common.action.cancel')"
     :okText="$t('common.action.confirm')"
@@ -118,9 +118,12 @@ const close = () => {
       <a-form-item
         :label="$t('commonBiz.user.username')"
         name="username"
-        :rules="[{ required: true, message: $t('userUpsertModal.message.usernameInvalid') }]"
+        :rules="[{ required: true, message: $t('upsertUserModal.message.usernameInvalid') }]"
       >
-        <a-input v-model:value="formState.username" />
+        <a-input
+          v-model:value="formState.username"
+          :placeholder="$t('upsertUserModal.info.usernamePlaceholder')"
+        />
       </a-form-item>
 
       <!-- 账号 -->
@@ -128,21 +131,25 @@ const close = () => {
         :label="$t('commonBiz.user.account')"
         name="account"
         :rules="[
-          { required: true, message: $t('userUpsertModal.message.accountInvalid') },
+          { required: true, message: $t('upsertUserModal.message.accountInvalid') },
           {
             pattern: /^[a-zA-Z0-9_]{6,20}$/,
-            message: $t('userUpsertModal.message.accountPatternInvalid')
+            message: $t('upsertUserModal.message.accountPatternInvalid')
           }
         ]"
       >
-        <a-input v-model:value="formState.account" :disabled="!isCreate" />
+        <a-input
+          v-model:value="formState.account"
+          :disabled="!isCreate"
+          :placeholder="$t('upsertUserModal.info.accountPlaceholder')"
+        />
       </a-form-item>
 
       <!-- 角色 -->
       <a-form-item
         :label="$t('commonBiz.user.role')"
         name="role"
-        :rules="[{ required: true, message: $t('userUpsertModal.message.roleInvalid') }]"
+        :rules="[{ required: true, message: $t('upsertUserModal.message.roleInvalid') }]"
       >
         <a-radio-group v-model:value="formState.role">
           <a-radio-button value="admin">{{ $t('commonBiz.user.roles.admin') }}</a-radio-button>
@@ -159,17 +166,24 @@ const close = () => {
         :label="$t('commonBiz.user.phoneNumber')"
         name="phone_number"
         :rules="[
-          { required: true, message: $t('userUpsertModal.message.phoneNumberInvalid') },
+          { required: true, message: $t('upsertUserModal.message.phoneNumberInvalid') },
           {
             pattern: /^[\d\-+]{7,20}$/,
-            message: $t('userUpsertModal.message.phoneNumberPatternInvalid')
+            message: $t('upsertUserModal.message.phoneNumberPatternInvalid')
           }
         ]"
       >
-        <a-input v-model:value="formState.phone_number" />
+        <a-input
+          v-model:value="formState.phone_number"
+          :placeholder="$t('upsertUserModal.info.phoneNumberPlaceholder')"
+        />
       </a-form-item>
     </a-form>
   </a-modal>
 </template>
 
-<style lang="less"></style>
+<style lang="less">
+.upsert-user-modal {
+  width: 640px;
+}
+</style>

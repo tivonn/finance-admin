@@ -62,9 +62,9 @@ const router = createRouter({
             // 员工管理
             {
               path: 'user',
-              name: 'userManage',
-              component: () => import('@/views/main/manage/user/UserManageView.vue'),
-              meta: { auth: auth['userManage'] }
+              name: 'manageUser',
+              component: () => import('@/views/main/manage/user/ManageUserView.vue'),
+              meta: { auth: auth['manageUser'] }
             }
           ]
         }

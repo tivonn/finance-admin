@@ -42,6 +42,11 @@ module.exports = (app) => {
         type: DataTypes.STRING(32),
         allowNull: false,
       },
+      is_first_login: {
+        type: DataTypes.INTEGER(1),
+        allowNull: false,
+        defaultValue: "1",
+      },
     },
     {
       tableName: "users",
