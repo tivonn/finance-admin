@@ -4,5 +4,5 @@ export interface UserRes {
   account: string
   role: 'admin' | 'finance' | 'staff' | 'external' | ''
   phone_number: string
-  is_first_login: boolean
+  is_modified_password: boolean
 }

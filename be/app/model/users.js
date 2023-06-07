@@ -42,10 +42,10 @@ module.exports = (app) => {
         type: DataTypes.STRING(32),
         allowNull: false,
       },
-      is_first_login: {
+      is_modified_password: {
         type: DataTypes.INTEGER(1),
         allowNull: false,
-        defaultValue: "1",
+        defaultValue: "0",
       },
     },
     {

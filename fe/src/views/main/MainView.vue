@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import router from '@/router'
-import { ref, watch } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
 import Language from '@/components/Language.vue'
 import avatarImg from '@/assets/images/avatar.png'
@@ -78,14 +78,6 @@ const gotoNavigation = (navigation: Nav) => {
 // 用户设置
 const showUpdateUserModal = ref<boolean>(false)
 
-// TODO:
-setTimeout(() => {
-  store.setUser({})
-}, 3000)
-watch(store.user, async (newValue, oldValue) => {
-  console.log(newValue, oldValue)
-})
-
 const toggleUpdateUserModal = (isShow: boolean) => {
   showUpdateUserModal.value = isShow
 }
@@ -93,6 +85,13 @@ const toggleUpdateUserModal = (isShow: boolean) => {
 const updateUser = () => {
   toggleUpdateUserModal(true)
 }
+
+// 首次登录引导修改密码
+watchEffect(() => {
+  if (store.isLogin && !store.user.is_modified_password) {
+    toggleUpdateUserModal(true)
+  }
+})
 
 const logout = () => {
   try {

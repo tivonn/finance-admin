@@ -3,6 +3,14 @@
 const lodash = require("lodash");
 
 module.exports = {
+  // 中间件判断 safeUrl
+  isSafeUrl(request, safeUrls) {
+    return safeUrls.some(
+      (item) =>
+        request.path.includes(item.url) && request.method === item.method
+    );
+  },
+
   // 预处理参数
   filterParams(rules, params) {
     const newParams = {};

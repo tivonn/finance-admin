@@ -4,8 +4,13 @@ const dayjs = require("dayjs");
 
 module.exports = () => {
   return async (ctx, next) => {
-    const safeUrls = ["/api/user/login"];
-    if (safeUrls.includes(ctx.request.path)) {
+    const safeUrls = [
+      {
+        url: "/api/user/login",
+        method: "POST",
+      },
+    ];
+    if (ctx.helper.isSafeUrl(ctx.request, safeUrls)) {
       // 白名单内的接口，放行
       await next();
     } else {

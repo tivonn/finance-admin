@@ -26,4 +26,9 @@ exports.sequelize = {
   },
 };
 
-exports.middleware = ["verifyLogin", "setUser", "errorHandler"];
+exports.middleware = [
+  "verifyLogin",
+  "setUser",
+  "verifyModifiedPassword",
+  "errorHandler",
+];

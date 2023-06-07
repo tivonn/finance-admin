@@ -29,6 +29,11 @@ const updateUserRules = Object.assign({}, createUserRules, {
     type: "number",
     required: true,
   },
+  password: {
+    type: "string",
+    required: false,
+    format: /^[a-zA-Z0-9]{8,20}$/,
+  },
 });
 
 const getUsersRules = {

@@ -47,7 +47,7 @@ const handleOk = async () => {
 
     // 编辑用户
     try {
-      const { username, account, role } = store.user
+      const { username, account, role, is_modified_password } = store.user
       const { phone_number, password } = formState
       await axios.put(`/user/${store.user.id}`, {
         username,
@@ -58,7 +58,11 @@ const handleOk = async () => {
       })
       message.success(t('updateUserModal.message.updateUserSuccess'))
       await store.getUser()
-      close()
+      if (!is_modified_password && store.user.is_modified_password) {
+        window.location.reload()
+      } else {
+        close()
+      }
     } catch (error: any) {
       switch (error?.response?.data?.message) {
         case '无权限': {
@@ -78,10 +82,10 @@ const handleCancel = () => {
 }
 
 const close = () => {
-  if (store.user.is_first_login) {
-    message.error(t('common.message.firstLogin'))
-  } else {
+  if (store.user.is_modified_password) {
     emit('closeModal')
+  } else {
+    message.error(t('common.message.noModifiedPassword'))
   }
 }
 </script>
@@ -91,9 +95,9 @@ const close = () => {
     class="update-user-modal"
     :visible="true"
     :title="`${$t('updateUserModal.info.updateUser')}${
-      store.user.is_first_login ? `(${$t('common.message.firstLogin')})` : ''
+      store.user.is_modified_password ? '' : `(${$t('common.message.noModifiedPassword')})`
     }`"
-    :maskClosable="!store.user.is_first_login"
+    :maskClosable="store.user.is_modified_password"
     :cancelText="$t('common.action.cancel')"
     :okText="$t('common.action.confirm')"
     @ok="() => handleOk()"
@@ -133,7 +137,7 @@ const close = () => {
         name="password"
         :rules="[
           {
-            required: store.user.is_first_login,
+            required: !store.user.is_modified_password,
             message: $t('updateUserModal.message.passwordInvalid')
           },
           {

@@ -80,14 +80,16 @@ class UserService extends Service {
     const { ctx } = this;
     // 权限校验
     const safeRoles = ["admin"];
-    if (!safeRoles.includes(ctx.state.user.role)) {
+    if (
+      ctx.state.user.id !== params.id &&
+      !safeRoles.includes(ctx.state.user.role)
+    ) {
       ctx.throw(403, "无权限");
     }
     // 业务逻辑
-    const { id } = params;
     const user = await this.usersModel.findOne({
       where: {
-        id,
+        id: params.id,
       },
     });
     // 未找到数据
@@ -99,9 +101,46 @@ class UserService extends Service {
       ctx.throw(422, "账号不可修改");
     }
     // 更新数据
-    await user.update(params);
+    let updateUserTransaction = null;
+    try {
+      // 更新用户事务
+      updateUserTransaction = await this.ctx.model.transaction();
 
-    ctx.status = 200;
+      // 修改账号信息
+      await user.update(
+        Object.assign(
+          {},
+          params,
+          user.is_modified_password ? {} : { is_modified_password: true }
+        ),
+        { transaction: updateUserTransaction }
+      );
+
+      // 若修改密码，取盐生成新密码
+      if (params.password) {
+        const password = await this.passwordsModel.findOne({
+          where: {
+            user_id: params.id,
+          },
+          transaction: updateUserTransaction,
+        });
+        await password.update(
+          {
+            password: md5(params.password + password.salt),
+          },
+          {
+            transaction: updateUserTransaction,
+          }
+        );
+      }
+
+      await updateUserTransaction.commit();
+
+      ctx.status = 200;
+    } catch (error) {
+      await updateUserTransaction.rollback();
+      ctx.throw(500);
+    }
   }
 
   async getUsers(params) {
@@ -154,6 +193,7 @@ class UserService extends Service {
     let user, password;
     let isUserValid = false;
     let isPasswordValid = false;
+    // 判断账号是否匹配
     user = await this.usersModel.findOne({
       where: {
         account: params.account,
@@ -161,6 +201,7 @@ class UserService extends Service {
       },
     });
     isUserValid = !!user;
+    // 判断密码是否匹配
     if (isUserValid) {
       password = await this.passwordsModel.findOne({
         where: {

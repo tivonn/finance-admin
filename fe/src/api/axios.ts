@@ -22,7 +22,7 @@ axios.interceptors.response.use(
       case 401: {
         // 清空用户信息缓存，主要用于停留在页面且 cookie 过期的情况
         const store = useStore(pinia)
-        store.setUser({})
+        store.resetUser()
         // 跳转登录页
         if (window.location.pathname !== '/login') {
           window.location.href = '/login'

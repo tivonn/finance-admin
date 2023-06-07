@@ -21,7 +21,7 @@ export default createI18n({
           netError: '系统错误',
           noAuth: '无权限',
           logoutFailed: '退出登录失败',
-          firstLogin: '首次登录请修改密码'
+          noModifiedPassword: '首次登录请修改密码'
         }
       },
       commonBiz: {

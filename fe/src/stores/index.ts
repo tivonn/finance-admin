@@ -8,14 +8,16 @@ const pinia = createPinia()
 export default pinia
 
 export const useStore = defineStore('store', () => {
-  const user = ref<UserRes>({
+  const defaultUser: UserRes = {
     id: 0,
     username: '',
     account: '',
     role: '',
     phone_number: '',
-    is_first_login: false
-  })
+    is_modified_password: false
+  }
+
+  const user = ref<UserRes>({ ...defaultUser })
 
   const isLogin = computed(() => user.value.id !== 0)
 
@@ -24,13 +26,17 @@ export const useStore = defineStore('store', () => {
       const res = await axios.get('/user/info')
       setUser(res.data)
     } catch {
-      setUser({})
+      resetUser()
     }
   }
 
-  const setUser = async (value: any) => {
-    user.value = value || {}
+  const setUser = async (value: UserRes) => {
+    user.value = value
   }
 
-  return { user, isLogin, getUser, setUser }
+  const resetUser = () => {
+    setUser({ ...defaultUser })
+  }
+
+  return { user, isLogin, getUser, setUser, resetUser }
 })
