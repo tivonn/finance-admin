@@ -18,7 +18,7 @@ const store = useStore()
 interface Nav {
   key: string
   text: string
-  route?: { name: string }
+  route: { name: string }
 }
 
 const route = useRoute()
@@ -31,32 +31,35 @@ const navigations = ref<
   >
 >([
   {
-    key: 'overview',
+    key: '/overview',
     text: t('route.overview'),
     route: {
       name: 'overview'
     }
   },
   {
-    key: 'order',
+    key: '/order',
     text: t('route.order'),
     route: {
       name: 'order'
     }
   },
   {
-    key: 'report',
+    key: '/report',
     text: t('route.report'),
     route: {
       name: 'report'
     }
   },
   {
-    key: 'manage',
+    key: '/manage',
     text: t('route.manage'),
+    route: {
+      name: 'manage'
+    },
     subs: [
       {
-        key: 'manageUser',
+        key: '/manage/user',
         text: t('route.manages.manageUser'),
         route: {
           name: 'manageUser'
@@ -113,7 +116,7 @@ const logout = () => {
       >
         <template
           v-for="navigation in navigations.filter((navigation) =>
-            hasAuthNavigation(navigation.key)
+            hasAuthNavigation(navigation.route.name)
           )"
         >
           <a-menu-item
@@ -134,7 +137,7 @@ const logout = () => {
             <!-- 二级路由 -->
             <a-menu-item
               v-for="subNavigation in navigation.subs.filter((subNavigation) =>
-                hasAuthNavigation(subNavigation.key)
+                hasAuthNavigation(subNavigation.route.name)
               )"
               :key="subNavigation.key"
               @click="() => gotoNavigation(subNavigation)"
