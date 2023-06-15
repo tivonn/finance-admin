@@ -83,6 +83,15 @@ export default createI18n({
       orderView: {
         info: {
           empty: '订单详情页开发中'
+        },
+        actions: {
+          downloadTemplate: '下载模版',
+          uploadExcel: '上传表格',
+          downloadBills: '导出送货单'
+        },
+        message: {
+          excelInvalid: '表格不符合模板要求',
+          uploadFailed: '表格上传失败'
         }
       },
       reportView: {

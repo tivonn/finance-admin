@@ -19,6 +19,7 @@
     "lodash": "^4.17.21",
     "md5": "^2.3.0",
     "mysql2": "^3.3.3",
+    "node-xlsx": "^0.23.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

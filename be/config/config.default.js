@@ -1,5 +1,6 @@
 "use strict";
 const secret = require("./config.secret");
+const path = require("path");
 
 exports.keys = secret.db.database;
 
@@ -24,6 +25,12 @@ exports.sequelize = {
   define: {
     timestamps: false,
   },
+};
+
+exports.multipart = {
+  mode: "file",
+  tmpdir: path.resolve(__dirname, "../tmp"),
+  fileExtensions: ["xls", ".xlsx"],
 };
 
 exports.middleware = [

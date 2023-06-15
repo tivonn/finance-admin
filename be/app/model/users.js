@@ -21,7 +21,7 @@ module.exports = (app) => {
       },
       username: {
         type: DataTypes.STRING(64),
-        allowNull: true,
+        allowNull: false,
       },
       create_at: {
         type: DataTypes.TIME,
@@ -43,7 +43,7 @@ module.exports = (app) => {
         allowNull: false,
       },
       is_modified_password: {
-        type: DataTypes.INTEGER(1),
+        type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: "0",
       },

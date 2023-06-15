@@ -83,7 +83,7 @@ const pagination = computed(() => ({
   total: total.value,
   current: current.value,
   pageSize: pageSize.value,
-  showSizeChanger: false
+  showSizeChanger: true
 }))
 
 // 获取表格数据 END
@@ -155,9 +155,11 @@ const deleteUser = async (user: UserRes) => {
 <template>
   <div class="manage-user-view">
     <div class="manage-user-header">
-      <a-button type="primary" class="add-user-button" @click="addUser">{{
-        $t('manageUserView.actions.addUser')
-      }}</a-button>
+      <div class="manage-user-action">
+        <a-button type="primary" class="add-user-button" @click="addUser">{{
+          $t('manageUserView.actions.addUser')
+        }}</a-button>
+      </div>
     </div>
     <a-table
       :columns="columns"
@@ -208,7 +210,7 @@ const deleteUser = async (user: UserRes) => {
         <template v-if="column.key === 'role'">
           <a-tag
             :key="text"
-            :color="column.filters.find((role: any) => role.value === text)?.color || 'green'"
+            :color="column.filters.find((role: any) => role.value === text)?.color"
           >
             {{ column.filters.find((role: any) => role.value === text)?.text }}
           </a-tag>
@@ -247,8 +249,9 @@ const deleteUser = async (user: UserRes) => {
     display: flex;
     align-items: center;
   }
-  .add-user-button {
+  .manage-user-action {
     margin-left: auto;
+    display: flex;
   }
   .action {
     .edit-action,

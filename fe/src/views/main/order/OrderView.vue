@@ -5,8 +5,12 @@ import axios from '@/api/axios'
 import type { UserRes } from '@/api/res/user'
 import { SearchOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
-import UpsertUserModal from '@/views/main/manage/user/UpsertUserModal.vue'
+// import UpsertUserModal from '@/views/main/manage/user/UpsertUserModal.vue'
+// import { message } from 'ant-design-vue'
 import { message } from 'ant-design-vue'
+import { UploadOutlined } from '@ant-design/icons-vue'
+import type { UploadChangeParam } from 'ant-design-vue'
+import { baseURL } from '@/api/axios'
 
 const { t } = useI18n()
 
@@ -83,7 +87,7 @@ const pagination = computed(() => ({
   total: total.value,
   current: current.value,
   pageSize: pageSize.value,
-  showSizeChanger: false
+  showSizeChanger: true
 }))
 
 // 获取表格数据 END
@@ -121,43 +125,84 @@ const handleReset = (clearFilters: Function) => {
   clearFilters({ confirm: true })
 }
 
-// 修改数据
-const showUpsertUserModal = ref<boolean>(false)
-const upsertUser = ref<UserRes | {}>({})
+// // 修改数据
+// const showUpsertUserModal = ref<boolean>(false)
+// const upsertUser = ref<UserRes | {}>({})
 
-const toggleUpsertUserModal = (isShow: boolean) => {
-  showUpsertUserModal.value = isShow
-  if (!isShow) {
-    upsertUser.value = {}
+// const toggleUpsertUserModal = (isShow: boolean) => {
+//   showUpsertUserModal.value = isShow
+//   if (!isShow) {
+//     upsertUser.value = {}
+//   }
+// }
+
+// const addUser = () => {
+//   toggleUpsertUserModal(true)
+// }
+
+// const updateUser = (user: UserRes) => {
+//   upsertUser.value = user
+//   toggleUpsertUserModal(true)
+// }
+
+// const deleteUser = async (user: UserRes) => {
+//   try {
+//     await axios.delete(`/user/${user.id}`)
+//     message.success(t('manageUserView.message.deleteUserSuccess'))
+//     window.location.reload()
+//   } catch (error) {
+//     message.error(t('manageUserView.message.deleteUserFailed'))
+//   }
+// }
+
+const downloadTemplate = () => {}
+
+const uploadExcel = (info: UploadChangeParam) => {
+  if (info.file.status === 'done') {
+    message.success(`${info.file.name} file uploaded successfully`)
+  } else if (info.file.status === 'error') {
+    switch (info.file.error?.status) {
+      case 422: {
+        message.error(t('orderView.message.excelInvalid'))
+        break
+      }
+      default: {
+        message.error(t('orderView.message.uploadFailed'))
+      }
+    }
   }
 }
 
-const addUser = () => {
-  toggleUpsertUserModal(true)
-}
+const fileList = ref([])
 
-const updateUser = (user: UserRes) => {
-  upsertUser.value = user
-  toggleUpsertUserModal(true)
-}
-
-const deleteUser = async (user: UserRes) => {
-  try {
-    await axios.delete(`/user/${user.id}`)
-    message.success(t('manageUserView.message.deleteUserSuccess'))
-    window.location.reload()
-  } catch (error) {
-    message.error(t('manageUserView.message.deleteUserFailed'))
-  }
-}
+const downloadBills = () => {}
 </script>
 
 <template>
-  <div class="manage-user-view">
-    <div class="manage-user-header">
-      <a-button type="primary" class="add-user-button" @click="addUser">{{
-        $t('manageUserView.actions.addUser')
-      }}</a-button>
+  <div class="order-view">
+    <div class="order-header">
+      <div class="order-action">
+        <a-button type="primary" class="download-template-button" @click="downloadTemplate">{{
+          $t('orderView.actions.downloadTemplate')
+        }}</a-button>
+        <a-upload
+          v-model:file-list="fileList"
+          accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          :action="`${baseURL}/order/list`"
+          :maxCount="1"
+          :showUploadList="false"
+          :withCredentials="true"
+          @change="uploadExcel"
+        >
+          <a-button type="primary" class="upload-excel-button">
+            <upload-outlined></upload-outlined>
+            <span> {{ $t('orderView.actions.uploadExcel') }}</span>
+          </a-button>
+        </a-upload>
+        <a-button type="primary" class="download-bills-button" @click="downloadBills">{{
+          $t('orderView.actions.downloadBills')
+        }}</a-button>
+      </div>
     </div>
     <a-table
       :columns="columns"
@@ -205,15 +250,15 @@ const deleteUser = async (user: UserRes) => {
       <!-- 表格内容 -->
       <template #bodyCell="{ record, column, text }">
         <!-- 权限 -->
-        <template v-if="column.key === 'role'">
+        <!-- <template v-if="column.key === 'role'">
           <a-tag
             :key="text"
             :color="column.filters.find((role: any) => role.value === text)?.color || 'green'"
           >
             {{ column.filters.find((role: any) => role.value === text)?.text }}
           </a-tag>
-        </template>
-        <template v-else-if="column.key === 'action'">
+        </template> -->
+        <!-- <template v-else-if="column.key === 'action'">
           <span class="action">
             <edit-outlined class="edit-action" @click="() => updateUser(record)" />
             <a-divider type="vertical" />
@@ -226,47 +271,52 @@ const deleteUser = async (user: UserRes) => {
               <delete-outlined class="delete-action" />
             </a-popconfirm>
           </span>
-        </template>
+        </template> -->
       </template>
     </a-table>
   </div>
-  <UpsertUserModal
+  <!-- <UpsertUserModal
     v-if="showUpsertUserModal"
     :upsertUser="upsertUser"
     @closeModal="() => toggleUpsertUserModal(false)"
-  ></UpsertUserModal>
+  ></UpsertUserModal> -->
 </template>
 
 <style lang="less">
 @import '@/assets/css/variables.less';
 
-.manage-user-view {
-  .manage-user-header {
+.order-view {
+  .order-header {
     height: 60px;
     padding: 0 16px;
     display: flex;
     align-items: center;
   }
-  .add-user-button {
+  .order-action {
     margin-left: auto;
+    display: flex;
   }
-  .action {
-    .edit-action,
-    .delete-action {
-      &:hover {
-        cursor: pointer;
-      }
-    }
-    .edit-action {
-      &:hover {
-        color: @--color-success;
-      }
-    }
-    .delete-action {
-      &:hover {
-        color: @--color-danger;
-      }
-    }
+  .upload-excel-button,
+  .download-bills-button {
+    margin-left: 16px;
   }
+  // .action {
+  //   .edit-action,
+  //   .delete-action {
+  //     &:hover {
+  //       cursor: pointer;
+  //     }
+  //   }
+  //   .edit-action {
+  //     &:hover {
+  //       color: @--color-success;
+  //     }
+  //   }
+  //   .delete-action {
+  //     &:hover {
+  //       color: @--color-danger;
+  //     }
+  //   }
+  // }
 }
 </style>

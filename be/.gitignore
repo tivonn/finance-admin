@@ -15,3 +15,5 @@ typings/
 .nyc_output/
 
 config/config.secret.js
+
+tmp

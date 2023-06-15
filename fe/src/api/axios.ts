@@ -5,9 +5,11 @@ import pinia from '@/stores'
 import { isDev } from '@/utils/common'
 import { useI18n } from 'vue-i18n'
 
-axios.defaults.baseURL = isDev()
+export const baseURL = isDev()
   ? `${location.protocol}//${location.hostname}:7001/api`
   : 'http://43.139.233.254:7001/api'
+
+axios.defaults.baseURL = baseURL
 
 axios.defaults.withCredentials = true
 
