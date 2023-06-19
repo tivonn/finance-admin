@@ -113,12 +113,12 @@ module.exports = (app) => {
       status: {
         type: DataTypes.ENUM(
           "client_cost_to_be_record",
-          "cost_to_be_record",
+          "warehouse_cost_to_be_record",
           "cost_to_be_pay",
           "cost_has_payed"
         ),
         allowNull: false,
-        defaultValue: "cost_to_be_record",
+        defaultValue: "client_cost_to_be_record",
       },
       payed_date: {
         type: DataTypes.TIME,

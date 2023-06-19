@@ -84,27 +84,41 @@ class OrderService extends Service {
     }
     // 业务逻辑
     // 查询数据
-    // const { Op } = app.Sequelize;
+    const { Op } = app.Sequelize;
     const orders = await this.ordersModel.findAndCountAll({
       where: Object.assign(
         {},
         {
           is_delete: false,
-        }
-        // params.username
-        //   ? {
-        //       username: {
-        //         [Op.like]: `%${params.username}%`,
-        //       },
-        //     }
-        //   : {},
-        // params.role
-        //   ? {
-        //       role: {
-        //         [Op.in]: params.role,
-        //       },
-        //     }
-        //   : {}
+        },
+        params.user_code
+          ? {
+              user_code: {
+                [Op.like]: `%${params.user_code}%`,
+              },
+            }
+          : {},
+        params.waybill_number
+          ? {
+              waybill_number: {
+                [Op.like]: `%${params.waybill_number}%`,
+              },
+            }
+          : {},
+        params.stuffing_number
+          ? {
+              stuffing_number: {
+                [Op.like]: `%${params.stuffing_number}%`,
+              },
+            }
+          : {},
+        params.status
+          ? {
+              status: {
+                [Op.in]: params.status,
+              },
+            }
+          : {}
       ),
       ...ctx.helper.getPageParams(params.page_index, params.page_size),
       // 过滤返回数据

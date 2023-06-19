@@ -34,8 +34,8 @@ const columns = [
     dataIndex: 'user_code',
     key: 'user_code',
     title: t('orderView.info.user_code'),
-    width: 150
-    // customFilterDropdown: true
+    width: 150,
+    customFilterDropdown: true
   },
   {
     dataIndex: 'receive_goods_date',
@@ -47,7 +47,8 @@ const columns = [
     dataIndex: 'waybill_number',
     key: 'waybill_number',
     title: t('orderView.info.waybill_number'),
-    width: 150
+    width: 150,
+    customFilterDropdown: true
   },
   {
     dataIndex: 'goods_number',
@@ -137,7 +138,8 @@ const columns = [
     dataIndex: 'stuffing_number',
     key: 'stuffing_number',
     title: t('orderView.info.stuffing_number'),
-    width: 150
+    width: 150,
+    customFilterDropdown: true
   },
   {
     dataIndex: 'warehouse_size_length',
@@ -192,7 +194,21 @@ const columns = [
     key: 'status',
     title: t('orderView.info.status'),
     fixed: 'right',
-    width: 100
+    width: 150,
+    filters: [
+      {
+        text: t('orderView.info.client_cost_to_be_record'),
+        value: 'client_cost_to_be_record',
+        color: 'red'
+      },
+      {
+        text: t('orderView.info.warehouse_cost_to_be_record'),
+        value: 'warehouse_cost_to_be_record',
+        color: 'orange'
+      },
+      { text: t('orderView.info.cost_to_be_pay'), value: 'cost_to_be_pay', color: 'blue' },
+      { text: t('orderView.info.cost_has_payed'), value: 'cost_has_payed', color: 'green' }
+    ]
   },
   { key: 'action', title: t('manageUserView.info.action'), fixed: 'right', width: 100 }
 ]
@@ -232,12 +248,23 @@ const handleTableChange: any = (
   filters: any,
   sorter: any
 ) => {
+  // 自定义
   const _filters = Object.assign(
     {},
     filters,
-    filters.username
+    filters.user_code
       ? {
-          username: filters.username[0]
+          user_code: filters.user_code[0]
+        }
+      : {},
+    filters.waybill_number
+      ? {
+          waybill_number: filters.waybill_number[0]
+        }
+      : {},
+    filters.stuffing_number
+      ? {
+          stuffing_number: filters.stuffing_number[0]
         }
       : {}
   )
@@ -391,15 +418,16 @@ const downloadBills = () => {}
       </template>
       <!-- 表格内容 -->
       <template #bodyCell="{ record, column, text }">
-        <!-- 权限 -->
-        <!-- <template v-if="column.key === 'role'">
+        <!-- 状态 -->
+        <template v-if="column.key === 'status'">
           <a-tag
             :key="text"
-            :color="column.filters.find((role: any) => role.value === text)?.color || 'green'"
+            :color="column.filters.find((role: any) => role.value === text)?.color"
           >
             {{ column.filters.find((role: any) => role.value === text)?.text }}
           </a-tag>
-        </template> -->
+        </template>
+        <!-- 操作 -->
         <!-- <template v-else-if="column.key === 'action'">
           <span class="action">
             <edit-outlined class="edit-action" @click="() => updateUser(record)" />

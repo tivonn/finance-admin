@@ -11,6 +11,33 @@ const getOrdersRules = {
     type: "number",
     required: true,
   },
+  user_code: {
+    type: "string",
+    required: false,
+  },
+  waybill_number: {
+    type: "string",
+    required: false,
+  },
+  stuffing_number: {
+    type: "string",
+    required: false,
+  },
+  status: {
+    type: "array",
+    itemType: "enum",
+    rule: {
+      type: "enum",
+      required: false,
+      values: [
+        "client_cost_to_be_record",
+        "warehouse_cost_to_be_record",
+        "cost_to_be_pay",
+        "cost_has_payed",
+      ],
+    },
+    required: false,
+  },
 };
 
 class OrderController extends Controller {

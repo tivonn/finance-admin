@@ -45,7 +45,7 @@ const columns = [
     width: '10%',
     filters: [
       { text: t('commonBiz.user.roles.admin'), value: 'admin', color: 'green' },
-      { text: t('commonBiz.user.roles.finance'), value: 'finance', color: 'purple' },
+      { text: t('commonBiz.user.roles.finance'), value: 'finance', color: 'blue' },
       { text: t('commonBiz.user.roles.staff'), value: 'staff', color: 'orange' },
       { text: t('commonBiz.user.roles.external'), value: 'external', color: 'red' }
     ]
@@ -94,6 +94,7 @@ const handleTableChange: any = (
   filters: any,
   sorter: any
 ) => {
+  // 自定义
   const _filters = Object.assign(
     {},
     filters,
@@ -215,6 +216,7 @@ const deleteUser = async (user: UserRes) => {
             {{ column.filters.find((role: any) => role.value === text)?.text }}
           </a-tag>
         </template>
+        <!-- 操作 -->
         <template v-else-if="column.key === 'action'">
           <span class="action">
             <edit-outlined class="edit-action" @click="() => updateUser(record)" />

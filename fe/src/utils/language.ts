@@ -108,6 +108,10 @@ export default createI18n({
           cost_packing_cost: '成本打包费',
           warehouse_freight: '库房运费',
           status: '状态',
+          client_cost_to_be_record: '客户费用待录入',
+          warehouse_cost_to_be_record: '库房费用待录入',
+          cost_to_be_pay: '待付款',
+          cost_has_payed: '已付款',
           payed_date: '付款日期'
         },
         actions: {
