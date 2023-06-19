@@ -11,6 +11,7 @@ import { message } from 'ant-design-vue'
 import { UploadOutlined } from '@ant-design/icons-vue'
 import type { UploadChangeParam } from 'ant-design-vue'
 import { baseURL } from '@/api/axios'
+import { timeout } from '@/utils/common'
 
 const { t } = useI18n()
 
@@ -30,42 +31,175 @@ interface APIResult {
 // 自定义
 const columns = [
   {
-    dataIndex: 'username',
-    key: 'username',
-    title: t('commonBiz.user.username'),
-    width: '25%',
-    customFilterDropdown: true
+    dataIndex: 'user_code',
+    key: 'user_code',
+    title: t('orderView.info.user_code'),
+    width: 150
+    // customFilterDropdown: true
   },
   {
-    dataIndex: 'account',
-    key: 'account',
-    title: t('commonBiz.user.account'),
-    width: '25%'
+    dataIndex: 'receive_goods_date',
+    key: 'receive_goods_date',
+    title: t('orderView.info.receive_goods_date'),
+    width: 100
   },
   {
-    dataIndex: 'role',
-    key: 'role',
-    title: t('commonBiz.user.role'),
-    width: '10%',
-    filters: [
-      { text: t('commonBiz.user.roles.admin'), value: 'admin', color: 'green' },
-      { text: t('commonBiz.user.roles.finance'), value: 'finance', color: 'purple' },
-      { text: t('commonBiz.user.roles.staff'), value: 'staff', color: 'orange' },
-      { text: t('commonBiz.user.roles.external'), value: 'external', color: 'red' }
-    ]
+    dataIndex: 'waybill_number',
+    key: 'waybill_number',
+    title: t('orderView.info.waybill_number'),
+    width: 150
   },
   {
-    dataIndex: 'phone_number',
-    key: 'phone_number',
-    title: t('commonBiz.user.phoneNumber'),
-    width: '30%'
+    dataIndex: 'goods_number',
+    key: 'goods_number',
+    title: t('orderView.info.goods_number'),
+    width: 150
   },
-  { key: 'action', title: t('manageUserView.info.action'), fixed: 'right', width: '10%' }
+  {
+    dataIndex: 'goods_name',
+    key: 'goods_name',
+    title: t('orderView.info.goods_name'),
+    width: 150
+  },
+  {
+    dataIndex: 'transport_mode',
+    key: 'transport_mode',
+    title: t('orderView.info.transport_mode'),
+    width: 100
+  },
+  {
+    dataIndex: 'count',
+    key: 'count',
+    title: t('orderView.info.count'),
+    width: 100
+  },
+  {
+    dataIndex: 'number',
+    key: 'number',
+    title: t('orderView.info.number'),
+    width: 100
+  },
+  {
+    dataIndex: 'description',
+    key: 'description',
+    title: t('orderView.info.description'),
+    width: 300
+  },
+  {
+    dataIndex: 'weight',
+    key: 'weight',
+    title: t('orderView.info.weight'),
+    width: 100
+  },
+  {
+    dataIndex: 'inner_size_length',
+    key: 'inner_size_length',
+    title: t('orderView.info.inner_size_length'),
+    width: 200
+  },
+  {
+    dataIndex: 'inner_size_width',
+    key: 'inner_size_width',
+    title: t('orderView.info.inner_size_width'),
+    width: 200
+  },
+  {
+    dataIndex: 'inner_size_height',
+    key: 'inner_size_height',
+    title: t('orderView.info.inner_size_height'),
+    width: 200
+  },
+  {
+    dataIndex: 'volume',
+    key: 'volume',
+    title: t('orderView.info.volume'),
+    width: 150
+  },
+  {
+    dataIndex: 'unit_price',
+    key: 'unit_price',
+    title: t('orderView.info.unit_price'),
+    width: 100
+  },
+  {
+    dataIndex: 'packing_cost',
+    key: 'packing_cost',
+    title: t('orderView.info.packing_cost'),
+    width: 100
+  },
+  {
+    dataIndex: 'client_freight',
+    key: 'client_freight',
+    title: t('orderView.info.client_freight'),
+    width: 100
+  },
+  {
+    dataIndex: 'stuffing_number',
+    key: 'stuffing_number',
+    title: t('orderView.info.stuffing_number'),
+    width: 150
+  },
+  {
+    dataIndex: 'warehouse_size_length',
+    key: 'warehouse_size_length',
+    title: t('orderView.info.warehouse_size_length'),
+    width: 200
+  },
+  {
+    dataIndex: 'warehouse_size_width',
+    key: 'warehouse_size_width',
+    title: t('orderView.info.warehouse_size_width'),
+    width: 200
+  },
+  {
+    dataIndex: 'warehouse_size_height',
+    key: 'warehouse_size_height',
+    title: t('orderView.info.warehouse_size_height'),
+    width: 200
+  },
+  {
+    dataIndex: 'warehouse_volumn',
+    key: 'warehouse_volumn',
+    title: t('orderView.info.warehouse_volumn'),
+    width: 200
+  },
+  {
+    dataIndex: 'cost_unit_price',
+    key: 'cost_unit_price',
+    title: t('orderView.info.cost_unit_price'),
+    width: 100
+  },
+  {
+    dataIndex: 'cost_packing_cost',
+    key: 'cost_packing_cost',
+    title: t('orderView.info.cost_packing_cost'),
+    width: 150
+  },
+  {
+    dataIndex: 'warehouse_freight',
+    key: 'warehouse_freight',
+    title: t('orderView.info.warehouse_freight'),
+    width: 150
+  },
+  {
+    dataIndex: 'payed_date',
+    key: 'payed_date',
+    title: t('orderView.info.payed_date'),
+    width: 150
+  },
+  {
+    dataIndex: 'status',
+    key: 'status',
+    title: t('orderView.info.status'),
+    fixed: 'right',
+    width: 100
+  },
+  { key: 'action', title: t('manageUserView.info.action'), fixed: 'right', width: 100 }
 ]
 
 const queryData = (params: APIParams) => {
   // 自定义
-  return axios.post<APIResult>('/user/list', params)
+  return axios.post<APIResult>('/order/getlist', params)
 }
 
 const {
@@ -159,7 +293,10 @@ const downloadTemplate = () => {}
 
 const uploadExcel = (info: UploadChangeParam) => {
   if (info.file.status === 'done') {
-    message.success(`${info.file.name} file uploaded successfully`)
+    message.success(t('orderView.message.uploadSuccess'))
+    setTimeout(() => {
+      window.location.reload()
+    }, timeout)
   } else if (info.file.status === 'error') {
     switch (info.file.error?.status) {
       case 422: {
@@ -182,9 +319,13 @@ const downloadBills = () => {}
   <div class="order-view">
     <div class="order-header">
       <div class="order-action">
-        <a-button type="primary" class="download-template-button" @click="downloadTemplate">{{
-          $t('orderView.actions.downloadTemplate')
-        }}</a-button>
+        <a-button
+          type="primary"
+          class="download-template-button"
+          @click="downloadTemplate"
+          disabled
+          >{{ $t('orderView.actions.downloadTemplate') }}</a-button
+        >
         <a-upload
           v-model:file-list="fileList"
           accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
@@ -199,7 +340,7 @@ const downloadBills = () => {}
             <span> {{ $t('orderView.actions.uploadExcel') }}</span>
           </a-button>
         </a-upload>
-        <a-button type="primary" class="download-bills-button" @click="downloadBills">{{
+        <a-button type="primary" class="download-bills-button" @click="downloadBills" disabled>{{
           $t('orderView.actions.downloadBills')
         }}</a-button>
       </div>
@@ -214,6 +355,7 @@ const downloadBills = () => {}
       }"
       :pagination="pagination"
       :loading="loading"
+      :scroll="{ x: 100 }"
       @change="handleTableChange"
     >
       <!-- 表头 -->

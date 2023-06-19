@@ -1,5 +1,7 @@
 import lodash from 'lodash'
 
+export const timeout = 500
+
 export const isDev = (): boolean => {
   return process.env.NODE_ENV === 'development'
 }

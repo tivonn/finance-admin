@@ -47,35 +47,35 @@ module.exports = (app) => {
         allowNull: true,
       },
       weight: {
-        type: DataTypes.FLOAT,
+        type: "DOUBLE",
         allowNull: false,
       },
       inner_size_length: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
+        type: "DOUBLE",
+        allowNull: true,
       },
       inner_size_width: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
+        type: "DOUBLE",
+        allowNull: true,
       },
       inner_size_height: {
-        type: DataTypes.FLOAT,
+        type: "DOUBLE",
         allowNull: false,
       },
       volume: {
-        type: DataTypes.FLOAT,
+        type: "DOUBLE",
         allowNull: false,
       },
       unit_price: {
-        type: DataTypes.FLOAT,
+        type: "DOUBLE",
         allowNull: true,
       },
       packing_cost: {
-        type: DataTypes.FLOAT,
+        type: "DOUBLE",
         allowNull: true,
       },
       client_freight: {
-        type: DataTypes.FLOAT,
+        type: "DOUBLE",
         allowNull: true,
       },
       stuffing_number: {
@@ -83,31 +83,31 @@ module.exports = (app) => {
         allowNull: true,
       },
       warehouse_size_length: {
-        type: DataTypes.FLOAT,
+        type: "DOUBLE",
         allowNull: true,
       },
       warehouse_size_width: {
-        type: DataTypes.FLOAT,
+        type: "DOUBLE",
         allowNull: true,
       },
       warehouse_size_height: {
-        type: DataTypes.FLOAT,
+        type: "DOUBLE",
         allowNull: true,
       },
       warehouse_volumn: {
-        type: DataTypes.FLOAT,
+        type: "DOUBLE",
         allowNull: true,
       },
       cost_unit_price: {
-        type: DataTypes.FLOAT,
+        type: "DOUBLE",
         allowNull: true,
       },
       cost_packing_cost: {
-        type: DataTypes.FLOAT,
+        type: "DOUBLE",
         allowNull: true,
       },
       warehouse_freight: {
-        type: DataTypes.FLOAT,
+        type: "DOUBLE",
         allowNull: true,
       },
       status: {
@@ -120,7 +120,7 @@ module.exports = (app) => {
         allowNull: false,
         defaultValue: "cost_to_be_record",
       },
-      payed_at: {
+      payed_date: {
         type: DataTypes.TIME,
         allowNull: true,
       },
@@ -133,6 +133,11 @@ module.exports = (app) => {
         type: DataTypes.TIME,
         allowNull: false,
         defaultValue: DataTypes.literal("CURRENT_TIMESTAMP"),
+      },
+      is_delete: {
+        type: DataTypes.INTEGER(1),
+        allowNull: false,
+        defaultValue: "0",
       },
     },
     {

@@ -74,6 +74,46 @@ class OrderService extends Service {
     }
     ctx.status = 200;
   }
+
+  async getOrders(params) {
+    const { ctx, app } = this;
+    // 权限校验
+    const safeRoles = ["admin", "finance", "staff", "external"];
+    if (!safeRoles.includes(ctx.state.user.role)) {
+      ctx.throw(403, "无权限");
+    }
+    // 业务逻辑
+    // 查询数据
+    // const { Op } = app.Sequelize;
+    const orders = await this.ordersModel.findAndCountAll({
+      where: Object.assign(
+        {},
+        {
+          is_delete: false,
+        }
+        // params.username
+        //   ? {
+        //       username: {
+        //         [Op.like]: `%${params.username}%`,
+        //       },
+        //     }
+        //   : {},
+        // params.role
+        //   ? {
+        //       role: {
+        //         [Op.in]: params.role,
+        //       },
+        //     }
+        //   : {}
+      ),
+      ...ctx.helper.getPageParams(params.page_index, params.page_size),
+      // 过滤返回数据
+      attributes: {
+        exclude: ["is_delete", "create_at", "update_at"],
+      },
+    });
+    return orders;
+  }
 }
 
 module.exports = OrderService;

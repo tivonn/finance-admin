@@ -56,12 +56,12 @@ const columns = [
     title: t('commonBiz.user.phoneNumber'),
     width: '30%'
   },
-  { key: 'action', title: t('manageUserView.info.action'), fixed: 'right', width: '10%' }
+  { key: 'action', title: t('manageUserView.info.action'), fixed: 'right', width: 100 }
 ]
 
 const queryData = (params: APIParams) => {
   // 自定义
-  return axios.post<APIResult>('/user/list', params)
+  return axios.post<APIResult>('/user/getlist', params)
 }
 
 const {

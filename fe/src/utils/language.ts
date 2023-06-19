@@ -82,7 +82,33 @@ export default createI18n({
       },
       orderView: {
         info: {
-          empty: '订单详情页开发中'
+          user_code: '用户代号',
+          receive_goods_date: '收货日期',
+          waybill_number: '运单号',
+          goods_number: '货号',
+          goods_name: '货物名称',
+          transport_mode: '运输方式',
+          count: '数量',
+          number: '件数',
+          description: '备注',
+          weight: '重量/KG',
+          inner_size_length: '内部尺寸/CM（长）',
+          inner_size_width: '内部尺寸/CM（宽）',
+          inner_size_height: '内部尺寸/CM（高）',
+          volume: '体积/CBM',
+          unit_price: '单价',
+          packing_cost: '打包费',
+          client_freight: '客户运费',
+          stuffing_number: '装柜号',
+          warehouse_size_length: '库房尺寸/CM（长）',
+          warehouse_size_width: '库房尺寸/CM（宽）',
+          warehouse_size_height: '库房尺寸/CM（高）',
+          warehouse_volumn: '库房体积/CBM',
+          cost_unit_price: '成本单价',
+          cost_packing_cost: '成本打包费',
+          warehouse_freight: '库房运费',
+          status: '状态',
+          payed_date: '付款日期'
         },
         actions: {
           downloadTemplate: '下载模版',
@@ -90,6 +116,7 @@ export default createI18n({
           downloadBills: '导出送货单'
         },
         message: {
+          uploadSuccess: '表格上传成功',
           excelInvalid: '表格不符合模板要求',
           uploadFailed: '表格上传失败'
         }
