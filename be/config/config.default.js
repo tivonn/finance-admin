@@ -29,7 +29,7 @@ exports.sequelize = {
 
 exports.multipart = {
   mode: "file",
-  tmpdir: path.resolve(__dirname, "../tmp"),
+  tmpdir: path.resolve(__dirname, "../temp"),
   fileExtensions: ["xls", ".xlsx"],
 };
 

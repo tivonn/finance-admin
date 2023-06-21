@@ -316,7 +316,18 @@ const handleReset = (clearFilters: Function) => {
 //   }
 // }
 
-const downloadTemplate = () => {}
+const downloadTemplate = async () => {
+  try {
+    let dom = document.createElement('a')
+    dom.href = '/static/templates/货物详情表.xlsx'
+    dom.download = '货物详情表.xlsx'
+    document.body.appendChild(dom)
+    dom.click()
+    document.body.removeChild(dom)
+  } catch (error) {
+    message.error(t('orderView.message.downloadTemplateFailed'))
+  }
+}
 
 const uploadExcel = (info: UploadChangeParam) => {
   if (info.file.status === 'done') {
@@ -346,13 +357,9 @@ const downloadBills = () => {}
   <div class="order-view">
     <div class="order-header">
       <div class="order-action">
-        <a-button
-          type="primary"
-          class="download-template-button"
-          @click="downloadTemplate"
-          disabled
-          >{{ $t('orderView.actions.downloadTemplate') }}</a-button
-        >
+        <a-button type="primary" class="download-template-button" @click="downloadTemplate">{{
+          $t('orderView.actions.downloadTemplate')
+        }}</a-button>
         <a-upload
           v-model:file-list="fileList"
           accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"

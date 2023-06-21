@@ -120,6 +120,7 @@ export default createI18n({
           downloadBills: '导出送货单'
         },
         message: {
+          downloadTemplateFailed: '下载模板失败',
           uploadSuccess: '表格上传成功',
           excelInvalid: '表格不符合模板要求',
           uploadFailed: '表格上传失败'
