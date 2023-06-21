@@ -9,11 +9,14 @@ export default createI18n({
   messages: {
     'zh-cn': {
       common: {
-        info: {},
+        info: {
+          action: '操作'
+        },
         actions: {
           confirm: '确定',
           cancel: '取消',
           reset: '重置',
+          search: '搜索',
           updateUser: '编辑资料',
           logout: '退出登录'
         },
@@ -107,12 +110,12 @@ export default createI18n({
           cost_unit_price: '成本单价',
           cost_packing_cost: '成本打包费',
           warehouse_freight: '库房运费',
+          payed_date: '付款日期',
           status: '状态',
           client_cost_to_be_record: '客户费用待录入',
           warehouse_cost_to_be_record: '库房费用待录入',
           cost_to_be_pay: '待付款',
-          cost_has_payed: '已付款',
-          payed_date: '付款日期'
+          cost_has_payed: '已付款'
         },
         actions: {
           downloadTemplate: '下载模版',
@@ -129,6 +132,34 @@ export default createI18n({
           deleteOrderFailed: '删除订单失败'
         }
       },
+      upsertOrderModal: {
+        info: {
+          updateOrder: '编辑订单',
+          unitPricePlaceholder: '请输入单价',
+          packingCostPlaceholder: '请输入打包费',
+          stuffingNumberPlaceholder: '请输入装柜号',
+          warehouseSizeLengthPlaceholder: '请输入库房尺寸/CM（长）',
+          warehouseSizeWidthPlaceholder: '请输入库房尺寸/CM（宽）',
+          warehouseSizeHeightPlaceholder: '请输入库房尺寸/CM（高）',
+          costUnitPricePlaceholder: '请输入成本单价',
+          costPackingCostPlaceholder: '请输入成本打包费',
+          payedDatePlaceholder: '请输入付款日期'
+        },
+        message: {
+          unitPriceInvalid: '单价必填',
+          packingCostInvalid: '打包费必填',
+          stuffingNumberInvalid: '装柜号必填',
+          warehouseSizeLengthInvalid: '库房尺寸/CM（长）必填',
+          warehouseSizeWidthInvalid: '库房尺寸/CM（宽）必填',
+          warehouseSizeHeightInvalid: '库房尺寸/CM（高）必填',
+          costUnitPriceInvalid: '成本单价必填',
+          costPackingCostInvalid: '成本打包费必填',
+          payedDateInvalid: '付款日期必填',
+          updateOrderSuccess: '编辑订单成功',
+          updateOrderFailed: '编辑订单失败',
+          orderCanNotUpdate: '订单不可修改'
+        }
+      },
       reportView: {
         info: {
           empty: '财务报表页开发中'
@@ -140,8 +171,6 @@ export default createI18n({
         },
         actions: {
           addUser: '新增用户',
-          search: '搜索',
-          reset: '重置',
           confirmDeleteUser: '确定删除用户？'
         },
         message: {
@@ -169,7 +198,6 @@ export default createI18n({
           createUserFailed: '创建用户失败',
           updateUserSuccess: '编辑用户成功',
           updateUserFailed: '编辑用户失败',
-          userNotFount: '不存在该用户',
           accountCanNotUpdate: '账号不可修改'
         }
       }

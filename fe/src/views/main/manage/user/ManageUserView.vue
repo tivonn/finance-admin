@@ -56,12 +56,12 @@ const columns = [
     title: t('commonBiz.user.phoneNumber'),
     width: '30%'
   },
-  { key: 'action', title: t('manageUserView.info.action'), fixed: 'right', width: 100 }
+  { key: 'action', title: t('common.info.action'), fixed: 'right', width: 100 }
 ]
 
 const queryData = (params: APIParams) => {
   // 自定义
-  return axios.post<APIResult>('/user/getlist', params)
+  return axios.post<APIResult>('/user/get_list', params)
 }
 
 const {
@@ -185,7 +185,7 @@ const deleteUser = async (user: UserRes) => {
       >
         <div style="padding: 8px">
           <a-input
-            :placeholder="`${$t('manageUserView.actions.search')}${column.title}`"
+            :placeholder="`${$t('common.actions.search')}${column.title}`"
             :value="selectedKeys[0]"
             style="width: 188px; margin-bottom: 8px; display: block"
             @change="(e: any) => setSelectedKeys(e.target.value ? [e.target.value] : [])"
@@ -198,10 +198,10 @@ const deleteUser = async (user: UserRes) => {
             @click="() => handleSearch(confirm)"
           >
             <template #icon><search-outlined /></template>
-            {{ $t('manageUserView.actions.search') }}
+            {{ $t('common.actions.search') }}
           </a-button>
           <a-button size="small" style="width: 90px" @click="() => handleReset(clearFilters)">
-            {{ $t('manageUserView.actions.reset') }}
+            {{ $t('common.actions.reset') }}
           </a-button>
         </div>
       </template>

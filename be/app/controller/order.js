@@ -40,6 +40,76 @@ const getOrdersRules = {
   },
 };
 
+const updateOrderRules = {
+  id: {
+    type: "number",
+    required: true,
+  },
+  status: {
+    type: "enum",
+    required: true,
+    values: [
+      "client_cost_to_be_record",
+      "warehouse_cost_to_be_record",
+      "cost_to_be_pay",
+      "cost_has_payed",
+    ],
+  },
+};
+
+const updateOrderClientCostToBeRecordRules = Object.assign(
+  {},
+  updateOrderRules,
+  {
+    unit_price: {
+      type: "number",
+      required: true,
+    },
+    packing_cost: {
+      type: "number",
+      required: true,
+    },
+  }
+);
+
+const updateOrderWarehouseCostToBeRecordRules = Object.assign(
+  {},
+  updateOrderRules,
+  {
+    stuffing_number: {
+      type: "number",
+      required: true,
+    },
+    warehouse_size_length: {
+      type: "number",
+      required: true,
+    },
+    warehouse_size_width: {
+      type: "number",
+      required: true,
+    },
+    warehouse_size_height: {
+      type: "number",
+      required: true,
+    },
+    cost_unit_price: {
+      type: "number",
+      required: true,
+    },
+    cost_packing_cost: {
+      type: "number",
+      required: true,
+    },
+  }
+);
+
+const updateOrderCostToBePayRules = Object.assign({}, updateOrderRules, {
+  payed_date: {
+    type: "date",
+    required: true,
+  },
+});
+
 const deleteOrderRules = {
   id: {
     type: "number",
@@ -68,6 +138,38 @@ class OrderController extends Controller {
     );
     ctx.validate(getOrdersRules, params);
     const res = await this.orderService.getOrders(params);
+    ctx.body = res;
+  }
+
+  // 修改订单
+  async updateOrder() {
+    const { ctx } = this;
+    const status = ctx.request.body.status;
+    let rule;
+    switch (status) {
+      case "client_cost_to_be_record": {
+        rule = updateOrderClientCostToBeRecordRules;
+        break;
+      }
+      case "warehouse_cost_to_be_record": {
+        rule = updateOrderWarehouseCostToBeRecordRules;
+        break;
+      }
+      case "cost_to_be_pay": {
+        rule = updateOrderCostToBePayRules;
+        break;
+      }
+      default: {
+        ctx.throw(422);
+        break;
+      }
+    }
+    const params = ctx.helper.filterParams(
+      rule,
+      Object.assign({}, ctx.params, ctx.request.body)
+    );
+    ctx.validate(rule, params);
+    const res = await this.orderService.updateOrder(params);
     ctx.body = res;
   }
 

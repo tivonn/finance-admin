@@ -1,6 +1,7 @@
 "use strict";
 
 const lodash = require("lodash");
+const dayjs = require("dayjs");
 
 module.exports = {
   // 中间件判断 safeUrl
@@ -40,8 +41,12 @@ module.exports = {
           }
           break;
         }
+        case "date": {
+          value = dayjs(value).format("YYYY-MM-DD");
+          break;
+        }
         case "dateTime": {
-          // value = moment(value).format('YYYY-MM-DD HH:mm:ss')
+          value = dayjs(value).format("YYYY-MM-DD HH:mm:ss");
           break;
         }
         case "array": {

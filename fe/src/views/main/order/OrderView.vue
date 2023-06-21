@@ -4,14 +4,14 @@ import { computed, ref } from 'vue'
 import axios from '@/api/axios'
 import { SearchOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
-import UpsertUserModal from '@/views/main/manage/user/UpsertUserModal.vue'
-// import { message } from 'ant-design-vue'
+import UpsertOrderModal from '@/views/main/order/UpsertOrderModal.vue'
 import { message } from 'ant-design-vue'
 import { UploadOutlined } from '@ant-design/icons-vue'
 import type { UploadChangeParam } from 'ant-design-vue'
 import { baseURL } from '@/api/axios'
 import { timeout } from '@/utils/common'
 import type { OrderRes } from '@/api/res/order'
+import dayjs from 'dayjs'
 
 const { t } = useI18n()
 
@@ -41,7 +41,10 @@ const columns = [
     dataIndex: 'receive_goods_date',
     key: 'receive_goods_date',
     title: t('orderView.info.receive_goods_date'),
-    width: 100
+    width: 100,
+    customRender: ({ text }: { text: string }) => {
+      return text ? dayjs(text).format('YYYY-MM-DD') : ''
+    }
   },
   {
     dataIndex: 'waybill_number',
@@ -187,7 +190,10 @@ const columns = [
     dataIndex: 'payed_date',
     key: 'payed_date',
     title: t('orderView.info.payed_date'),
-    width: 150
+    width: 150,
+    customRender: ({ text }: { text: string }) => {
+      return text ? dayjs(text).format('YYYY-MM-DD') : ''
+    }
   },
   {
     dataIndex: 'status',
@@ -210,12 +216,12 @@ const columns = [
       { text: t('orderView.info.cost_has_payed'), value: 'cost_has_payed', color: 'green' }
     ]
   },
-  { key: 'action', title: t('manageUserView.info.action'), fixed: 'right', width: 100 }
+  { key: 'action', title: t('common.info.action'), fixed: 'right', width: 100 }
 ]
 
 const queryData = (params: APIParams) => {
   // 自定义
-  return axios.post<APIResult>('/order/getlist', params)
+  return axios.post<APIResult>('/order/get_list', params)
 }
 
 const {
@@ -399,7 +405,7 @@ const downloadBills = () => {}
       >
         <div style="padding: 8px">
           <a-input
-            :placeholder="`${$t('manageUserView.actions.search')}${column.title}`"
+            :placeholder="`${$t('common.actions.search')}${column.title}`"
             :value="selectedKeys[0]"
             style="width: 188px; margin-bottom: 8px; display: block"
             @change="(e: any) => setSelectedKeys(e.target.value ? [e.target.value] : [])"
@@ -412,10 +418,10 @@ const downloadBills = () => {}
             @click="() => handleSearch(confirm)"
           >
             <template #icon><search-outlined /></template>
-            {{ $t('manageUserView.actions.search') }}
+            {{ $t('common.actions.search') }}
           </a-button>
           <a-button size="small" style="width: 90px" @click="() => handleReset(clearFilters)">
-            {{ $t('manageUserView.actions.reset') }}
+            {{ $t('common.actions.reset') }}
           </a-button>
         </div>
       </template>
@@ -450,11 +456,11 @@ const downloadBills = () => {}
       </template>
     </a-table>
   </div>
-  <UpsertUserModal
+  <UpsertOrderModal
     v-if="showUpsertOrderModal"
-    :upsertUser="upsertOrder"
+    :upsertOrder="upsertOrder"
     @closeModal="() => toggleUpsertOrderModal(false)"
-  ></UpsertUserModal>
+  ></UpsertOrderModal>
 </template>
 
 <style lang="less">

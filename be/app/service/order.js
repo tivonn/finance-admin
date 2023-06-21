@@ -75,6 +75,75 @@ class OrderService extends Service {
     ctx.status = 200;
   }
 
+  async updateOrder(params) {
+    const { ctx } = this;
+    let safeRoles, status;
+    switch (params.status) {
+      case "client_cost_to_be_record": {
+        safeRoles = ["admin", "staff"];
+        status = "warehouse_cost_to_be_record";
+        break;
+      }
+      case "warehouse_cost_to_be_record": {
+        safeRoles = ["admin", "staff"];
+        status = "cost_to_be_pay";
+        break;
+      }
+      case "cost_to_be_pay": {
+        safeRoles = ["admin", "finance"];
+        status = "cost_has_payed";
+        break;
+      }
+      default: {
+        ctx.throw(422);
+      }
+    }
+    // 权限校验
+    if (!safeRoles.includes(ctx.state.user.role)) {
+      ctx.throw(403, "无权限");
+    }
+    // 业务逻辑
+    const order = await this.ordersModel.findOne({
+      where: {
+        id: params.id,
+      },
+    });
+    // 未找到数据
+    if (!order || order.is_delete) {
+      ctx.throw(404, "不存在该订单");
+    }
+    // 校验不可修改项
+    if (params.status !== order.status) {
+      ctx.throw(422, "订单不可修改");
+    }
+    // 更新数据
+    let data = {};
+    switch (params.status) {
+      case "client_cost_to_be_record": {
+        const client_freight =
+          order.number * order.volume * params.unit_price + params.packing_cost;
+        data = { client_freight };
+        break;
+      }
+      case "warehouse_cost_to_be_record": {
+        const warehouse_volumn =
+          (params.warehouse_size_length *
+            params.warehouse_size_width *
+            params.warehouse_size_height) /
+          1000000;
+        const warehouse_freight =
+          order.number * warehouse_volumn * params.cost_unit_price +
+          params.cost_packing_cost;
+        data = {
+          warehouse_volumn,
+          warehouse_freight,
+        };
+      }
+    }
+    order.update(Object.assign({}, params, { status }, data));
+    ctx.status = 200;
+  }
+
   async getOrders(params) {
     const { ctx, app } = this;
     // 权限校验

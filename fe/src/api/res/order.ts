@@ -9,22 +9,22 @@ export interface OrderRes {
   count: number
   number: number
   description: string
-  weight: string
-  inner_size_length: string
-  inner_size_width: string
-  inner_size_height: string
-  volume: string
-  unit_price: string
-  packing_cost: string
-  client_freight: string
+  weight: number
+  inner_size_length: number
+  inner_size_width: number
+  inner_size_height: number
+  volume: number
+  unit_price: number
+  packing_cost: number
+  client_freight: number
   stuffing_number: string
-  warehouse_size_length: string
-  warehouse_size_width: string
-  warehouse_size_height: string
-  warehouse_volumn: string
-  cost_unit_price: string
-  cost_packing_cost: string
-  warehouse_freight: string
+  warehouse_size_length: number
+  warehouse_size_width: number
+  warehouse_size_height: number
+  warehouse_volumn: number
+  cost_unit_price: number
+  cost_packing_cost: number
+  warehouse_freight: number
   status:
     | 'client_cost_to_be_record'
     | 'warehouse_cost_to_be_record'
