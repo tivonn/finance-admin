@@ -164,7 +164,7 @@ const deleteUser = async (user: UserRes) => {
     </div>
     <a-table
       :columns="columns"
-      :row-key="(row: any) => row.id"
+      :row-key="(row: UserRes) => row.id"
       :data-source="dataSource?.data.rows"
       :locale="{
         filterConfirm: $t('common.actions.confirm'),

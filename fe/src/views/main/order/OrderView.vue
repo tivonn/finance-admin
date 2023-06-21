@@ -12,8 +12,10 @@ import { baseURL } from '@/api/axios'
 import { timeout } from '@/utils/common'
 import type { OrderRes } from '@/api/res/order'
 import dayjs from 'dayjs'
+import { useStore } from '@/stores'
 
 const { t } = useI18n()
+const store = useStore()
 
 // 获取表格数据 START
 interface APIParams {
@@ -41,7 +43,7 @@ const columns = [
     dataIndex: 'receive_goods_date',
     key: 'receive_goods_date',
     title: t('orderView.info.receive_goods_date'),
-    width: 100,
+    width: 150,
     customRender: ({ text }: { text: string }) => {
       return text ? dayjs(text).format('YYYY-MM-DD') : ''
     }
@@ -135,7 +137,7 @@ const columns = [
     dataIndex: 'client_freight',
     key: 'client_freight',
     title: t('orderView.info.client_freight'),
-    width: 100
+    width: 150
   },
   {
     dataIndex: 'stuffing_number',
@@ -296,6 +298,29 @@ const handleReset = (clearFilters: Function) => {
 const showUpsertOrderModal = ref<boolean>(false)
 const upsertOrder = ref<OrderRes | {}>({})
 
+const showUpsertOrder = (order: OrderRes) => {
+  let safeRoles: Array<string> = []
+  switch (order.status) {
+    case 'client_cost_to_be_record': {
+      safeRoles = ['admin', 'staff']
+      break
+    }
+    case 'warehouse_cost_to_be_record': {
+      safeRoles = ['admin', 'staff']
+      break
+    }
+    case 'cost_to_be_pay': {
+      safeRoles = ['admin', 'finance']
+      break
+    }
+    default: {
+      safeRoles = []
+      break
+    }
+  }
+  return safeRoles.includes(store.user.role)
+}
+
 const toggleUpsertOrderModal = (isShow: boolean) => {
   showUpsertOrderModal.value = isShow
   if (!isShow) {
@@ -303,7 +328,7 @@ const toggleUpsertOrderModal = (isShow: boolean) => {
   }
 }
 
-const updateOrder = (order: any) => {
+const updateOrder = (order: OrderRes) => {
   upsertOrder.value = order
   toggleUpsertOrderModal(true)
 }
@@ -383,7 +408,7 @@ const downloadBills = () => {}
     </div>
     <a-table
       :columns="columns"
-      :row-key="(row: any) => row.id"
+      :row-key="(row: OrderRes) => row.id"
       :data-source="dataSource?.data.rows"
       :locale="{
         filterConfirm: $t('common.actions.confirm'),
@@ -439,8 +464,10 @@ const downloadBills = () => {}
         <!-- 操作 -->
         <template v-else-if="column.key === 'action'">
           <span class="action">
-            <edit-outlined class="edit-action" @click="() => updateOrder(record)" />
-            <a-divider type="vertical" />
+            <template v-if="showUpsertOrder(record)">
+              <edit-outlined class="edit-action" @click="() => updateOrder(record)" />
+              <a-divider type="vertical"
+            /></template>
             <!-- TODO：联动财务报表 -->
             <a-popconfirm
               :title="$t('orderView.actions.confirmDeleteOrder')"

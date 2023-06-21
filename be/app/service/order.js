@@ -3,6 +3,7 @@
 const Service = require("egg").Service;
 const xlsx = require("node-xlsx");
 const lodash = require("lodash");
+const dayjs = require("dayjs");
 
 class OrderService extends Service {
   get ordersModel() {
@@ -42,7 +43,7 @@ class OrderService extends Service {
     const body = data.slice(1, data.length);
     for (const item of body) {
       const user_code = item[0];
-      const receive_goods_date = item[1];
+      const receive_goods_date = dayjs(item[1]).format("YYYY-MM-DD");
       const waybill_number = item[2];
       const goods_number = item[3];
       const goods_name = item[4];
