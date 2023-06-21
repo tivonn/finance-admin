@@ -10,7 +10,7 @@ export default createI18n({
     'zh-cn': {
       common: {
         info: {},
-        action: {
+        actions: {
           confirm: '确定',
           cancel: '取消',
           reset: '重置',
@@ -117,13 +117,16 @@ export default createI18n({
         actions: {
           downloadTemplate: '下载模版',
           uploadExcel: '上传表格',
-          downloadBills: '导出送货单'
+          downloadBills: '导出送货单',
+          confirmDeleteOrder: '确定删除订单？'
         },
         message: {
           downloadTemplateFailed: '下载模板失败',
           uploadSuccess: '表格上传成功',
           excelInvalid: '表格不符合模板要求',
-          uploadFailed: '表格上传失败'
+          uploadFailed: '表格上传失败',
+          deleteOrderSuccess: '删除订单成功',
+          deleteOrderFailed: '删除订单失败'
         }
       },
       reportView: {

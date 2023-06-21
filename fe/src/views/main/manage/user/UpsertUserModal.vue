@@ -103,8 +103,8 @@ const close = () => {
     :title="
       isCreate ? $t('upsertUserModal.info.createUser') : $t('upsertUserModal.info.updateUser')
     "
-    :cancelText="$t('common.action.cancel')"
-    :okText="$t('common.action.confirm')"
+    :cancelText="$t('common.actions.cancel')"
+    :okText="$t('common.actions.confirm')"
     @ok="() => handleOk()"
     @cancel="() => handleCancel()"
   >

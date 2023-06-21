@@ -128,6 +128,27 @@ class OrderService extends Service {
     });
     return orders;
   }
+
+  async deleteOrder(params) {
+    const { ctx } = this;
+    // 权限校验
+    const safeRoles = ["admin"];
+    if (!safeRoles.includes(ctx.state.user.role)) {
+      ctx.throw(403, "无权限");
+    }
+    // 业务逻辑
+    const order = await this.ordersModel.findOne({
+      where: {
+        id: params.id,
+      },
+    });
+    if (!order) {
+      ctx.throw(404, "不存在该订单");
+    }
+    // 删除数据
+    await order.destroy({ is_delete: true });
+    ctx.status = 200;
+  }
 }
 
 module.exports = OrderService;

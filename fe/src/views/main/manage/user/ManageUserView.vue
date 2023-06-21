@@ -167,8 +167,8 @@ const deleteUser = async (user: UserRes) => {
       :row-key="(row: any) => row.id"
       :data-source="dataSource?.data.rows"
       :locale="{
-        filterConfirm: $t('common.action.confirm'),
-        filterReset: $t('common.action.reset')
+        filterConfirm: $t('common.actions.confirm'),
+        filterReset: $t('common.actions.reset')
       }"
       :pagination="pagination"
       :loading="loading"
@@ -223,8 +223,8 @@ const deleteUser = async (user: UserRes) => {
             <a-divider type="vertical" />
             <a-popconfirm
               :title="$t('manageUserView.actions.confirmDeleteUser')"
-              ok-text="Yes"
-              cancel-text="No"
+              :ok-text="$t('common.actions.confirm')"
+              :cancel-text="$t('common.actions.cancel')"
               @confirm="() => deleteUser(record)"
             >
               <delete-outlined class="delete-action" />

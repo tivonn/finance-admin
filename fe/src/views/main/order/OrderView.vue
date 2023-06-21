@@ -2,16 +2,16 @@
 import { usePagination } from 'vue-request'
 import { computed, ref } from 'vue'
 import axios from '@/api/axios'
-import type { UserRes } from '@/api/res/user'
 import { SearchOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
-// import UpsertUserModal from '@/views/main/manage/user/UpsertUserModal.vue'
+import UpsertUserModal from '@/views/main/manage/user/UpsertUserModal.vue'
 // import { message } from 'ant-design-vue'
 import { message } from 'ant-design-vue'
 import { UploadOutlined } from '@ant-design/icons-vue'
 import type { UploadChangeParam } from 'ant-design-vue'
 import { baseURL } from '@/api/axios'
 import { timeout } from '@/utils/common'
+import type { OrderRes } from '@/api/res/order'
 
 const { t } = useI18n()
 
@@ -25,7 +25,7 @@ interface APIParams {
 }
 interface APIResult {
   counts: number
-  rows: Array<UserRes>
+  rows: Array<OrderRes>
 }
 
 // 自定义
@@ -286,36 +286,33 @@ const handleReset = (clearFilters: Function) => {
   clearFilters({ confirm: true })
 }
 
-// // 修改数据
-// const showUpsertUserModal = ref<boolean>(false)
-// const upsertUser = ref<UserRes | {}>({})
+// 修改数据
+const showUpsertOrderModal = ref<boolean>(false)
+const upsertOrder = ref<OrderRes | {}>({})
 
-// const toggleUpsertUserModal = (isShow: boolean) => {
-//   showUpsertUserModal.value = isShow
-//   if (!isShow) {
-//     upsertUser.value = {}
-//   }
-// }
+const toggleUpsertOrderModal = (isShow: boolean) => {
+  showUpsertOrderModal.value = isShow
+  if (!isShow) {
+    upsertOrder.value = {}
+  }
+}
 
-// const addUser = () => {
-//   toggleUpsertUserModal(true)
-// }
+const updateOrder = (order: any) => {
+  upsertOrder.value = order
+  toggleUpsertOrderModal(true)
+}
 
-// const updateUser = (user: UserRes) => {
-//   upsertUser.value = user
-//   toggleUpsertUserModal(true)
-// }
+const deleteOrder = async (order: OrderRes) => {
+  try {
+    await axios.delete(`/order/${order.id}`)
+    message.success(t('orderView.message.deleteOrderSuccess'))
+    window.location.reload()
+  } catch (error) {
+    message.error(t('orderView.message.deleteOrderFailed'))
+  }
+}
 
-// const deleteUser = async (user: UserRes) => {
-//   try {
-//     await axios.delete(`/user/${user.id}`)
-//     message.success(t('manageUserView.message.deleteUserSuccess'))
-//     window.location.reload()
-//   } catch (error) {
-//     message.error(t('manageUserView.message.deleteUserFailed'))
-//   }
-// }
-
+// 下载模板
 const downloadTemplate = async () => {
   try {
     let dom = document.createElement('a')
@@ -329,6 +326,7 @@ const downloadTemplate = async () => {
   }
 }
 
+// 上传 Excel
 const uploadExcel = (info: UploadChangeParam) => {
   if (info.file.status === 'done') {
     message.success(t('orderView.message.uploadSuccess'))
@@ -348,8 +346,7 @@ const uploadExcel = (info: UploadChangeParam) => {
   }
 }
 
-const fileList = ref([])
-
+// 导出送货单
 const downloadBills = () => {}
 </script>
 
@@ -361,7 +358,6 @@ const downloadBills = () => {}
           $t('orderView.actions.downloadTemplate')
         }}</a-button>
         <a-upload
-          v-model:file-list="fileList"
           accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
           :action="`${baseURL}/order/list`"
           :maxCount="1"
@@ -384,8 +380,8 @@ const downloadBills = () => {}
       :row-key="(row: any) => row.id"
       :data-source="dataSource?.data.rows"
       :locale="{
-        filterConfirm: $t('common.action.confirm'),
-        filterReset: $t('common.action.reset')
+        filterConfirm: $t('common.actions.confirm'),
+        filterReset: $t('common.actions.reset')
       }"
       :pagination="pagination"
       :loading="loading"
@@ -435,28 +431,30 @@ const downloadBills = () => {}
           </a-tag>
         </template>
         <!-- 操作 -->
-        <!-- <template v-else-if="column.key === 'action'">
+        <template v-else-if="column.key === 'action'">
           <span class="action">
-            <edit-outlined class="edit-action" @click="() => updateUser(record)" />
+            <edit-outlined class="edit-action" @click="() => updateOrder(record)" />
             <a-divider type="vertical" />
+            <!-- TODO：联动财务报表 -->
             <a-popconfirm
-              :title="$t('manageUserView.actions.confirmDeleteUser')"
-              ok-text="Yes"
-              cancel-text="No"
-              @confirm="() => deleteUser(record)"
+              :title="$t('orderView.actions.confirmDeleteOrder')"
+              :ok-text="$t('common.actions.confirm')"
+              :cancel-text="$t('common.actions.cancel')"
+              @confirm="() => deleteOrder(record)"
+              style="width: 600px"
             >
               <delete-outlined class="delete-action" />
             </a-popconfirm>
           </span>
-        </template> -->
+        </template>
       </template>
     </a-table>
   </div>
-  <!-- <UpsertUserModal
-    v-if="showUpsertUserModal"
-    :upsertUser="upsertUser"
-    @closeModal="() => toggleUpsertUserModal(false)"
-  ></UpsertUserModal> -->
+  <UpsertUserModal
+    v-if="showUpsertOrderModal"
+    :upsertUser="upsertOrder"
+    @closeModal="() => toggleUpsertOrderModal(false)"
+  ></UpsertUserModal>
 </template>
 
 <style lang="less">
@@ -477,23 +475,23 @@ const downloadBills = () => {}
   .download-bills-button {
     margin-left: 16px;
   }
-  // .action {
-  //   .edit-action,
-  //   .delete-action {
-  //     &:hover {
-  //       cursor: pointer;
-  //     }
-  //   }
-  //   .edit-action {
-  //     &:hover {
-  //       color: @--color-success;
-  //     }
-  //   }
-  //   .delete-action {
-  //     &:hover {
-  //       color: @--color-danger;
-  //     }
-  //   }
-  // }
+  .action {
+    .edit-action,
+    .delete-action {
+      &:hover {
+        cursor: pointer;
+      }
+    }
+    .edit-action {
+      &:hover {
+        color: @--color-success;
+      }
+    }
+    .delete-action {
+      &:hover {
+        color: @--color-danger;
+      }
+    }
+  }
 }
 </style>

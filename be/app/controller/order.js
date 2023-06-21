@@ -40,6 +40,13 @@ const getOrdersRules = {
   },
 };
 
+const deleteOrderRules = {
+  id: {
+    type: "number",
+    required: true,
+  },
+};
+
 class OrderController extends Controller {
   get orderService() {
     return this.ctx.service.order;
@@ -61,6 +68,18 @@ class OrderController extends Controller {
     );
     ctx.validate(getOrdersRules, params);
     const res = await this.orderService.getOrders(params);
+    ctx.body = res;
+  }
+
+  // 删除订单
+  async deleteOrder() {
+    const { ctx } = this;
+    const params = ctx.helper.filterParams(
+      deleteOrderRules,
+      Object.assign({}, ctx.params)
+    );
+    ctx.validate(deleteOrderRules, params);
+    const res = await this.orderService.deleteOrder(params);
     ctx.body = res;
   }
 }

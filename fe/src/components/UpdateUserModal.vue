@@ -98,8 +98,8 @@ const close = () => {
       store.user.is_modified_password ? '' : `(${$t('common.message.noModifiedPassword')})`
     }`"
     :maskClosable="store.user.is_modified_password"
-    :cancelText="$t('common.action.cancel')"
-    :okText="$t('common.action.confirm')"
+    :cancelText="$t('common.actions.cancel')"
+    :okText="$t('common.actions.confirm')"
     @ok="() => handleOk()"
     @cancel="() => handleCancel()"
   >

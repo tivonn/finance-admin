@@ -153,10 +153,10 @@ const logout = () => {
           <template #overlay>
             <a-menu
               ><a-menu-item @click="() => updateUser()">
-                <span>{{ $t('common.action.updateUser') }}</span>
+                <span>{{ $t('common.actions.updateUser') }}</span>
               </a-menu-item>
               <a-menu-item @click="() => logout()">
-                <span>{{ $t('common.action.logout') }}</span>
+                <span>{{ $t('common.actions.logout') }}</span>
               </a-menu-item>
             </a-menu>
           </template>
