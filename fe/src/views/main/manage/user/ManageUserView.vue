@@ -7,8 +7,10 @@ import { SearchOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons-
 import { useI18n } from 'vue-i18n'
 import UpsertUserModal from '@/views/main/manage/user/UpsertUserModal.vue'
 import { message } from 'ant-design-vue'
+import { useStore } from '@/stores'
 
 const { t } = useI18n()
+const store = useStore()
 
 // 获取表格数据 START
 interface APIParams {
@@ -126,6 +128,10 @@ const handleReset = (clearFilters: Function) => {
 const showUpsertUserModal = ref<boolean>(false)
 const upsertUser = ref<UserRes | {}>({})
 
+const canEditUser = (): boolean => {
+  const safeRoles = ['admin']
+  return safeRoles.includes(store.user.role)
+}
 const toggleUpsertUserModal = (isShow: boolean) => {
   showUpsertUserModal.value = isShow
   if (!isShow) {
@@ -219,16 +225,19 @@ const deleteUser = async (user: UserRes) => {
         <!-- 操作 -->
         <template v-else-if="column.key === 'action'">
           <span class="action">
-            <edit-outlined class="edit-action" @click="() => updateUser(record)" />
-            <a-divider type="vertical" />
-            <a-popconfirm
-              :title="$t('manageUserView.actions.confirmDeleteUser')"
-              :ok-text="$t('common.actions.confirm')"
-              :cancel-text="$t('common.actions.cancel')"
-              @confirm="() => deleteUser(record)"
-            >
-              <delete-outlined class="delete-action" />
-            </a-popconfirm>
+            <template v-if="canEditUser()">
+              <edit-outlined class="edit-action" @click="() => updateUser(record)" />
+              <a-divider type="vertical" />
+              <a-popconfirm
+                :title="$t('manageUserView.actions.confirmDeleteUser')"
+                :ok-text="$t('common.actions.confirm')"
+                :cancel-text="$t('common.actions.cancel')"
+                @confirm="() => deleteUser(record)"
+              >
+                <delete-outlined class="delete-action" />
+              </a-popconfirm>
+            </template>
+            <span v-else>-</span>
           </span>
         </template>
       </template>

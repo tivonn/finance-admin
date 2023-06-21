@@ -298,7 +298,7 @@ const handleReset = (clearFilters: Function) => {
 const showUpsertOrderModal = ref<boolean>(false)
 const upsertOrder = ref<OrderRes | {}>({})
 
-const showUpsertOrder = (order: OrderRes) => {
+const canUpsertOrder = (order: OrderRes): boolean => {
   let safeRoles: Array<string> = []
   switch (order.status) {
     case 'client_cost_to_be_record': {
@@ -318,6 +318,11 @@ const showUpsertOrder = (order: OrderRes) => {
       break
     }
   }
+  return safeRoles.includes(store.user.role)
+}
+
+const canDeleteOrder = (): boolean => {
+  const safeRoles = ['admin']
   return safeRoles.includes(store.user.role)
 }
 
@@ -464,12 +469,13 @@ const downloadBills = () => {}
         <!-- 操作 -->
         <template v-else-if="column.key === 'action'">
           <span class="action">
-            <template v-if="showUpsertOrder(record)">
+            <template v-if="canUpsertOrder(record)">
               <edit-outlined class="edit-action" @click="() => updateOrder(record)" />
               <a-divider type="vertical"
             /></template>
             <!-- TODO：联动财务报表 -->
             <a-popconfirm
+              v-if="canDeleteOrder()"
               :title="$t('orderView.actions.confirmDeleteOrder')"
               :ok-text="$t('common.actions.confirm')"
               :cancel-text="$t('common.actions.cancel')"
@@ -478,6 +484,7 @@ const downloadBills = () => {}
             >
               <delete-outlined class="delete-action" />
             </a-popconfirm>
+            <span v-if="!canUpsertOrder(record) && !canDeleteOrder()">-</span>
           </span>
         </template>
       </template>
