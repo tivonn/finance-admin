@@ -13,6 +13,7 @@ import { timeout } from '@/utils/common'
 import type { OrderRes } from '@/api/res/order'
 import dayjs from 'dayjs'
 import { useStore } from '@/stores'
+import { downloadFile } from '@/utils/common'
 
 const { t } = useI18n()
 const store = useStore()
@@ -396,32 +397,43 @@ const rowSelection: TableProps['rowSelection'] = {
 
 const downloadDeliveryBill = async () => {
   try {
-    await axios.post(`/order/download_delivery_bills`, { ids: selectedRowKeys.value })
+    const res = await axios.post(
+      `/order/download_delivery_bills`,
+      { ids: selectedRowKeys.value },
+      { responseType: 'blob' }
+    )
+    downloadFile(res.data, '送货单.xls')
     message.success(t('orderView.message.downloadDeliveryBillSuccess'))
   } catch (error: any) {
-    switch (error?.response?.data?.message) {
-      case '无权限': {
-        message.error(t('common.message.noAuth'))
-        break
-      }
-      case '未选中订单': {
-        message.error(t('orderView.message.downloadDeliveryBillNoOrderFailed'))
-        break
-      }
-      case '订单状态要求为待付款/已付款': {
-        message.error(t('orderView.message.downloadDeliveryBillStatusFailed'))
-        break
-      }
-      case '用户代号要求为同一个': {
-        message.error(t('orderView.message.downloadDeliveryBillUserCodeFailed'))
-        break
-      }
-      case '装柜号要求为同一个': {
-        message.error(t('orderView.message.downloadDeliveryBillStuffingNumberFailed'))
-        break
-      }
-      default: {
-        message.error(t('orderView.message.downloadDeliveryBillFailed'))
+    // blob 类型，适配
+    var reader = new FileReader()
+    reader.readAsBinaryString(error?.response?.data)
+    reader.onload = function () {
+      const result = JSON.parse((this.result as string) || '{}')
+      switch (result.message) {
+        case 'noAuth': {
+          message.error(t('common.message.noAuth'))
+          break
+        }
+        case 'downloadDeliveryBillNoOrderFailed': {
+          message.error(t('orderView.message.downloadDeliveryBillNoOrderFailed'))
+          break
+        }
+        case 'downloadDeliveryBillStatusFailed': {
+          message.error(t('orderView.message.downloadDeliveryBillStatusFailed'))
+          break
+        }
+        case 'downloadDeliveryBillUserCodeFailed': {
+          message.error(t('orderView.message.downloadDeliveryBillUserCodeFailed'))
+          break
+        }
+        case 'downloadDeliveryBillStuffingNumberFailed': {
+          message.error(t('orderView.message.downloadDeliveryBillStuffingNumberFailed'))
+          break
+        }
+        default: {
+          message.error(t('orderView.message.downloadDeliveryBillFailed'))
+        }
       }
     }
   }

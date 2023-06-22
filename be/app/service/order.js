@@ -1,9 +1,10 @@
 "use strict";
 
 const Service = require("egg").Service;
-const xlsx = require("node-xlsx");
 const lodash = require("lodash");
 const dayjs = require("dayjs");
+const nodeXlsx = require("node-xlsx");
+const xlsx = require("xlsx");
 
 class OrderService extends Service {
   get ordersModel() {
@@ -19,7 +20,7 @@ class OrderService extends Service {
     }
     // 业务逻辑
     const file = ctx.request.files[0];
-    const sheets = xlsx.parse(file.filepath);
+    const sheets = nodeXlsx.parse(file.filepath);
     const { data } = sheets[0];
     const defaultHeader = [
       "客户代号",
@@ -150,7 +151,7 @@ class OrderService extends Service {
     // 权限校验
     const safeRoles = ["admin", "finance"];
     if (!safeRoles.includes(ctx.state.user.role)) {
-      ctx.throw(403, "无权限");
+      ctx.throw(403, "noAuth");
     }
     // 业务逻辑
     // 查询数据
@@ -164,7 +165,7 @@ class OrderService extends Service {
     });
     // 校验数据
     if (orders.length === 0) {
-      ctx.throw(422, "未选中订单");
+      ctx.throw(422, "downloadDeliveryBillNoOrderFailed");
     }
     if (
       orders.some(
@@ -172,19 +173,246 @@ class OrderService extends Service {
           order.status !== "cost_to_be_pay" && order.status !== "cost_has_payed"
       )
     ) {
-      ctx.throw(422, "订单状态要求为待付款/已付款");
+      ctx.throw(422, "downloadDeliveryBillStatusFailed");
     }
     if (orders.some((order) => order.user_code !== orders[0].user_code)) {
-      ctx.throw(422, "用户代号要求为同一个");
+      ctx.throw(422, "downloadDeliveryBillUserCodeFailed");
     }
     if (
       orders.some(
         (order) => order.stuffing_number !== orders[0].stuffing_number
       )
     ) {
-      ctx.throw(422, "装柜号要求为同一个");
+      ctx.throw(422, "downloadDeliveryBillStuffingNumberFailed");
     }
-    return orders;
+
+    // 导出 Excel
+    const workbook = xlsx.utils.book_new();
+    const dateStrs = new Date().toDateString().split(" ");
+    const worksheet = xlsx.utils.aoa_to_sheet([
+      ["HTX", "", "", "送货单ใบสงของ", "", "", "", "", "", "NO:", "8820230"],
+      ["", "宏泰兴国际货运", "", "", "", "", "", "", "", "", "YW H502"],
+      ["", "", "", "", "", "", "", "", "", "", ""],
+      [
+        "HONGTAIXING International Freight",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "客户ลกคา：",
+        "xxx",
+      ],
+      [
+        "发货日期วนทสนคาออก：",
+        "",
+        `${dateStrs[2]}-${dateStrs[1]}`,
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "电话โทร：",
+        "087-0539-630",
+      ],
+      [
+        "序号หมายเลข",
+        "货物名称รายกานสนคา",
+        "",
+        "件数จำนวน",
+        "重量นำหนด",
+        "尺寸CM",
+        "",
+        "",
+        "体积ควCBM",
+        "单价ราคา",
+        "金额จำนวนเงน",
+      ],
+      ...orders.map((order, index) => [
+        index + 1,
+        order.goods_name,
+        "",
+        order.number,
+        order.weight,
+        order.inner_size_length,
+        order.inner_size_width,
+        order.inner_size_height,
+        order.volume,
+        order.unit_price,
+        order.client_freight,
+      ]),
+      [
+        "总计รวม",
+        "",
+        "",
+        lodash.sum(orders.filter((order) => order.number)),
+        lodash.sum(orders.filter((order) => order.weight)),
+        "",
+        "",
+        "",
+        lodash.sum(orders.filter((order) => order.volume)),
+        "",
+        lodash.sum(orders.filter((order) => order.client_freight)),
+      ],
+      [
+        "送货人签名  ลายเซนผสง",
+        "",
+        "",
+        "收货人签名  ลายเซนผรบ",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "BY AIR",
+        "",
+      ],
+      ["", "", "", "", "", "", "", "", "", "EK", "√"],
+      [
+        "联系电话ตดตอ：15989894077 中国จน  0948629770 ไทย",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "BU SEA",
+        "",
+      ],
+      [
+        "注意事项：*  送货人应填写托运人及收货人地址和电话。*托运货物必须按规定包装好，否则损坏，本公司不负责任。*不得假报货名，不得夹带禁运货物、危险品、否则一切损失由托运人负责。*如货物丢失，损坏按保险金额赔偿，未投保的货物承运方按此批货物运费的三倍赔偿。*收货时请当面点清货物，事后概不负责。      หมายเหตุ：ผู้ส่งที่อยู่และเบอร์โทรศัพท์ของผู้ฝากส่งและผู้รับของไว้ของที่ฝากส่งต้องห่อไว้ให้เรียบร้อยตามกำหนดและต้องเสนอชื่อตองกับสิ่งของห้ามใส่ของต้องห้ามของอันตรายไว้กับของที่ฝากด้วยกัน มิฉะนั้นมีความเสียหายทางบริษัทไม่รับผิดชอบหากของเสียหรือหายจ่ายตามค้ำประกันของที่ไม่ได้ทำประกันทางขนส่งจ่ายค่าทดแทนสามเท่าของค่าขนส่งโปรดผู้รับของตรวจสอบสิ่งของให้เรียบร้อยทางบริษัทไม่รับผิดชอบหลังเสร็จงาน                                                                   ",
+        ,
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+      ],
+      ["", "", "", "", "", "", "", "", "", "", ""],
+    ]);
+    // 列宽
+    worksheet["!cols"] = [
+      { wpx: 100 },
+      { wpx: 100 },
+      { wpx: 100 },
+      { wpx: 100 },
+      { wpx: 100 },
+      { wpx: 33 },
+      { wpx: 33 },
+      { wpx: 33 },
+      { wpx: 100 },
+      { wpx: 100 },
+      { wpx: 100 },
+    ];
+    // 合并单元格
+    const merges = [
+      // HTX
+      {
+        // s 为开始
+        s: {
+          c: 0, // 开始列
+          r: 0, // 开始行
+        },
+        // e 为结束
+        e: {
+          c: 0, // 结束列
+          r: 2, // 结束行
+        },
+      },
+      // 宏泰兴国际货运
+      {
+        s: {
+          c: 1,
+          r: 1,
+        },
+        e: {
+          c: 2,
+          r: 2,
+        },
+      },
+      // 送货单
+      {
+        s: {
+          c: 3,
+          r: 0,
+        },
+        e: {
+          c: 8,
+          r: 2,
+        },
+      },
+      // HONGTAIXING International Freight
+      {
+        s: {
+          c: 0,
+          r: 3,
+        },
+        e: {
+          c: 2,
+          r: 3,
+        },
+      },
+      // 发货日期
+      {
+        s: {
+          c: 0,
+          r: 4,
+        },
+        e: {
+          c: 1,
+          r: 4,
+        },
+      },
+      // 货物名称 表头
+      {
+        s: {
+          c: 1,
+          r: 5,
+        },
+        e: {
+          c: 2,
+          r: 5,
+        },
+      },
+      // 尺寸CM 表头
+      {
+        s: {
+          c: 5,
+          r: 5,
+        },
+        e: {
+          c: 7,
+          r: 5,
+        },
+      },
+      // 送货人签名
+      // {
+      //   s: {
+      //     c: 0,
+      //     r: 15,
+      //   },
+      //   e: {
+      //     c: 0,
+      //     r: 16,
+      //   },
+      // },
+    ];
+    worksheet["!merges"] = merges;
+    xlsx.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+    const buffer = xlsx.write(workbook, { type: "buffer", bookType: "xlsx" });
+    ctx.set("Content-Disposition", "attachment; filename=data.xlsx");
+    return buffer;
   }
 
   async getOrders(params) {
