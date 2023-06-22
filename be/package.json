@@ -20,7 +20,8 @@
     "md5": "^2.3.0",
     "mysql2": "^3.3.3",
     "node-xlsx": "^0.23.0",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "xlsx-style": "^0.8.13"
   },
   "devDependencies": {
     "egg-bin": "^5",

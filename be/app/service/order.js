@@ -5,6 +5,7 @@ const lodash = require("lodash");
 const dayjs = require("dayjs");
 const nodeXlsx = require("node-xlsx");
 const xlsx = require("xlsx");
+const xlsxStyle = require("xlsx-style");
 
 class OrderService extends Service {
   get ordersModel() {
@@ -164,9 +165,11 @@ class OrderService extends Service {
       },
     });
     // 校验数据
+    // 未选中订单
     if (orders.length === 0) {
       ctx.throw(422, "downloadDeliveryBillNoOrderFailed");
     }
+    // 订单状态要求为待付款/已付款
     if (
       orders.some(
         (order) =>
@@ -175,9 +178,11 @@ class OrderService extends Service {
     ) {
       ctx.throw(422, "downloadDeliveryBillStatusFailed");
     }
+    // 用户代号要求为同一个
     if (orders.some((order) => order.user_code !== orders[0].user_code)) {
       ctx.throw(422, "downloadDeliveryBillUserCodeFailed");
     }
+    // 装柜号要求为同一个
     if (
       orders.some(
         (order) => order.stuffing_number !== orders[0].stuffing_number
@@ -204,7 +209,7 @@ class OrderService extends Service {
         "",
         "",
         "客户ลกคา：",
-        "xxx",
+        orders[0]?.user_code || "",
       ],
       [
         "发货日期วนทสนคาออก：",
@@ -271,7 +276,7 @@ class OrderService extends Service {
         "BY AIR",
         "",
       ],
-      ["", "", "", "", "", "", "", "", "", "EK", "√"],
+      ["", "", "", "", "", "", "", "", "", "EK", ""],
       [
         "联系电话ตดตอ：15989894077 中国จน  0948629770 ไทย",
         "",
@@ -301,6 +306,7 @@ class OrderService extends Service {
       ],
       ["", "", "", "", "", "", "", "", "", "", ""],
     ]);
+    xlsx.utils.book_append_sheet(workbook, worksheet, "Sheet1");
     // 列宽
     worksheet["!cols"] = [
       { wpx: 100 },
@@ -488,8 +494,93 @@ class OrderService extends Service {
       });
     });
     worksheet["!merges"] = merges;
-    xlsx.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-    const buffer = xlsx.write(workbook, { type: "buffer", bookType: "xlsx" });
+    // 设置样式
+    // HTX
+    worksheet["A1"].s = {
+      font: {
+        sz: 28,
+        bold: true,
+      },
+      alignment: {
+        vertical: "center",
+        horizontal: "center",
+      },
+    };
+    // 宏泰兴国际货运
+    worksheet["B2"].s = {
+      font: {
+        sz: 18,
+        bold: true,
+      },
+      alignment: {
+        vertical: "center",
+        horizontal: "center",
+      },
+    };
+    // 送货单
+    worksheet["D1"].s = {
+      font: {
+        sz: 20,
+        bold: true,
+      },
+      alignment: {
+        vertical: "center",
+        horizontal: "center",
+      },
+    };
+    // 总计 重量
+    worksheet[`E${7 + orders.length}`].s = {
+      font: {
+        bold: true,
+        color: { rgb: "FF0000" },
+      },
+    };
+    // 总计 体积
+    worksheet[`I${7 + orders.length}`].s = {
+      font: {
+        bold: true,
+        color: { rgb: "FF0000" },
+      },
+    };
+    // 总计 金额
+    worksheet[`K${7 + orders.length}`].s = {
+      font: {
+        bold: true,
+        color: { rgb: "FF0000" },
+      },
+    };
+    // 送货人签名
+    worksheet[`A${8 + orders.length}`].s = {
+      alignment: {
+        vertical: "center",
+        horizontal: "center",
+        wrapText: true,
+      },
+    };
+    // 收货人签名
+    worksheet[`D${8 + orders.length}`].s = {
+      alignment: {
+        vertical: "center",
+        horizontal: "center",
+        wrapText: true,
+      },
+    };
+    // 注意事项
+    worksheet[`A${11 + orders.length}`].s = {
+      font: {
+        sz: 9,
+      },
+      alignment: {
+        vertical: "center",
+        horizontal: "center",
+        wrapText: true,
+      },
+    };
+    // 绘制 Excel
+    const buffer = xlsxStyle.write(workbook, {
+      type: "buffer",
+      bookType: "xlsx",
+    });
     ctx.set("Content-Disposition", "attachment; filename=data.xlsx");
     return buffer;
   }
