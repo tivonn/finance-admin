@@ -7,7 +7,7 @@ import { useI18n } from 'vue-i18n'
 import UpsertOrderModal from '@/views/main/order/UpsertOrderModal.vue'
 import { message } from 'ant-design-vue'
 import { UploadOutlined } from '@ant-design/icons-vue'
-import type { UploadChangeParam } from 'ant-design-vue'
+import type { TableProps, UploadChangeParam } from 'ant-design-vue'
 import { baseURL } from '@/api/axios'
 import { timeout } from '@/utils/common'
 import type { OrderRes } from '@/api/res/order'
@@ -383,7 +383,49 @@ const uploadExcel = (info: UploadChangeParam) => {
 }
 
 // 导出送货单
-const downloadBills = () => {}
+const selectedRowKeys = ref<Array<number>>([])
+
+const rowSelection: TableProps['rowSelection'] = {
+  onChange: (_selectedRowKeys: Array<number>) => {
+    selectedRowKeys.value = _selectedRowKeys
+  },
+  getCheckboxProps: (record: OrderRes) => ({
+    disabled: record.status !== 'cost_to_be_pay' && record.status !== 'cost_has_payed'
+  })
+}
+
+const downloadDeliveryBill = async () => {
+  try {
+    await axios.post(`/order/download_delivery_bills`, { ids: selectedRowKeys.value })
+    message.success(t('orderView.message.downloadDeliveryBillSuccess'))
+  } catch (error: any) {
+    switch (error?.response?.data?.message) {
+      case '无权限': {
+        message.error(t('common.message.noAuth'))
+        break
+      }
+      case '未选中订单': {
+        message.error(t('orderView.message.downloadDeliveryBillNoOrderFailed'))
+        break
+      }
+      case '订单状态要求为待付款/已付款': {
+        message.error(t('orderView.message.downloadDeliveryBillStatusFailed'))
+        break
+      }
+      case '用户代号要求为同一个': {
+        message.error(t('orderView.message.downloadDeliveryBillUserCodeFailed'))
+        break
+      }
+      case '装柜号要求为同一个': {
+        message.error(t('orderView.message.downloadDeliveryBillStuffingNumberFailed'))
+        break
+      }
+      default: {
+        message.error(t('orderView.message.downloadDeliveryBillFailed'))
+      }
+    }
+  }
+}
 </script>
 
 <template>
@@ -406,8 +448,8 @@ const downloadBills = () => {}
             <span> {{ $t('orderView.actions.uploadExcel') }}</span>
           </a-button>
         </a-upload>
-        <a-button type="primary" class="download-bills-button" @click="downloadBills" disabled>{{
-          $t('orderView.actions.downloadBills')
+        <a-button type="primary" class="download-bills-button" @click="downloadDeliveryBill">{{
+          $t('orderView.actions.downloadDeliveryBill')
         }}</a-button>
       </div>
     </div>
@@ -415,6 +457,7 @@ const downloadBills = () => {}
       :columns="columns"
       :row-key="(row: OrderRes) => row.id"
       :data-source="dataSource?.data.rows"
+      :row-selection="rowSelection"
       :locale="{
         filterConfirm: $t('common.actions.confirm'),
         filterReset: $t('common.actions.reset')

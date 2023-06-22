@@ -120,7 +120,7 @@ export default createI18n({
         actions: {
           downloadTemplate: '下载模版',
           uploadExcel: '上传表格',
-          downloadBills: '导出送货单',
+          downloadDeliveryBill: '导出送货单',
           confirmDeleteOrder: '确定删除订单？'
         },
         message: {
@@ -129,7 +129,13 @@ export default createI18n({
           excelInvalid: '表格不符合模板要求',
           uploadFailed: '表格上传失败',
           deleteOrderSuccess: '删除订单成功',
-          deleteOrderFailed: '删除订单失败'
+          deleteOrderFailed: '删除订单失败',
+          downloadDeliveryBillSuccess: '导出送货单成功',
+          downloadDeliveryBillNoOrderFailed: '未选中订单',
+          downloadDeliveryBillStatusFailed: '订单状态要求为待付款/已付款',
+          downloadDeliveryBillUserCodeFailed: '用户代号要求为同一个',
+          downloadDeliveryBillStuffingNumberFailed: '装柜号要求为同一个',
+          downloadDeliveryBillFailed: '导出送货单失败'
         }
       },
       upsertOrderModal: {

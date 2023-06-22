@@ -145,6 +145,48 @@ class OrderService extends Service {
     ctx.status = 200;
   }
 
+  async downloadDeliveryBill(params) {
+    const { ctx, app } = this;
+    // 权限校验
+    const safeRoles = ["admin", "finance"];
+    if (!safeRoles.includes(ctx.state.user.role)) {
+      ctx.throw(403, "无权限");
+    }
+    // 业务逻辑
+    // 查询数据
+    const { Op } = app.Sequelize;
+    const orders = await this.ordersModel.findAll({
+      where: {
+        id: {
+          [Op.in]: params.ids,
+        },
+      },
+    });
+    // 校验数据
+    if (orders.length === 0) {
+      ctx.throw(422, "未选中订单");
+    }
+    if (
+      orders.some(
+        (order) =>
+          order.status !== "cost_to_be_pay" && order.status !== "cost_has_payed"
+      )
+    ) {
+      ctx.throw(422, "订单状态要求为待付款/已付款");
+    }
+    if (orders.some((order) => order.user_code !== orders[0].user_code)) {
+      ctx.throw(422, "用户代号要求为同一个");
+    }
+    if (
+      orders.some(
+        (order) => order.stuffing_number !== orders[0].stuffing_number
+      )
+    ) {
+      ctx.throw(422, "装柜号要求为同一个");
+    }
+    return orders;
+  }
+
   async getOrders(params) {
     const { ctx, app } = this;
     // 权限校验

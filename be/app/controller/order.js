@@ -2,44 +2,6 @@
 
 const { Controller } = require("egg");
 
-const getOrdersRules = {
-  page_index: {
-    type: "number",
-    required: true,
-  },
-  page_size: {
-    type: "number",
-    required: true,
-  },
-  user_code: {
-    type: "string",
-    required: false,
-  },
-  waybill_number: {
-    type: "string",
-    required: false,
-  },
-  stuffing_number: {
-    type: "string",
-    required: false,
-  },
-  status: {
-    type: "array",
-    itemType: "enum",
-    rule: {
-      type: "enum",
-      required: false,
-      values: [
-        "client_cost_to_be_record",
-        "warehouse_cost_to_be_record",
-        "cost_to_be_pay",
-        "cost_has_payed",
-      ],
-    },
-    required: false,
-  },
-};
-
 const updateOrderRules = {
   id: {
     type: "number",
@@ -110,6 +72,52 @@ const updateOrderCostToBePayRules = Object.assign({}, updateOrderRules, {
   },
 });
 
+const getOrdersRules = {
+  page_index: {
+    type: "number",
+    required: true,
+  },
+  page_size: {
+    type: "number",
+    required: true,
+  },
+  user_code: {
+    type: "string",
+    required: false,
+  },
+  waybill_number: {
+    type: "string",
+    required: false,
+  },
+  stuffing_number: {
+    type: "string",
+    required: false,
+  },
+  status: {
+    type: "array",
+    itemType: "enum",
+    rule: {
+      type: "enum",
+      required: false,
+      values: [
+        "client_cost_to_be_record",
+        "warehouse_cost_to_be_record",
+        "cost_to_be_pay",
+        "cost_has_payed",
+      ],
+    },
+    required: false,
+  },
+};
+
+const downloadDeliveryBillRules = {
+  ids: {
+    type: "array",
+    itemType: "number",
+    required: true,
+  },
+};
+
 const deleteOrderRules = {
   id: {
     type: "number",
@@ -126,18 +134,6 @@ class OrderController extends Controller {
   async createOrders() {
     const { ctx } = this;
     const res = await this.orderService.createOrders();
-    ctx.body = res;
-  }
-
-  // 获取订单列表
-  async getOrders() {
-    const { ctx } = this;
-    const params = ctx.helper.filterParams(
-      getOrdersRules,
-      Object.assign({}, ctx.request.body)
-    );
-    ctx.validate(getOrdersRules, params);
-    const res = await this.orderService.getOrders(params);
     ctx.body = res;
   }
 
@@ -170,6 +166,30 @@ class OrderController extends Controller {
     );
     ctx.validate(rule, params);
     const res = await this.orderService.updateOrder(params);
+    ctx.body = res;
+  }
+
+  // 获取订单列表
+  async getOrders() {
+    const { ctx } = this;
+    const params = ctx.helper.filterParams(
+      getOrdersRules,
+      Object.assign({}, ctx.request.body)
+    );
+    ctx.validate(getOrdersRules, params);
+    const res = await this.orderService.getOrders(params);
+    ctx.body = res;
+  }
+
+  // 获取订单列表
+  async downloadDeliveryBill() {
+    const { ctx } = this;
+    const params = ctx.helper.filterParams(
+      downloadDeliveryBillRules,
+      Object.assign({}, ctx.request.body)
+    );
+    ctx.validate(downloadDeliveryBillRules, params);
+    const res = await this.orderService.downloadDeliveryBill(params);
     ctx.body = res;
   }
 
