@@ -353,8 +353,8 @@ const deleteOrder = async (order: OrderRes) => {
 const downloadTemplate = async () => {
   try {
     let dom = document.createElement('a')
-    dom.href = '/static/templates/货物详情表.xlsx'
-    dom.download = '货物详情表.xlsx'
+    dom.href = '/static/templates/货品详情表.xlsx'
+    dom.download = '货品详情表.xlsx'
     document.body.appendChild(dom)
     dom.click()
     document.body.removeChild(dom)
