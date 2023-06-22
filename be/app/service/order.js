@@ -249,14 +249,14 @@ class OrderService extends Service {
         "总计รวม",
         "",
         "",
-        lodash.sum(orders.filter((order) => order.number)),
-        lodash.sum(orders.filter((order) => order.weight)),
+        lodash.sum(orders.map((order) => order.number)),
+        lodash.sum(orders.map((order) => order.weight)),
         "",
         "",
         "",
-        lodash.sum(orders.filter((order) => order.volume)),
+        lodash.sum(orders.map((order) => order.volume)),
         "",
-        lodash.sum(orders.filter((order) => order.client_freight)),
+        lodash.sum(orders.map((order) => order.client_freight)),
       ],
       [
         "送货人签名  ลายเซนผสง",
@@ -396,18 +396,97 @@ class OrderService extends Service {
           r: 5,
         },
       },
+      // 货物名称 总计
+      {
+        s: {
+          c: 1,
+          r: 6 + orders.length,
+        },
+        e: {
+          c: 2,
+          r: 6 + orders.length,
+        },
+      },
       // 送货人签名
-      // {
-      //   s: {
-      //     c: 0,
-      //     r: 15,
-      //   },
-      //   e: {
-      //     c: 0,
-      //     r: 16,
-      //   },
-      // },
+      {
+        s: {
+          c: 0,
+          r: 7 + orders.length,
+        },
+        e: {
+          c: 0,
+          r: 8 + orders.length,
+        },
+      },
+      // 送货人后的空格
+      {
+        s: {
+          c: 1,
+          r: 7 + orders.length,
+        },
+        e: {
+          c: 2,
+          r: 8 + orders.length,
+        },
+      },
+      // 收货人签名
+      {
+        s: {
+          c: 3,
+          r: 7 + orders.length,
+        },
+        e: {
+          c: 3,
+          r: 8 + orders.length,
+        },
+      },
+      // 收货人后的空格
+      {
+        s: {
+          c: 4,
+          r: 7 + orders.length,
+        },
+        e: {
+          c: 8,
+          r: 8 + orders.length,
+        },
+      },
+      // 联系电话
+      {
+        s: {
+          c: 0,
+          r: 9 + orders.length,
+        },
+        e: {
+          c: 3,
+          r: 9 + orders.length,
+        },
+      },
+      // 注意事项
+      {
+        s: {
+          c: 0,
+          r: 10 + orders.length,
+        },
+        e: {
+          c: 10,
+          r: 15 + orders.length,
+        },
+      },
     ];
+    // 货物名称 内容
+    orders.forEach((_order, index) => {
+      merges.push({
+        s: {
+          c: 1,
+          r: 6 + index,
+        },
+        e: {
+          c: 2,
+          r: 6 + index,
+        },
+      });
+    });
     worksheet["!merges"] = merges;
     xlsx.utils.book_append_sheet(workbook, worksheet, "Sheet1");
     const buffer = xlsx.write(workbook, { type: "buffer", bookType: "xlsx" });
