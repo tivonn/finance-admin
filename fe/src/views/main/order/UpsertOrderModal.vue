@@ -62,6 +62,10 @@ const handleOk = async () => {
           message.error(t('upsertOrderModal.message.orderCanNotUpdate'))
           break
         }
+        case '货值和费率需同时填写': {
+          message.error(t('upsertOrderModal.message.rateAndInsuranceShouldTogether'))
+          break
+        }
         default: {
           message.error(t('upsertOrderModal.message.updateOrderFailed'))
         }

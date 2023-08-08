@@ -181,7 +181,8 @@ export default createI18n({
           payCurrencyInvalid: '付款币种必填',
           updateOrderSuccess: '编辑订单成功',
           updateOrderFailed: '编辑订单失败',
-          orderCanNotUpdate: '订单不可修改'
+          orderCanNotUpdate: '订单不可修改',
+          rateAndInsuranceShouldTogether: '货值和费率需同时填写'
         }
       },
       reportView: {

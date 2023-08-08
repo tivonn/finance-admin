@@ -150,8 +150,18 @@ class OrderService extends Service {
         };
       }
       case "finance_cost_to_be_record": {
-        if (lodash.isNumber(order.good_value) && lodash.isNumber(order.rate)) {
-          const insurance = order.good_value * order.rate;
+        if (
+          (lodash.isNumber(params.good_value) &&
+            !lodash.isNumber(params.rate)) ||
+          (!lodash.isNumber(params.good_value) && lodash.isNumber(params.rate))
+        ) {
+          ctx.throw(422, "货值和费率需同时填写");
+        }
+        if (
+          lodash.isNumber(params.good_value) &&
+          lodash.isNumber(params.rate)
+        ) {
+          const insurance = params.good_value * params.rate;
           data = { insurance };
         }
         break;
