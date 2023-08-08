@@ -110,18 +110,12 @@ module.exports = (app) => {
         type: "DOUBLE",
         allowNull: true,
       },
-      status: {
-        type: DataTypes.ENUM(
-          "client_cost_to_be_record",
-          "warehouse_cost_to_be_record",
-          "cost_to_be_pay",
-          "cost_has_payed"
-        ),
-        allowNull: false,
-        defaultValue: "client_cost_to_be_record",
-      },
       payed_date: {
         type: DataTypes.TIME,
+        allowNull: true,
+      },
+      pay_currency: {
+        type: DataTypes.ENUM("CNY", "THB"),
         allowNull: true,
       },
       create_at: {
@@ -138,6 +132,41 @@ module.exports = (app) => {
         type: DataTypes.INTEGER(1),
         allowNull: false,
         defaultValue: "0",
+      },
+      status: {
+        type: DataTypes.ENUM(
+          "client_cost_to_be_record",
+          "warehouse_cost_to_be_record",
+          "finance_cost_to_be_record",
+          "cost_to_be_pay",
+          "cost_has_payed"
+        ),
+        allowNull: false,
+        defaultValue: "client_cost_to_be_record",
+      },
+      pay_currency: {
+        type: DataTypes.ENUM("CNY", "THB"),
+        allowNull: true,
+      },
+      good_value: {
+        type: "DOUBLE",
+        allowNull: true,
+      },
+      rate: {
+        type: "DOUBLE",
+        allowNull: true,
+      },
+      insurance: {
+        type: "DOUBLE",
+        allowNull: true,
+      },
+      disbursements: {
+        type: "DOUBLE",
+        allowNull: true,
+      },
+      compensate: {
+        type: "DOUBLE",
+        allowNull: true,
       },
     },
     {

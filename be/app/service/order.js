@@ -91,6 +91,11 @@ class OrderService extends Service {
       }
       case "warehouse_cost_to_be_record": {
         safeRoles = ["admin", "staff"];
+        status = "finance_cost_to_be_record";
+        break;
+      }
+      case "finance_cost_to_be_record": {
+        safeRoles = ["admin", "finance"];
         status = "cost_to_be_pay";
         break;
       }
@@ -143,6 +148,13 @@ class OrderService extends Service {
           warehouse_volumn,
           warehouse_freight,
         };
+      }
+      case "finance_cost_to_be_record": {
+        if (lodash.isNumber(order.good_value) && lodash.isNumber(order.rate)) {
+          const insurance = order.good_value * order.rate;
+          data = { insurance };
+        }
+        break;
       }
     }
     order.update(Object.assign({}, params, { status }, data));

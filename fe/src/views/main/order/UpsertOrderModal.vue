@@ -29,8 +29,15 @@ const formState = reactive<OrderRes>(
           cost_unit_price: props.upsertOrder!.cost_unit_price,
           cost_packing_cost: props.upsertOrder!.cost_packing_cost
         }
+      : props.upsertOrder!.status === 'finance_cost_to_be_record'
+      ? {
+          good_value: props.upsertOrder!.good_value,
+          rate: props.upsertOrder!.rate,
+          disbursements: props.upsertOrder!.disbursements,
+          compensate: props.upsertOrder!.compensate
+        }
       : props.upsertOrder!.status === 'cost_to_be_pay'
-      ? { payed_date: props.upsertOrder!.payed_date }
+      ? { payed_date: props.upsertOrder!.payed_date, pay_currency: props.upsertOrder!.pay_currency }
       : {}
   ) as any
 )
@@ -258,6 +265,93 @@ const close = () => {
       </a-form-item>
     </a-form>
 
+    <!-- 财务信息待录入 -->
+    <a-form
+      v-if="(props.upsertOrder!.status === 'finance_cost_to_be_record')"
+      ref="formRef"
+      :model="formState"
+      :label-col="{ offset: 1, span: 5 }"
+      :wrapper-col="{ offset: 1, span: 16 }"
+    >
+      <!-- 货值 -->
+      <a-form-item
+        :label="$t('orderView.info.good_value')"
+        name="good_value"
+        :rules="[
+          {
+            required: false,
+            type: 'number'
+          }
+        ]"
+      >
+        <a-input-number
+          v-model:value="formState.good_value"
+          :controls="false"
+          :placeholder="$t('upsertOrderModal.info.goodValuePlaceholder')"
+          style="width: 100%"
+        />
+      </a-form-item>
+
+      <!-- 费率 -->
+      <a-form-item
+        :label="$t('orderView.info.rate')"
+        name="rate"
+        :rules="[
+          {
+            required: false,
+            type: 'number'
+          }
+        ]"
+      >
+        <a-input-number
+          v-model:value="formState.rate"
+          :controls="false"
+          :placeholder="$t('upsertOrderModal.info.ratePlaceholder')"
+          style="width: 100%"
+        />
+      </a-form-item>
+
+      <!-- 垫付 -->
+      <a-form-item
+        :label="$t('orderView.info.disbursements')"
+        name="disbursements"
+        :rules="[
+          {
+            required: true,
+            type: 'number',
+            message: $t('upsertOrderModal.message.disbursementsInvalid')
+          }
+        ]"
+      >
+        <a-input-number
+          v-model:value="formState.disbursements"
+          :controls="false"
+          :placeholder="$t('upsertOrderModal.info.disbursementsPlaceholder')"
+          style="width: 100%"
+        />
+      </a-form-item>
+
+      <!-- 赔付 -->
+      <a-form-item
+        :label="$t('orderView.info.compensate')"
+        name="compensate"
+        :rules="[
+          {
+            required: true,
+            type: 'number',
+            message: $t('upsertOrderModal.message.compensateInvalid')
+          }
+        ]"
+      >
+        <a-input-number
+          v-model:value="formState.compensate"
+          :controls="false"
+          :placeholder="$t('upsertOrderModal.info.compensatePlaceholder')"
+          style="width: 100%"
+        />
+      </a-form-item>
+    </a-form>
+
     <!-- 待付款 -->
     <a-form
       v-if="(props.upsertOrder!.status === 'cost_to_be_pay')"
@@ -283,6 +377,24 @@ const close = () => {
           :placeholder="$t('upsertOrderModal.info.payedDatePlaceholder')"
           style="width: 100%"
         />
+      </a-form-item>
+
+      <!-- 付款币种 -->
+      <a-form-item
+        :label="$t('orderView.info.pay_currency')"
+        name="pay_currency"
+        :rules="[
+          {
+            required: true,
+            type: 'string',
+            message: $t('upsertOrderModal.message.payCurrencyInvalid')
+          }
+        ]"
+      >
+        <a-radio-group v-model:value="formState.pay_currency" size="small" style="width: 100%">
+          <a-radio-button value="CNY">{{ $t('upsertOrderModal.info.CNY') }}</a-radio-button>
+          <a-radio-button value="THB">{{ $t('upsertOrderModal.info.THB') }}</a-radio-button>
+        </a-radio-group>
       </a-form-item>
     </a-form>
   </a-modal>

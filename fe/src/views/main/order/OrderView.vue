@@ -129,9 +129,39 @@ const columns = [
     width: 100
   },
   {
+    dataIndex: 'good_value',
+    key: 'good_value',
+    title: t('orderView.info.good_value'),
+    width: 100
+  },
+  {
+    dataIndex: 'rate',
+    key: 'rate',
+    title: t('orderView.info.rate'),
+    width: 100
+  },
+  {
+    dataIndex: 'insurance',
+    key: 'insurance',
+    title: t('orderView.info.insurance'),
+    width: 100
+  },
+  {
     dataIndex: 'packing_cost',
     key: 'packing_cost',
     title: t('orderView.info.packing_cost'),
+    width: 100
+  },
+  {
+    dataIndex: 'disbursements',
+    key: 'disbursements',
+    title: t('orderView.info.disbursements'),
+    width: 100
+  },
+  {
+    dataIndex: 'compensate',
+    key: 'compensate',
+    title: t('orderView.info.compensate'),
     width: 100
   },
   {
@@ -199,6 +229,25 @@ const columns = [
     }
   },
   {
+    dataIndex: 'pay_currency',
+    key: 'pay_currency',
+    title: t('orderView.info.pay_currency'),
+    width: 150,
+    customRender: ({ text }: { text: string }) => {
+      switch (text) {
+        case 'CNY': {
+          return t('orderView.info.CNY')
+        }
+        case 'THB': {
+          return t('orderView.info.THB')
+        }
+        default: {
+          return ''
+        }
+      }
+    }
+  },
+  {
     dataIndex: 'status',
     key: 'status',
     title: t('orderView.info.status'),
@@ -214,6 +263,11 @@ const columns = [
         text: t('orderView.info.warehouse_cost_to_be_record'),
         value: 'warehouse_cost_to_be_record',
         color: 'orange'
+      },
+      {
+        text: t('orderView.info.finance_cost_to_be_record'),
+        value: 'finance_cost_to_be_record',
+        color: 'grey'
       },
       { text: t('orderView.info.cost_to_be_pay'), value: 'cost_to_be_pay', color: 'blue' },
       { text: t('orderView.info.cost_has_payed'), value: 'cost_has_payed', color: 'green' }
@@ -308,6 +362,10 @@ const canUpsertOrder = (order: OrderRes): boolean => {
     }
     case 'warehouse_cost_to_be_record': {
       safeRoles = ['admin', 'staff']
+      break
+    }
+    case 'finance_cost_to_be_record': {
+      safeRoles = ['admin', 'finance']
       break
     }
     case 'cost_to_be_pay': {

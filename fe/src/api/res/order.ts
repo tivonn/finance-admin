@@ -15,7 +15,11 @@ export interface OrderRes {
   inner_size_height: number
   volume: number
   unit_price: number
+  good_value: number
+  rate: number
   packing_cost: number
+  disbursements: number
+  compensate: number
   client_freight: number
   stuffing_number: string
   warehouse_size_length: number
@@ -28,9 +32,11 @@ export interface OrderRes {
   status:
     | 'client_cost_to_be_record'
     | 'warehouse_cost_to_be_record'
+    | 'finance_cost_to_be_record'
     | 'cost_to_be_pay'
     | 'cost_has_payed'
   payed_date: string
+  pay_currency: 'CNY' | 'THB'
   create_at: string
   update_at: string
   is_delete: boolean

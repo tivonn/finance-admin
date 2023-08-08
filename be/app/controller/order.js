@@ -13,6 +13,7 @@ const updateOrderRules = {
     values: [
       "client_cost_to_be_record",
       "warehouse_cost_to_be_record",
+      "finance_cost_to_be_record",
       "cost_to_be_pay",
       "cost_has_payed",
     ],
@@ -65,10 +66,38 @@ const updateOrderWarehouseCostToBeRecordRules = Object.assign(
   }
 );
 
+const updateOrderFinanceCostToBeRecordRules = Object.assign(
+  {},
+  updateOrderRules,
+  {
+    good_value: {
+      type: "number",
+      required: false,
+    },
+    rate: {
+      type: "number",
+      required: false,
+    },
+    disbursements: {
+      type: "number",
+      required: true,
+    },
+    compensate: {
+      type: "number",
+      required: true,
+    },
+  }
+);
+
 const updateOrderCostToBePayRules = Object.assign({}, updateOrderRules, {
   payed_date: {
     type: "date",
     required: true,
+  },
+  pay_currency: {
+    type: "enum",
+    required: true,
+    values: ["CNY", "THB"],
   },
 });
 
@@ -102,6 +131,7 @@ const getOrdersRules = {
       values: [
         "client_cost_to_be_record",
         "warehouse_cost_to_be_record",
+        "finance_cost_to_be_record",
         "cost_to_be_pay",
         "cost_has_payed",
       ],
@@ -149,6 +179,10 @@ class OrderController extends Controller {
       }
       case "warehouse_cost_to_be_record": {
         rule = updateOrderWarehouseCostToBeRecordRules;
+        break;
+      }
+      case "finance_cost_to_be_record": {
+        rule = updateOrderFinanceCostToBeRecordRules;
         break;
       }
       case "cost_to_be_pay": {
