@@ -3,6 +3,7 @@
 const Service = require("egg").Service;
 const lodash = require("lodash");
 const dayjs = require("dayjs");
+const { getFirstLevelClassify, getSecondLevelDetail } = require('../utils/bank_report')
 
 class BankReportService extends Service {
     get bankReportsModel() {
@@ -33,6 +34,10 @@ class BankReportService extends Service {
                 exclude: ["is_delete", "create_at", "update_at"].concat(params.pay_currency === 'CNY' ? ['exchange_rate', 'rmb_in', 'rmb_out', 'rmb_remain'] : []),
             },
         });
+        bankReports.rows.forEach(bankReport => {
+            bankReport.first_level_classify = getFirstLevelClassify(bankReport.first_level_classify)
+            bankReport.second_level_detail = getSecondLevelDetail(bankReport.second_level_detail)
+        })
         return bankReports;
     }
 }

@@ -49,11 +49,12 @@ const columns = [
     key: 'remain',
     title: t('bankReportView.info.remain')
   },
-  {
-    dataIndex: 'description',
-    key: 'description',
-    title: t('bankReportView.info.description')
-  },
+  // TODO: 银行账描述
+  // {
+  //   dataIndex: 'description',
+  //   key: 'description',
+  //   title: t('bankReportView.info.description')
+  // },
   {
     dataIndex: 'first_level_classify',
     key: 'first_level_classify',

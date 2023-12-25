@@ -99,6 +99,10 @@ const updateOrderCostToBePayRules = Object.assign({}, updateOrderRules, {
     required: true,
     values: ["CNY", "THB"],
   },
+  bank_out: {
+    type: "number",
+    require: true
+  }
 });
 
 const getOrdersRules = {

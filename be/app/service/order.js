@@ -6,6 +6,8 @@ const dayjs = require("dayjs");
 const nodeXlsx = require("node-xlsx");
 const xlsx = require("xlsx");
 const xlsxStyle = require("xlsx-style");
+const { getProject } = require("../utils/bank_report")
+const math = require('math.js')
 
 class OrderService extends Service {
   get ordersModel() {
@@ -83,6 +85,7 @@ class OrderService extends Service {
   async updateOrder(params) {
     const { ctx } = this;
     let safeRoles, status;
+    // 状态后移一个节点
     switch (params.status) {
       case "client_cost_to_be_record": {
         safeRoles = ["admin", "staff"];
@@ -130,8 +133,8 @@ class OrderService extends Service {
     let data = {};
     switch (params.status) {
       case "client_cost_to_be_record": {
-        const client_freight =
-          order.number * order.volume * params.unit_price + params.packing_cost;
+        const client_freight = math.format(
+          (order.number * order.volume * params.unit_price + params.packing_cost), { precision: 14 })
         data = { client_freight };
         break;
       }
@@ -141,9 +144,9 @@ class OrderService extends Service {
             params.warehouse_size_width *
             params.warehouse_size_height) /
           1000000;
-        const warehouse_freight =
+        const warehouse_freight = math.format((
           order.number * warehouse_volumn * params.cost_unit_price +
-          params.cost_packing_cost;
+          params.cost_packing_cost), { precision: 14 });
         data = {
           warehouse_volumn,
           warehouse_freight,
@@ -167,7 +170,59 @@ class OrderService extends Service {
         break;
       }
     }
-    order.update(Object.assign({}, params, { status }, data));
+
+    const newParams = Object.assign({}, params, { status }, data)
+    if (status === 'cost_has_payed') {
+      // 订单完成，除了更新订单状态外，需要同步更新银行账
+      let updateOrderTransaction = null;
+      try {
+        // 创建订单事务
+        updateOrderTransaction = await this.ctx.model.transaction();
+        // 更新订单状态
+        await this.ordersModel.update(newParams, {
+          where: {
+            id: params.id,
+          },
+          transaction: updateOrderTransaction,
+        });
+        // 创建银行账
+        const exchangeRate = 5
+        const bankReports = await this.app.model.BankReports.findAll({ where: { pay_currency: params.pay_currency }, transaction: updateOrderTransaction })
+        const bankIn = order.client_freight
+        const bankOut = params.bank_out
+        const originRemain = bankReports.length ? bankReports[bankReports.length - 1].remain : 0
+        const newRemain = math.format((originRemain + bankIn - bankOut), { precision: 14 })
+        await this.app.model.BankReports.create(Object.assign({}, {
+          bank_report_date: params.payed_date,
+          bank_in: bankIn,
+          bank_out: bankOut,
+          remain: newRemain,
+          description: '',  // TODO
+          first_level_classify: 'cost_payable',
+          second_level_detail: 'freight_cost',
+          project: getProject('cost_payable', 'freight_cost'),
+          pay_currency: params.pay_currency
+        }, params.pay_currency === 'CNY' ? {} : {
+          exchange_rate: exchangeRate,
+          rmb_in: (order.client_freight / exchangeRate).toFixed(2),
+          rmb_out: (params.bank_out / exchangeRate).toFixed(2),
+          rmb_remain: (newRemain / exchangeRate).toFixed(2),
+        }), {
+          transaction: updateOrderTransaction,
+        });
+
+        await updateOrderTransaction.commit();
+
+        ctx.status = 200;
+      } catch (error) {
+        await updateOrderTransaction.rollback();
+        ctx.throw(500);
+      }
+    } else {
+      // 订单未完成，正常更新订单状态即可
+      order.update(newParams);
+    }
+
     ctx.status = 200;
   }
 
@@ -627,31 +682,31 @@ class OrderService extends Service {
         },
         params.user_code
           ? {
-              user_code: {
-                [Op.like]: `%${params.user_code}%`,
-              },
-            }
+            user_code: {
+              [Op.like]: `%${params.user_code}%`,
+            },
+          }
           : {},
         params.waybill_number
           ? {
-              waybill_number: {
-                [Op.like]: `%${params.waybill_number}%`,
-              },
-            }
+            waybill_number: {
+              [Op.like]: `%${params.waybill_number}%`,
+            },
+          }
           : {},
         params.stuffing_number
           ? {
-              stuffing_number: {
-                [Op.like]: `%${params.stuffing_number}%`,
-              },
-            }
+            stuffing_number: {
+              [Op.like]: `%${params.stuffing_number}%`,
+            },
+          }
           : {},
         params.status
           ? {
-              status: {
-                [Op.in]: params.status,
-              },
-            }
+            status: {
+              [Op.in]: params.status,
+            },
+          }
           : {}
       ),
       ...ctx.helper.getPageParams(params.page_index, params.page_size),

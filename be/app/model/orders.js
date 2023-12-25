@@ -155,6 +155,10 @@ module.exports = app => {
     pay_currency: {
       type: DataTypes.ENUM('CNY', 'THB'),
       allowNull: true
+    },
+    bank_out: {
+      type: "DOUBLE",
+      allowNull: true
     }
   }, {
     tableName: 'orders'
