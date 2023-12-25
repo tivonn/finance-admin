@@ -215,7 +215,7 @@ class OrderController extends Controller {
     ctx.body = res;
   }
 
-  // 获取订单列表
+  // 导出送货单
   async downloadDeliveryBill() {
     const { ctx } = this;
     const params = ctx.helper.filterParams(

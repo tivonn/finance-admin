@@ -20,6 +20,10 @@ export const auth: Auth = {
   order: { required: true, allows: allRoles },
   // 财务报表
   report: { required: true, allows: allRoles },
+  // 银行账
+  bankReport: { required: true, allows: ['admin', 'finance'] },
+  // 科目汇总
+  subjectCollect: { required: true, allows: ['admin', 'finance'] },
   // 管理
   manage: { required: true, allows: ['admin'] },
   // 员工管理

@@ -49,8 +49,24 @@ const router = createRouter({
         {
           path: 'report',
           name: 'report',
-          component: () => import('@/views/main/report/ReportView.vue'),
-          meta: { auth: auth['report'] }
+          meta: { auth: auth['report'] },
+          children: [
+            // 银行账
+            {
+              path: 'bank',
+              name: 'bankReport',
+              component: () => import('@/views/main/report/bank/BankReportView.vue'),
+              meta: { auth: auth['bankReport'] }
+            },
+            // 科目汇总
+            {
+              path: 'subject',
+              name: 'subjectCollect',
+              component: () => import('@/views/main/report/subject/SubjectCollectView.vue'),
+              meta: { auth: auth['subjectCollect'] }
+            }
+
+          ]
         },
         // 管理页
         {

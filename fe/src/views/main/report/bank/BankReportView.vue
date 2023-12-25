@@ -8,6 +8,8 @@ import { useI18n } from 'vue-i18n'
 import UpsertUserModal from '@/views/main/manage/user/UpsertUserModal.vue'
 import { message } from 'ant-design-vue'
 import { useStore } from '@/stores'
+import { log } from 'console'
+import { getLocalStorage, setLocalStorage } from '@/utils/common'
 
 const { t } = useI18n()
 const store = useStore()
@@ -28,42 +30,117 @@ interface APIResult {
 // 自定义
 const columns = [
   {
-    dataIndex: 'username',
-    key: 'username',
-    title: t('commonBiz.user.username'),
-    width: '25%',
-    customFilterDropdown: true
+    dataIndex: 'bank_report_date',
+    key: 'bank_report_date',
+    title: t('bankReportView.info.bankReportDate')
   },
   {
-    dataIndex: 'account',
-    key: 'account',
-    title: t('commonBiz.user.account'),
-    width: '25%'
+    dataIndex: 'bank_in',
+    key: 'bank_in',
+    title: t('bankReportView.info.bankIn')
   },
   {
-    dataIndex: 'role',
-    key: 'role',
-    title: t('commonBiz.user.role'),
-    width: '10%',
-    filters: [
-      { text: t('commonBiz.user.roles.admin'), value: 'admin', color: 'green' },
-      { text: t('commonBiz.user.roles.finance'), value: 'finance', color: 'blue' },
-      { text: t('commonBiz.user.roles.staff'), value: 'staff', color: 'orange' },
-      { text: t('commonBiz.user.roles.external'), value: 'external', color: 'red' }
-    ]
+    dataIndex: 'bank_out',
+    key: 'bank_out',
+    title: t('bankReportView.info.bankOut')
   },
   {
-    dataIndex: 'phone_number',
-    key: 'phone_number',
-    title: t('commonBiz.user.phoneNumber'),
-    width: '30%'
+    dataIndex: 'remain',
+    key: 'remain',
+    title: t('bankReportView.info.remain')
   },
-  { key: 'action', title: t('common.info.action'), fixed: 'right', width: 100 }
-]
+  {
+    dataIndex: 'description',
+    key: 'description',
+    title: t('bankReportView.info.description')
+  },
+  {
+    dataIndex: 'first_level_classify',
+    key: 'first_level_classify',
+    title: t('bankReportView.info.firstLevelClassify')
+  },
+  {
+    dataIndex: 'second_level_detail',
+    key: 'second_level_detail',
+    title: t('bankReportView.info.secondLevelDetail')
+  },
+  {
+    dataIndex: 'project',
+    key: 'project',
+    title: t('bankReportView.info.project')
+  }
+].concat(
+  getLocalStorage('bank-pay-currency') === 'THB'
+    ? [
+        {
+          dataIndex: 'exchange_rate',
+          key: 'exchange_rate',
+          title: t('bankReportView.info.exchangeRate')
+        },
+        {
+          dataIndex: 'rmb_in',
+          key: 'rmb_in',
+          title: t('bankReportView.info.rmbIn')
+        },
+        {
+          dataIndex: 'rmb_out',
+          key: 'rmb_out',
+          title: t('bankReportView.info.rmbOut')
+        },
+        {
+          dataIndex: 'rmb_remain',
+          key: 'rmb_remain',
+          title: t('bankReportView.info.rmbRemain')
+        }
+        // {
+        //   dataIndex: 'username',
+        //   key: 'username',
+        //   title: t('commonBiz.user.username'),
+        //   width: '25%',
+        //   customFilterDropdown: true
+        // },
+        // {
+        //   dataIndex: 'account',
+        //   key: 'account',
+        //   title: t('commonBiz.user.account'),
+        //   width: '25%'
+        // },
+        // {
+        //   dataIndex: 'role',
+        //   key: 'role',
+        //   title: t('commonBiz.user.role'),
+        //   width: '10%',
+        //   filters: [
+        //     { text: t('commonBiz.user.roles.admin'), value: 'admin', color: 'green' },
+        //     { text: t('commonBiz.user.roles.finance'), value: 'finance', color: 'blue' },
+        //     { text: t('commonBiz.user.roles.staff'), value: 'staff', color: 'orange' },
+        //     { text: t('commonBiz.user.roles.external'), value: 'external', color: 'red' }
+        //   ]
+        // },
+        // {
+        //   dataIndex: 'phone_number',
+        //   key: 'phone_number',
+        //   title: t('commonBiz.user.phoneNumber'),
+        //   width: '30%'
+        // },
+        // { key: 'action', title: t('common.info.action'), fixed: 'right', width: 100 }
+      ]
+    : []
+)
+
+const currentPayCurrency = ref<string>(getLocalStorage('bank-pay-currency') || 'CNY')
+const selectBankReportPayCurrency = (payCurrency: string) => {
+  currentPayCurrency.value = payCurrency
+  setLocalStorage('bank-pay-currency', payCurrency)
+  window.location.reload()
+}
 
 const queryData = (params: APIParams) => {
   // 自定义
-  return axios.post<APIResult>('/user/get_list', params)
+  return axios.post<APIResult>('/bank/report/get_list', {
+    pay_currency: currentPayCurrency.value,
+    ...params
+  })
 }
 
 const {
@@ -139,9 +216,11 @@ const toggleUpsertUserModal = (isShow: boolean) => {
   }
 }
 
-const addUser = () => {
-  toggleUpsertUserModal(true)
-}
+const addBankReport = () => {}
+const downloadBankReport = () => {}
+const deleteBankReport = () => {}
+const viewInBankReport = () => {}
+const viewOutBankReport = () => {}
 
 const updateUser = (user: UserRes) => {
   upsertUser.value = user
@@ -151,20 +230,43 @@ const updateUser = (user: UserRes) => {
 const deleteUser = async (user: UserRes) => {
   try {
     await axios.delete(`/user/${user.id}`)
-    message.success(t('manageUserView.message.deleteUserSuccess'))
+    message.success(t('bankReportView.message.deleteUserSuccess'))
     window.location.reload()
   } catch (error) {
-    message.error(t('manageUserView.message.deleteUserFailed'))
+    message.error(t('bankReportView.message.deleteUserFailed'))
   }
 }
 </script>
 
 <template>
-  <div class="manage-user-view">
-    <div class="manage-user-header">
-      <div class="manage-user-action">
-        <a-button type="primary" @click="addUser">{{
-          $t('manageUserView.actions.addUser')
+  <div class="bank-report-view">
+    <div class="bank-report-header">
+      <div class="bank-report-type">
+        <a-radio-group v-model:value="currentPayCurrency">
+          <a-radio-button value="CNY" @click="selectBankReportPayCurrency('CNY')">{{
+            $t('bankReportView.actions.selectCNYBankReport')
+          }}</a-radio-button>
+          <a-radio-button value="THB" @click="selectBankReportPayCurrency('THB')">{{
+            $t('bankReportView.actions.selectTHBBankReport')
+          }}</a-radio-button>
+        </a-radio-group>
+      </div>
+
+      <div class="bank-report-action">
+        <a-button type="primary" @click="addBankReport">{{
+          $t('bankReportView.actions.addBankReport')
+        }}</a-button>
+        <a-button type="primary" style="margin-left: 16px" @click="downloadBankReport" disabled>{{
+          $t('bankReportView.actions.downloadBankReport')
+        }}</a-button>
+        <a-button type="primary" style="margin-left: 16px" @click="deleteBankReport" disabled>{{
+          $t('bankReportView.actions.deleteBankReport')
+        }}</a-button>
+        <a-button type="primary" style="margin-left: 16px" @click="viewInBankReport" disabled>{{
+          $t('bankReportView.actions.viewInBankReport')
+        }}</a-button>
+        <a-button type="primary" style="margin-left: 16px" @click="viewOutBankReport" disabled>{{
+          $t('bankReportView.actions.viewOutBankReport')
         }}</a-button>
       </div>
     </div>
@@ -229,7 +331,7 @@ const deleteUser = async (user: UserRes) => {
               <edit-outlined class="edit-action" @click="() => updateUser(record)" />
               <a-divider type="vertical" />
               <a-popconfirm
-                :title="$t('manageUserView.actions.confirmDeleteUser')"
+                :title="$t('bankReportView.actions.confirmDeleteUser')"
                 :ok-text="$t('common.actions.confirm')"
                 :cancel-text="$t('common.actions.cancel')"
                 @confirm="() => deleteUser(record)"
@@ -247,23 +349,26 @@ const deleteUser = async (user: UserRes) => {
     v-if="showUpsertUserModal"
     :upsertUser="upsertUser"
     @closeModal="() => toggleUpsertUserModal(false)"
-  ></UpsertUserModal>
+  >
+  </UpsertUserModal>
 </template>
 
 <style lang="less">
 @import '@/assets/css/variables.less';
 
-.manage-user-view {
-  .manage-user-header {
+.bank-report-view {
+  .bank-report-header {
     height: 60px;
     padding: 0 16px;
     display: flex;
     align-items: center;
   }
-  .manage-user-action {
+
+  .bank-report-action {
     margin-left: auto;
     display: flex;
   }
+
   .action {
     .edit-action,
     .delete-action {
@@ -271,11 +376,13 @@ const deleteUser = async (user: UserRes) => {
         cursor: pointer;
       }
     }
+
     .edit-action {
       &:hover {
         color: @--color-success;
       }
     }
+
     .delete-action {
       &:hover {
         color: @--color-danger;

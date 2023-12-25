@@ -47,6 +47,7 @@ export default createI18n({
         overview: '总览',
         order: '订单详情',
         report: '财务报表',
+        reports: { bankReport: '银行账', subjectCollect: "科目汇总" },
         manage: '管理',
         manages: { manageUser: '用户管理' }
       },
@@ -188,6 +189,35 @@ export default createI18n({
       reportView: {
         info: {
           empty: '财务报表页开发中'
+        }
+      },
+      bankReportView: {
+        info: {
+          bankReportDate: '日期',
+          bankIn: '银行入账',
+          bankOut: '银行支出',
+          remain: '余额',
+          description: '备注',
+          firstLevelClassify: '分类一级',
+          secondLevelDetail: '二级明细',
+          project: "项目",
+          exchangeRate: '汇率',
+          rmbIn: '人民币入账',
+          rmbOut: '人民币支出',
+          rmbRemain: '人民币余额'
+        },
+        actions: {
+          selectCNYBankReport: '中国银行',
+          selectTHBBankReport: '泰国银行',
+          addBankReport: "新增",
+          downloadBankReport: "导出",
+          deleteBankReport: "删除",
+          viewInBankReport: "只看进账",
+          viewOutBankReport: "只看支出"
+        },
+        message: {
+          // deleteUserSuccess: '删除用户成功',
+          // deleteUserFailed: '删除用户失败'
         }
       },
       manageUserView: {

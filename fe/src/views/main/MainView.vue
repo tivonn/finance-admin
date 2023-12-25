@@ -49,7 +49,23 @@ const navigations = ref<
     text: t('route.report'),
     route: {
       name: 'report'
-    }
+    },
+    subs: [
+      {
+        key: '/report/bank',
+        text: t('route.reports.bankReport'),
+        route: {
+          name: 'bankReport'
+        }
+      },
+      {
+        key: '/report/subject',
+        text: t('route.reports.subjectCollect'),
+        route: {
+          name: 'subjectCollect'
+        }
+      }
+    ]
   },
   {
     key: '/manage',
