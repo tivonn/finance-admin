@@ -2,7 +2,7 @@
 
 const { Controller } = require("egg");
 
-const Rules = {
+const updateOrderRules = {
   id: {
     type: "number",
     required: true,
@@ -20,9 +20,9 @@ const Rules = {
   },
 };
 
-const ClientCostToBeRecordRules = Object.assign(
+const updateOrderClientCostToBeRecordRules = Object.assign(
   {},
-  Rules,
+  updateOrderRules,
   {
     unit_price: {
       type: "number",
@@ -35,9 +35,9 @@ const ClientCostToBeRecordRules = Object.assign(
   }
 );
 
-const WarehouseCostToBeRecordRules = Object.assign(
+const updateOrderWarehouseCostToBeRecordRules = Object.assign(
   {},
-  Rules,
+  updateOrderRules,
   {
     stuffing_number: {
       type: "number",
@@ -66,9 +66,9 @@ const WarehouseCostToBeRecordRules = Object.assign(
   }
 );
 
-const FinanceCostToBeRecordRules = Object.assign(
+const updateOrderFinanceCostToBeRecordRules = Object.assign(
   {},
-  Rules,
+  updateOrderRules,
   {
     good_value: {
       type: "number",
@@ -89,7 +89,7 @@ const FinanceCostToBeRecordRules = Object.assign(
   }
 );
 
-const CostToBePayRules = Object.assign({}, Rules, {
+const updateOrderCostToBePayRules = Object.assign({}, updateOrderRules, {
   payed_date: {
     type: "date",
     required: true,
@@ -168,25 +168,25 @@ class OrderController extends Controller {
   }
 
   // 修改订单
-  async() {
+  async updateOrder() {
     const { ctx } = this;
     const status = ctx.request.body.status;
     let rule;
     switch (status) {
       case "client_cost_to_be_record": {
-        rule = ClientCostToBeRecordRules;
+        rule = updateOrderClientCostToBeRecordRules;
         break;
       }
       case "warehouse_cost_to_be_record": {
-        rule = WarehouseCostToBeRecordRules;
+        rule = updateOrderWarehouseCostToBeRecordRules;
         break;
       }
       case "finance_cost_to_be_record": {
-        rule = FinanceCostToBeRecordRules;
+        rule = updateOrderFinanceCostToBeRecordRules;
         break;
       }
       case "cost_to_be_pay": {
-        rule = CostToBePayRules;
+        rule = updateOrderCostToBePayRules;
         break;
       }
       default: {
@@ -199,7 +199,7 @@ class OrderController extends Controller {
       Object.assign({}, ctx.params, ctx.request.body)
     );
     ctx.validate(rule, params);
-    const res = await this.orderService.(params);
+    const res = await this.orderService.updateOrder(params);
     ctx.body = res;
   }
 
