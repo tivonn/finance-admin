@@ -30,13 +30,13 @@ const navigations = ref<
     }
   >
 >([
-  {
-    key: '/overview',
-    text: t('route.overview'),
-    route: {
-      name: 'overview'
-    }
-  },
+  // {
+  //   key: '/overview',
+  //   text: t('route.overview'),
+  //   route: {
+  //     name: 'overview'
+  //   }
+  // },
   {
     key: '/order',
     text: t('route.order'),

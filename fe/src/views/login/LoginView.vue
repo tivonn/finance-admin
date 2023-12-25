@@ -34,7 +34,7 @@ const login = async () => {
       await store.getUser()
 
       // 登录成功，跳转主页面
-      router.push({ name: 'overview' })
+      router.push({ name: 'order' })
     } catch {}
   } catch (error: any) {
     switch (error?.response?.data?.message) {

@@ -31,13 +31,13 @@ const router = createRouter({
       component: () => import('@/views/main/MainView.vue'),
       meta: { auth: auth['main'] },
       children: [
-        // 总览
-        {
-          path: 'overview',
-          name: 'overview',
-          component: () => import('@/views/main/overview/OverviewView.vue'),
-          meta: { auth: auth['overview'] }
-        },
+        // // 总览
+        // {
+        //   path: 'overview',
+        //   name: 'overview',
+        //   component: () => import('@/views/main/overview/OverviewView.vue'),
+        //   meta: { auth: auth['overview'] }
+        // },
         // 订单
         {
           path: 'order',
@@ -94,7 +94,7 @@ router.beforeEach((to, _, next) => {
     if (store.isLogin) {
       // 已登录
       next({
-        name: 'overview'
+        name: 'order'
       })
     } else {
       // 未登录
@@ -114,7 +114,7 @@ router.beforeEach((to, _, next) => {
         } else {
           // 无权限访问页面，不放行，跳转总览页
           next({
-            name: 'overview'
+            name: 'order'
           })
         }
       } else {
@@ -127,7 +127,7 @@ router.beforeEach((to, _, next) => {
       // 不需要权限，目前仅登录页
       if (store.isLogin) {
         next({
-          name: 'overview'
+          name: 'order'
         })
       } else {
         next()
