@@ -586,7 +586,6 @@ const downloadDeliveryBill = async () => {
               <edit-outlined class="edit-action" @click="() => updateOrder(record)" />
               <a-divider type="vertical"
             /></template>
-            <!-- TODO：联动财务报表 -->
             <a-popconfirm
               v-if="canDeleteOrder()"
               :title="$t('orderView.actions.confirmDeleteOrder')"

@@ -6,7 +6,6 @@ const dayjs = require("dayjs");
 const nodeXlsx = require("node-xlsx");
 const xlsx = require("xlsx");
 const xlsxStyle = require("xlsx-style");
-const { getProject } = require("../utils/bank_report")
 const math = require('math.js')
 
 class OrderService extends Service {
@@ -186,28 +185,16 @@ class OrderService extends Service {
           transaction: updateOrderTransaction,
         });
         // 创建银行账
-        const exchangeRate = 5
-        const bankReports = await this.app.model.BankReports.findAll({ where: { pay_currency: params.pay_currency }, transaction: updateOrderTransaction })
-        const bankIn = order.client_freight
-        const bankOut = params.bank_out
-        const originRemain = bankReports.length ? bankReports[bankReports.length - 1].remain : 0
-        const newRemain = math.format((originRemain + bankIn - bankOut), { precision: 14 })
-        await this.app.model.BankReports.create(Object.assign({}, {
-          bank_report_date: params.payed_date,
-          bank_in: bankIn,
-          bank_out: bankOut,
-          remain: newRemain,
-          description: '',  // TODO
-          first_level_classify: 'cost_payable',
-          second_level_detail: 'freight_cost',
-          project: getProject('cost_payable', 'freight_cost'),
-          pay_currency: params.pay_currency
-        }, params.pay_currency === 'CNY' ? {} : {
-          exchange_rate: exchangeRate,
-          rmb_in: (order.client_freight / exchangeRate).toFixed(2),
-          rmb_out: (params.bank_out / exchangeRate).toFixed(2),
-          rmb_remain: (newRemain / exchangeRate).toFixed(2),
-        }), {
+        const data = await this.ctx.service.bankReport.getCreateBankReportData({
+          bankIn: order.client_freight,
+          bankReportDate: params.payed_date,
+          bankOut: params.bank_out,
+          description: params.description,
+          firstLevelClassify: 'cost_receivable',
+          secondLevelDetail: 'freight_cost',
+          payCurrency: params.pay_currency
+        })
+        await this.app.model.BankReports.create(data, {
           transaction: updateOrderTransaction,
         });
 

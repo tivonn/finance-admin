@@ -2,13 +2,11 @@
 import { usePagination } from 'vue-request'
 import { computed, ref } from 'vue'
 import axios from '@/api/axios'
-import type { UserRes } from '@/api/res/user'
 import { SearchOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
-import UpsertUserModal from '@/views/main/manage/user/UpsertUserModal.vue'
+import UpsertBankReportModal from '@/views/main/report/bank/UpsertBankReportModal.vue'
 import { message } from 'ant-design-vue'
 import { useStore } from '@/stores'
-import { log } from 'console'
 import { getLocalStorage, setLocalStorage } from '@/utils/common'
 
 const { t } = useI18n()
@@ -24,8 +22,117 @@ interface APIParams {
 }
 interface APIResult {
   counts: number
-  rows: Array<UserRes>
+  rows: Array<{}>
 }
+
+const firstLevelClassifyFilters = [
+  { text: t('bankReportView.info.firstLevelClassifyFilter.manage_cost'), value: 'manage_cost' },
+  {
+    text: t('bankReportView.info.firstLevelClassifyFilter.business_cost'),
+    value: 'business_cost'
+  },
+  {
+    text: t('bankReportView.info.firstLevelClassifyFilter.finance_cost'),
+    value: 'finance_cost'
+  },
+  { text: t('bankReportView.info.firstLevelClassifyFilter.bonus'), value: 'bonus' },
+  {
+    text: t('bankReportView.info.firstLevelClassifyFilter.cost_receivable'),
+    value: 'cost_receivable'
+  },
+  {
+    text: t('bankReportView.info.firstLevelClassifyFilter.cost_payable'),
+    value: 'cost_payable'
+  },
+  {
+    text: t('bankReportView.info.firstLevelClassifyFilter.other_cost_receivable'),
+    value: 'other_cost_receivable'
+  },
+  { text: t('bankReportView.info.firstLevelClassifyFilter.cost_allot'), value: 'cost_allot' },
+  {
+    text: t('bankReportView.info.firstLevelClassifyFilter.cost_real_in'),
+    value: 'cost_real_in'
+  },
+  {
+    text: t('bankReportView.info.firstLevelClassifyFilter.short_borrow_cost'),
+    value: 'short_borrow_cost'
+  },
+  {
+    text: t('bankReportView.info.firstLevelClassifyFilter.bank_save_cost'),
+    value: 'bank_save_cost'
+  },
+  {
+    text: t('bankReportView.info.firstLevelClassifyFilter.other_cost_in'),
+    value: 'other_cost_in'
+  }
+]
+
+const secondLevelDetailFilters = [
+  {
+    text: t('bankReportView.info.secondLevelDetailFilter.work_cost'),
+    value: 'work_cost'
+  },
+  {
+    text: t('bankReportView.info.secondLevelDetailFilter.tel_cost'),
+    value: 'tel_cost'
+  },
+  {
+    text: t('bankReportView.info.secondLevelDetailFilter.salary_cost'),
+    value: 'salary_cost'
+  },
+  {
+    text: t('bankReportView.info.secondLevelDetailFilter.social_security_cost'),
+    value: 'social_security_cost'
+  },
+  {
+    text: t('bankReportView.info.secondLevelDetailFilter.rent_cost'),
+    value: 'rent_cost'
+  },
+  {
+    text: t('bankReportView.info.secondLevelDetailFilter.packing_cost'),
+    value: 'packing_cost'
+  },
+  {
+    text: t('bankReportView.info.secondLevelDetailFilter.royalty_cost'),
+    value: 'royalty_cost'
+  },
+  {
+    text: t('bankReportView.info.secondLevelDetailFilter.cash'),
+    value: 'cash'
+  },
+  {
+    text: t('bankReportView.info.secondLevelDetailFilter.middle_cost'),
+    value: 'middle_cost'
+  },
+  {
+    text: t('bankReportView.info.secondLevelDetailFilter.accrual_cost'),
+    value: 'accrual_cost'
+  },
+  {
+    text: t('bankReportView.info.secondLevelDetailFilter.service_cost'),
+    value: 'service_cost'
+  },
+  {
+    text: t('bankReportView.info.secondLevelDetailFilter.all_profit_cost'),
+    value: 'all_profit_cost'
+  },
+  {
+    text: t('bankReportView.info.secondLevelDetailFilter.accrual_in_cost'),
+    value: 'accrual_in_cost'
+  },
+  {
+    text: t('bankReportView.info.secondLevelDetailFilter.bonus'),
+    value: 'bonus'
+  },
+  {
+    text: t('bankReportView.info.secondLevelDetailFilter.th_cost'),
+    value: 'th_cost'
+  },
+  {
+    text: t('bankReportView.info.secondLevelDetailFilter.freight_cost'),
+    value: 'freight_cost'
+  }
+]
 
 // 自定义
 const columns = [
@@ -49,21 +156,22 @@ const columns = [
     key: 'remain',
     title: t('bankReportView.info.remain')
   },
-  // TODO: 银行账描述
-  // {
-  //   dataIndex: 'description',
-  //   key: 'description',
-  //   title: t('bankReportView.info.description')
-  // },
+  {
+    dataIndex: 'description',
+    key: 'description',
+    title: t('bankReportView.info.description')
+  },
   {
     dataIndex: 'first_level_classify',
     key: 'first_level_classify',
-    title: t('bankReportView.info.firstLevelClassify')
+    title: t('bankReportView.info.firstLevelClassify'),
+    filters: firstLevelClassifyFilters
   },
   {
     dataIndex: 'second_level_detail',
     key: 'second_level_detail',
-    title: t('bankReportView.info.secondLevelDetail')
+    title: t('bankReportView.info.secondLevelDetail'),
+    filters: secondLevelDetailFilters
   },
   {
     dataIndex: 'project',
@@ -93,42 +201,11 @@ const columns = [
           key: 'rmb_remain',
           title: t('bankReportView.info.rmbRemain')
         }
-        // {
-        //   dataIndex: 'username',
-        //   key: 'username',
-        //   title: t('commonBiz.user.username'),
-        //   width: '25%',
-        //   customFilterDropdown: true
-        // },
-        // {
-        //   dataIndex: 'account',
-        //   key: 'account',
-        //   title: t('commonBiz.user.account'),
-        //   width: '25%'
-        // },
-        // {
-        //   dataIndex: 'role',
-        //   key: 'role',
-        //   title: t('commonBiz.user.role'),
-        //   width: '10%',
-        //   filters: [
-        //     { text: t('commonBiz.user.roles.admin'), value: 'admin', color: 'green' },
-        //     { text: t('commonBiz.user.roles.finance'), value: 'finance', color: 'blue' },
-        //     { text: t('commonBiz.user.roles.staff'), value: 'staff', color: 'orange' },
-        //     { text: t('commonBiz.user.roles.external'), value: 'external', color: 'red' }
-        //   ]
-        // },
-        // {
-        //   dataIndex: 'phone_number',
-        //   key: 'phone_number',
-        //   title: t('commonBiz.user.phoneNumber'),
-        //   width: '30%'
-        // },
-        // { key: 'action', title: t('common.info.action'), fixed: 'right', width: 100 }
       ]
     : []
 )
 
+// 付款币种
 const currentPayCurrency = ref<string>(getLocalStorage('bank-pay-currency') || 'CNY')
 const selectBankReportPayCurrency = (payCurrency: string) => {
   currentPayCurrency.value = payCurrency
@@ -203,40 +280,43 @@ const handleReset = (clearFilters: Function) => {
 }
 
 // 修改数据
-const showUpsertUserModal = ref<boolean>(false)
-const upsertUser = ref<UserRes | {}>({})
+const showUpsertBankReportModal = ref<boolean>(false)
+const upsertBankReport = ref<{}>({})
 
-const canEditUser = (): boolean => {
-  const safeRoles = ['admin']
-  return safeRoles.includes(store.user.role)
-}
-const toggleUpsertUserModal = (isShow: boolean) => {
-  showUpsertUserModal.value = isShow
+// const canEditUser = (): boolean => {
+//   const safeRoles = ['admin']
+//   return safeRoles.includes(store.user.role)
+// }
+const toggleUpsertBankReportModal = (isShow: boolean) => {
+  showUpsertBankReportModal.value = isShow
   if (!isShow) {
-    upsertUser.value = {}
+    upsertBankReport.value = {}
   }
 }
 
-const addBankReport = () => {}
+const addBankReport = () => {
+  upsertBankReport.value = {}
+  toggleUpsertBankReportModal(true)
+}
+
+// const updateUser = (user) => {
+//   upsertBankReport.value = user
+//   toggleUpsertBankReportModal(true)
+// }
+
+const deleteBankReport = async (bankReport) => {
+  // try {
+  //   await axios.delete(`/user/${user.id}`)
+  //   message.success(t('bankReportView.message.deleteUserSuccess'))
+  //   window.location.reload()
+  // } catch (error) {
+  //   message.error(t('bankReportView.message.deleteUserFailed'))
+  // }
+}
+
 const downloadBankReport = () => {}
-const deleteBankReport = () => {}
 const viewInBankReport = () => {}
 const viewOutBankReport = () => {}
-
-const updateUser = (user: UserRes) => {
-  upsertUser.value = user
-  toggleUpsertUserModal(true)
-}
-
-const deleteUser = async (user: UserRes) => {
-  try {
-    await axios.delete(`/user/${user.id}`)
-    message.success(t('bankReportView.message.deleteUserSuccess'))
-    window.location.reload()
-  } catch (error) {
-    message.error(t('bankReportView.message.deleteUserFailed'))
-  }
-}
 </script>
 
 <template>
@@ -273,7 +353,7 @@ const deleteUser = async (user: UserRes) => {
     </div>
     <a-table
       :columns="columns"
-      :row-key="(row: UserRes) => row.id"
+      :row-key="(row) => row.id"
       :data-source="dataSource?.data.rows"
       :locale="{
         filterConfirm: $t('common.actions.confirm'),
@@ -314,9 +394,10 @@ const deleteUser = async (user: UserRes) => {
           </a-button>
         </div>
       </template>
-      <!-- 表格内容 -->
+      <!-- 
+      表格内容
       <template #bodyCell="{ record, column, text }">
-        <!-- 权限 -->
+        权限
         <template v-if="column.key === 'role'">
           <a-tag
             :key="text"
@@ -325,7 +406,7 @@ const deleteUser = async (user: UserRes) => {
             {{ column.filters.find((role: any) => role.value === text)?.text }}
           </a-tag>
         </template>
-        <!-- 操作 -->
+        操作
         <template v-else-if="column.key === 'action'">
           <span class="action">
             <template v-if="canEditUser()">
@@ -335,7 +416,7 @@ const deleteUser = async (user: UserRes) => {
                 :title="$t('bankReportView.actions.confirmDeleteUser')"
                 :ok-text="$t('common.actions.confirm')"
                 :cancel-text="$t('common.actions.cancel')"
-                @confirm="() => deleteUser(record)"
+                @confirm="() => deleteBankReport(record)"
               >
                 <delete-outlined class="delete-action" />
               </a-popconfirm>
@@ -344,14 +425,18 @@ const deleteUser = async (user: UserRes) => {
           </span>
         </template>
       </template>
+      -->
     </a-table>
   </div>
-  <UpsertUserModal
-    v-if="showUpsertUserModal"
-    :upsertUser="upsertUser"
-    @closeModal="() => toggleUpsertUserModal(false)"
+  <UpsertBankReportModal
+    v-if="showUpsertBankReportModal"
+    :upsertBankReport="upsertBankReport"
+    :currentPayCurrency="currentPayCurrency"
+    :firstLevelClassifyFilters="firstLevelClassifyFilters"
+    :secondLevelDetailFilters="secondLevelDetailFilters"
+    @closeModal="() => toggleUpsertBankReportModal(false)"
   >
-  </UpsertUserModal>
+  </UpsertBankReportModal>
 </template>
 
 <style lang="less">

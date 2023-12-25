@@ -140,6 +140,7 @@ const toggleUpsertUserModal = (isShow: boolean) => {
 }
 
 const addUser = () => {
+  upsertUser.value = {}
   toggleUpsertUserModal(true)
 }
 

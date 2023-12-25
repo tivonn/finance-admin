@@ -420,6 +420,22 @@ const close = () => {
           style="width: 100%"
         />
       </a-form-item>
+
+      <!-- 备注 -->
+      <a-form-item
+        :label="$t('orderView.info.description')"
+        name="description"
+        :rules="[
+          {
+            required: false
+          }
+        ]"
+      >
+        <a-input
+          v-model:value="formState.description"
+          :placeholder="$t('upsertOrderModal.info.descriptionPlaceholder')"
+        />
+      </a-form-item>
     </a-form>
   </a-modal>
 </template>

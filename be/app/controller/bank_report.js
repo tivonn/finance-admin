@@ -18,35 +18,72 @@ const getBankReportsRules = {
             "CNY",
             "THB",
         ]
-    }
-    // user_code: {
-    //     type: "string",
-    //     required: false,
-    // },
-    // waybill_number: {
-    //     type: "string",
-    //     required: false,
-    // },
-    // stuffing_number: {
-    //     type: "string",
-    //     required: false,
-    // },
-    // status: {
-    //     type: "array",
-    //     itemType: "enum",
-    //     rule: {
-    //         type: "enum",
-    //         required: false,
-    //         values: [
-    //             "client_cost_to_be_record",
-    //             "warehouse_cost_to_be_record",
-    //             "finance_cost_to_be_record",
-    //             "cost_to_be_pay",
-    //             "cost_has_payed",
-    //         ],
-    //     },
-    //     required: false,
-    // },
+    },
+    first_level_classify: {
+        type: "array",
+        itemType: "enum",
+        rule: {
+            type: "enum",
+            required: false,
+            values: [
+                'manage_cost', 'business_cost', 'finance_cost', 'bonus', 'cost_receivable', 'cost_payable', 'other_cost_receivable', 'cost_allot', 'cost_real_in', 'short_borrow_cost', 'bank_save_cost', 'other_cost_in'
+            ],
+        },
+        required: false,
+    },
+    second_level_detail: {
+        type: "array",
+        itemType: "enum",
+        rule: {
+            type: "enum",
+            required: false,
+            values: [
+                'work_cost', 'tel_cost', 'salary_cost', 'social_security_cost', 'rent_cost', 'packing_cost', 'royalty_cost', 'cash', 'middle_cost', 'accrual_cost', 'service_cost', 'all_profit_cost', 'accrual_in_cost', 'bonus', 'th_cost', 'freight_cost'
+            ],
+        },
+        required: false,
+    },
+};
+
+const createBankReportRules = {
+    pay_currency: {
+        type: "enum",
+        required: true,
+        values: [
+            "CNY",
+            "THB",
+        ]
+    },
+    bank_report_date: {
+        type: "date",
+        required: true,
+    },
+    bank_in: {
+        type: "number",
+        required: true,
+    },
+    bank_out: {
+        type: "number",
+        required: true,
+    },
+    description: {
+        type: "string",
+        required: false,
+    },
+    first_level_classify: {
+        type: "enum",
+        required: true,
+        values: [
+            'manage_cost', 'business_cost', 'finance_cost', 'bonus', 'cost_receivable', 'cost_payable', 'other_cost_receivable', 'cost_allot', 'cost_real_in', 'short_borrow_cost', 'bank_save_cost', 'other_cost_in'
+        ]
+    },
+    second_level_detail: {
+        type: "enum",
+        required: true,
+        values: [
+            'work_cost', 'tel_cost', 'salary_cost', 'social_security_cost', 'rent_cost', 'packing_cost', 'royalty_cost', 'cash', 'middle_cost', 'accrual_cost', 'service_cost', 'all_profit_cost', 'accrual_in_cost', 'bonus', 'th_cost', 'freight_cost'
+        ],
+    },
 };
 
 class BankReportController extends Controller {
@@ -63,6 +100,18 @@ class BankReportController extends Controller {
         );
         ctx.validate(getBankReportsRules, params);
         const res = await this.bankReportService.getBankReports(params);
+        ctx.body = res;
+    }
+
+    // 创建银行账
+    async createBankReport() {
+        const { ctx } = this;
+        const params = ctx.helper.filterParams(
+            createBankReportRules,
+            Object.assign({}, ctx.request.body)
+        );
+        ctx.validate(createBankReportRules, params);
+        const res = await this.bankReportService.createBankReport(params);
         ctx.body = res;
     }
 }

@@ -3,7 +3,8 @@
 const Service = require("egg").Service;
 const lodash = require("lodash");
 const dayjs = require("dayjs");
-const { getFirstLevelClassify, getSecondLevelDetail } = require('../utils/bank_report')
+const { getFirstLevelClassify, getSecondLevelDetail, getProject } = require('../utils/bank_report')
+const math = require('math.js')
 
 class BankReportService extends Service {
     get bankReportsModel() {
@@ -27,6 +28,20 @@ class BankReportService extends Service {
                 {
                     is_delete: false,
                 },
+                params.first_level_classify
+                    ? {
+                        first_level_classify: {
+                            [Op.in]: params.first_level_classify,
+                        },
+                    }
+                    : {},
+                params.second_level_detail
+                    ? {
+                        second_level_detail: {
+                            [Op.in]: params.second_level_detail,
+                        },
+                    }
+                    : {}
             ),
             ...ctx.helper.getPageParams(params.page_index, params.page_size),
             // 过滤返回数据
@@ -39,6 +54,58 @@ class BankReportService extends Service {
             bankReport.second_level_detail = getSecondLevelDetail(bankReport.second_level_detail)
         })
         return bankReports;
+    }
+
+    // 获取要创建银行账的数据，可复用
+    async getCreateBankReportData(params) {
+        const { payCurrency, bankReportDate, bankIn, bankOut, description, firstLevelClassify, secondLevelDetail } = params
+        // 泰币汇率，先写死
+        const exchangeRate = 5
+        // 取最新的一条银行账，找余额
+        const bankReports = await this.bankReportsModel.findAll({ where: { pay_currency: payCurrency } })
+        const originRemain = bankReports.length ? bankReports[bankReports.length - 1].remain : 0
+        // 计算新的余额，新余额 = 旧余额 + 银行进账 - 银行支出
+        const newRemain = math.format((originRemain + bankIn - bankOut), { precision: 14 })
+        // 生成银行账数据
+        const data = Object.assign({}, {
+            bank_report_date: bankReportDate,
+            bank_in: bankIn,
+            bank_out: bankOut,
+            remain: newRemain,
+            description,
+            first_level_classify: firstLevelClassify,
+            second_level_detail: secondLevelDetail,
+            project: getProject(firstLevelClassify, secondLevelDetail),
+            pay_currency: payCurrency
+        }, payCurrency === 'CNY' ? {} : {
+            exchange_rate: exchangeRate,
+            rmb_in: (bankIn / exchangeRate).toFixed(2),
+            rmb_out: (bankOut / exchangeRate).toFixed(2),
+            rmb_remain: (newRemain / exchangeRate).toFixed(2),
+        })
+        return data
+    }
+
+    async createBankReport(params) {
+        const { ctx } = this;
+        // 权限校验
+        const safeRoles = ["admin", 'finance'];
+        if (!safeRoles.includes(ctx.state.user.role)) {
+            ctx.throw(403, "无权限");
+        }
+        // 业务逻辑
+        // 创建银行账
+        const data = await this.ctx.service.bankReport.getCreateBankReportData({
+            payCurrency: params.pay_currency,
+            bankReportDate: params.bank_report_date,
+            bankIn: params.bank_in,
+            bankOut: params.bank_out,
+            description: params.description,
+            firstLevelClassify: params.first_level_classify,
+            secondLevelDetail: params.second_level_detail,
+        })
+        const bankReport = await this.bankReportsModel.create(data);
+        return bankReport
     }
 }
 

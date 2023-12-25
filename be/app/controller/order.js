@@ -101,7 +101,11 @@ const updateOrderCostToBePayRules = Object.assign({}, updateOrderRules, {
   },
   bank_out: {
     type: "number",
-    require: true
+    required: true
+  },
+  description: {
+    type: "string",
+    required: false
   }
 });
 

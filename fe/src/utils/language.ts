@@ -166,6 +166,7 @@ export default createI18n({
           costPackingCostPlaceholder: '请输入成本打包费',
           payedDatePlaceholder: '请输入付款日期',
           bankOutPlaceholder: '请输入银行支出',
+          descriptionPlaceholder: '请输入备注',
           CNY: '人民币',
           THB: '泰铢'
         },
@@ -196,7 +197,7 @@ export default createI18n({
       },
       bankReportView: {
         info: {
-          bankReportDate: '日期',
+          bankReportDate: '付款日期',
           bankIn: '银行入账',
           bankOut: '银行支出',
           remain: '余额',
@@ -207,7 +208,11 @@ export default createI18n({
           exchangeRate: '汇率',
           rmbIn: '人民币入账',
           rmbOut: '人民币支出',
-          rmbRemain: '人民币余额'
+          rmbRemain: '人民币余额',
+          firstLevelClassifyFilter: { 'manage_cost': '管理费用', 'business_cost': '营业费用', 'finance_cost': '财务费用', 'bonus': '分红', 'cost_receivable': '应收账款', 'cost_payable': '应付账款', 'other_cost_receivable': '其他应收款', 'cost_allot': '利润分配', 'cost_real_in': '实收资本', 'short_borrow_cost': '短期借款', 'bank_save_cost': '银行存款', 'other_cost_in': '其他业务收入' },
+          secondLevelDetailFilter: {
+            'work_cost': '办公费', 'tel_cost': '电信费', 'salary_cost': '工资', 'social_security_cost': '社保费', 'rent_cost': '租金', 'packing_cost': '打包材料', 'royalty_cost': '提成', 'cash': '现金', 'middle_cost': '中间费', 'accrual_cost': '利息', 'service_cost': '手续费', 'all_profit_cost': '汇兑损益', 'accrual_in_cost': '利息收入', 'bonus': '分红', 'th_cost': '泰铢', 'freight_cost': '运费'
+          },
         },
         actions: {
           selectCNYBankReport: '中国银行',
@@ -221,6 +226,27 @@ export default createI18n({
         message: {
           // deleteUserSuccess: '删除用户成功',
           // deleteUserFailed: '删除用户失败'
+        }
+      },
+      upsertBankReportModal: {
+        info: {
+          createBankReport: '创建银行账',
+          updateBankReport: '编辑银行账',
+          bankReportDatePlaceholder: '请输入付款日期',
+          bankInPlaceholder: '请输入银行入账',
+          bankOutPlaceholder: '请输入银行支出',
+          descriptionPlaceholder: '请输入备注',
+          firstLevelClassifyPlaceholder: '请选择分类一级',
+          secondLevelDetailPlaceholder: '请选择二级明细',
+        },
+        message: {
+          bankReportDateInvalid: '付款日期必填',
+          bankInInvalid: '银行入账必填',
+          bankOutInvalid: '银行支出必填',
+          firstLevelClassifyInvalid: '分类一级必填',
+          secondLevelDetailInvalid: '二级明细必填',
+          createBankReportSuccess: '创建银行账成功',
+          createBankReportFailed: '创建银行账失败',
         }
       },
       manageUserView: {
