@@ -400,6 +400,26 @@ const close = () => {
           <a-radio-button value="THB">{{ $t('upsertOrderModal.info.THB') }}</a-radio-button>
         </a-radio-group>
       </a-form-item>
+
+      <!-- 银行支出 -->
+      <a-form-item
+        :label="$t('orderView.info.bank_out')"
+        name="bank_out"
+        :rules="[
+          {
+            required: true,
+            type: 'number',
+            message: $t('upsertOrderModal.message.bankOutInvalid')
+          }
+        ]"
+      >
+        <a-input-number
+          v-model:value="formState.bank_out"
+          :controls="false"
+          :placeholder="$t('upsertOrderModal.info.bankOutPlaceholder')"
+          style="width: 100%"
+        />
+      </a-form-item>
     </a-form>
   </a-modal>
 </template>

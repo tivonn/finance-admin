@@ -30,14 +30,15 @@ export interface OrderRes {
   cost_packing_cost: number
   warehouse_freight: number
   status:
-    | 'client_cost_to_be_record'
-    | 'warehouse_cost_to_be_record'
-    | 'finance_cost_to_be_record'
-    | 'cost_to_be_pay'
-    | 'cost_has_payed'
+  | 'client_cost_to_be_record'
+  | 'warehouse_cost_to_be_record'
+  | 'finance_cost_to_be_record'
+  | 'cost_to_be_pay'
+  | 'cost_has_payed'
   payed_date: string
   pay_currency: 'CNY' | 'THB'
   create_at: string
   update_at: string
   is_delete: boolean
+  bank_out: number
 }

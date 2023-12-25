@@ -118,6 +118,7 @@ export default createI18n({
           warehouse_freight: '库房运费',
           payed_date: '付款日期',
           pay_currency: '付款币种',
+          bank_out: '银行支出',
           CNY: '人民币',
           THB: '泰铢',
           status: '状态',
@@ -164,6 +165,7 @@ export default createI18n({
           costUnitPricePlaceholder: '请输入成本单价',
           costPackingCostPlaceholder: '请输入成本打包费',
           payedDatePlaceholder: '请输入付款日期',
+          bankOutPlaceholder: '请输入银行支出',
           CNY: '人民币',
           THB: '泰铢'
         },
@@ -180,6 +182,7 @@ export default createI18n({
           costPackingCostInvalid: '成本打包费必填',
           payedDateInvalid: '付款日期必填',
           payCurrencyInvalid: '付款币种必填',
+          bankOutInvalid: '银行支出必填',
           updateOrderSuccess: '编辑订单成功',
           updateOrderFailed: '编辑订单失败',
           orderCanNotUpdate: '订单不可修改',
