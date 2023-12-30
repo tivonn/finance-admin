@@ -26,7 +26,7 @@ const getBankReportsRules = {
             type: "enum",
             required: false,
             values: [
-                'manage_cost', 'business_cost', 'finance_cost', 'bonus', 'cost_receivable', 'cost_payable', 'other_cost_receivable', 'cost_allot', 'cost_real_in', 'short_borrow_cost', 'bank_save_cost', 'other_cost_in'
+                'manage_cost', 'business_cost', 'finance_cost', 'bonus', 'cost_receivable', 'cost_payable', 'other_cost_receivable', 'cost_allot', 'cost_real_in', 'short_borrow_cost', 'other_cost_in', 'accrual_in', 'bonus_payable', 'other_cost_payable', 'other_cost_out'
             ],
         },
         required: false,
@@ -38,7 +38,7 @@ const getBankReportsRules = {
             type: "enum",
             required: false,
             values: [
-                'work_cost', 'tel_cost', 'salary_cost', 'social_security_cost', 'rent_cost', 'packing_cost', 'royalty_cost', 'cash', 'middle_cost', 'accrual_cost', 'service_cost', 'all_profit_cost', 'accrual_in_cost', 'bonus', 'th_cost', 'freight_cost'
+                'work_cost', 'tel_cost', 'salary_cost', 'social_security_cost', 'rent_cost', 'packing_cost', 'royalty_cost', 'cash', 'middle_cost', 'accrual_cost', 'service_cost', 'all_profit_cost', 'accrual_in_cost', 'bonus', 'th_cost', 'freight_cost', 'cash_pledge', 'last_not_pay', 'not_allot_profit', 'other'
             ],
         },
         required: false,
@@ -74,14 +74,14 @@ const createBankReportRules = {
         type: "enum",
         required: true,
         values: [
-            'manage_cost', 'business_cost', 'finance_cost', 'bonus', 'cost_receivable', 'cost_payable', 'other_cost_receivable', 'cost_allot', 'cost_real_in', 'short_borrow_cost', 'bank_save_cost', 'other_cost_in'
+            'manage_cost', 'business_cost', 'finance_cost', 'bonus', 'cost_receivable', 'cost_payable', 'other_cost_receivable', 'cost_allot', 'cost_real_in', 'short_borrow_cost', 'other_cost_in', 'accrual_in', 'bonus_payable', 'other_cost_payable', 'other_cost_out'
         ]
     },
     second_level_detail: {
         type: "enum",
         required: true,
         values: [
-            'work_cost', 'tel_cost', 'salary_cost', 'social_security_cost', 'rent_cost', 'packing_cost', 'royalty_cost', 'cash', 'middle_cost', 'accrual_cost', 'service_cost', 'all_profit_cost', 'accrual_in_cost', 'bonus', 'th_cost', 'freight_cost'
+            'work_cost', 'tel_cost', 'salary_cost', 'social_security_cost', 'rent_cost', 'packing_cost', 'royalty_cost', 'cash', 'middle_cost', 'accrual_cost', 'service_cost', 'all_profit_cost', 'accrual_in_cost', 'bonus', 'th_cost', 'freight_cost', 'cash_pledge', 'last_not_pay', 'not_allot_profit', 'other'
         ],
     },
 };

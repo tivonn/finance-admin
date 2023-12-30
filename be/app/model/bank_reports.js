@@ -29,11 +29,11 @@ module.exports = app => {
       allowNull: true
     },
     first_level_classify: {
-      type: DataTypes.ENUM('manage_cost', 'business_cost', 'finance_cost', 'bonus', 'cost_receivable', 'cost_payable', 'other_cost_receivable', 'cost_allot', 'cost_real_in', 'short_borrow_cost', 'bank_save_cost', 'other_cost_in'),
+      type: DataTypes.ENUM('manage_cost', 'business_cost', 'finance_cost', 'bonus', 'cost_receivable', 'cost_payable', 'other_cost_receivable', 'cost_allot', 'cost_real_in', 'short_borrow_cost', 'other_cost_in', 'accrual_in', 'bonus_payable', 'other_cost_payable', 'other_cost_out'),
       allowNull: true
     },
     second_level_detail: {
-      type: DataTypes.ENUM('work_cost', 'tel_cost', 'salary_cost', 'social_security_cost', 'rent_cost', 'packing_cost', 'royalty_cost', 'cash', 'middle_cost', 'accrual_cost', 'service_cost', 'all_profit_cost', 'accrual_in_cost', 'bonus', 'th_cost', 'freight_cost'),
+      type: DataTypes.ENUM('work_cost', 'tel_cost', 'salary_cost', 'social_security_cost', 'rent_cost', 'packing_cost', 'royalty_cost', 'cash', 'middle_cost', 'accrual_cost', 'service_cost', 'all_profit_cost', 'accrual_in_cost', 'bonus', 'th_cost', 'freight_cost', 'cash_pledge', 'last_not_pay', 'not_allot_profit', 'other'),
       allowNull: true
     },
     project: {

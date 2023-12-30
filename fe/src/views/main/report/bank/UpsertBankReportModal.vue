@@ -216,7 +216,6 @@ const close = () => {
             :value="firstLevelClassifyFilter.value"
             >{{ firstLevelClassifyFilter.text }}</a-select-option
           >
-          <a-select-option value="lucy">Lucy</a-select-option>
         </a-select>
       </a-form-item>
 
@@ -241,7 +240,6 @@ const close = () => {
             :value="secondLevelDetailFilter.value"
             >{{ secondLevelDetailFilter.text }}</a-select-option
           >
-          <a-select-option value="lucy">Lucy</a-select-option>
         </a-select>
       </a-form-item>
     </a-form>

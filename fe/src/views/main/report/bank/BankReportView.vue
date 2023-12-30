@@ -26,7 +26,10 @@ interface APIResult {
 }
 
 const firstLevelClassifyFilters = [
-  { text: t('bankReportView.info.firstLevelClassifyFilter.manage_cost'), value: 'manage_cost' },
+  {
+    text: t('bankReportView.info.firstLevelClassifyFilter.manage_cost'),
+    value: 'manage_cost'
+  },
   {
     text: t('bankReportView.info.firstLevelClassifyFilter.business_cost'),
     value: 'business_cost'
@@ -35,7 +38,10 @@ const firstLevelClassifyFilters = [
     text: t('bankReportView.info.firstLevelClassifyFilter.finance_cost'),
     value: 'finance_cost'
   },
-  { text: t('bankReportView.info.firstLevelClassifyFilter.bonus'), value: 'bonus' },
+  {
+    text: t('bankReportView.info.firstLevelClassifyFilter.bonus'),
+    value: 'bonus'
+  },
   {
     text: t('bankReportView.info.firstLevelClassifyFilter.cost_receivable'),
     value: 'cost_receivable'
@@ -48,7 +54,14 @@ const firstLevelClassifyFilters = [
     text: t('bankReportView.info.firstLevelClassifyFilter.other_cost_receivable'),
     value: 'other_cost_receivable'
   },
-  { text: t('bankReportView.info.firstLevelClassifyFilter.cost_allot'), value: 'cost_allot' },
+  {
+    text: t('bankReportView.info.firstLevelClassifyFilter.other_cost_payable'),
+    value: 'other_cost_payable'
+  },
+  {
+    text: t('bankReportView.info.firstLevelClassifyFilter.cost_allot'),
+    value: 'cost_allot'
+  },
   {
     text: t('bankReportView.info.firstLevelClassifyFilter.cost_real_in'),
     value: 'cost_real_in'
@@ -58,12 +71,20 @@ const firstLevelClassifyFilters = [
     value: 'short_borrow_cost'
   },
   {
-    text: t('bankReportView.info.firstLevelClassifyFilter.bank_save_cost'),
-    value: 'bank_save_cost'
-  },
-  {
     text: t('bankReportView.info.firstLevelClassifyFilter.other_cost_in'),
     value: 'other_cost_in'
+  },
+  {
+    text: t('bankReportView.info.firstLevelClassifyFilter.other_cost_out'),
+    value: 'other_cost_out'
+  },
+  {
+    text: t('bankReportView.info.firstLevelClassifyFilter.accrual_in'),
+    value: 'accrual_in'
+  },
+  {
+    text: t('bankReportView.info.firstLevelClassifyFilter.bonus_payable'),
+    value: 'bonus_payable'
   }
 ]
 
@@ -131,6 +152,22 @@ const secondLevelDetailFilters = [
   {
     text: t('bankReportView.info.secondLevelDetailFilter.freight_cost'),
     value: 'freight_cost'
+  },
+  {
+    text: t('bankReportView.info.secondLevelDetailFilter.cash_pledge'),
+    value: 'cash_pledge'
+  },
+  {
+    text: t('bankReportView.info.secondLevelDetailFilter.last_not_pay'),
+    value: 'last_not_pay'
+  },
+  {
+    text: t('bankReportView.info.secondLevelDetailFilter.not_allot_profit'),
+    value: 'not_allot_profit'
+  },
+  {
+    text: t('bankReportView.info.secondLevelDetailFilter.other'),
+    value: 'other'
   }
 ]
 
@@ -252,15 +289,7 @@ const handleTableChange: any = (
   sorter: any
 ) => {
   // 自定义
-  const _filters = Object.assign(
-    {},
-    filters,
-    filters.username
-      ? {
-          username: filters.username[0]
-        }
-      : {}
-  )
+  const _filters = Object.assign({}, filters)
   run({
     page_index: pag.current,
     page_size: pag.pageSize,
@@ -322,15 +351,18 @@ const viewOutBankReport = () => {}
 <template>
   <div class="bank-report-view">
     <div class="bank-report-header">
-      <div class="bank-report-type">
-        <a-radio-group v-model:value="currentPayCurrency">
-          <a-radio-button value="CNY" @click="selectBankReportPayCurrency('CNY')">{{
-            $t('bankReportView.actions.selectCNYBankReport')
-          }}</a-radio-button>
-          <a-radio-button value="THB" @click="selectBankReportPayCurrency('THB')">{{
-            $t('bankReportView.actions.selectTHBBankReport')
-          }}</a-radio-button>
-        </a-radio-group>
+      <div style="display: flex">
+        <div class="bank-report-title">{{ $t('route.reports.bankReport') }}</div>
+        <div class="bank-report-type">
+          <a-radio-group v-model:value="currentPayCurrency">
+            <a-radio-button value="CNY" @click="selectBankReportPayCurrency('CNY')">{{
+              $t('bankReportView.actions.selectCNYBankReport')
+            }}</a-radio-button>
+            <a-radio-button value="THB" @click="selectBankReportPayCurrency('THB')">{{
+              $t('bankReportView.actions.selectTHBBankReport')
+            }}</a-radio-button>
+          </a-radio-group>
+        </div>
       </div>
 
       <div class="bank-report-action">
@@ -448,6 +480,16 @@ const viewOutBankReport = () => {}
     padding: 0 16px;
     display: flex;
     align-items: center;
+  }
+
+  .bank-report-title {
+    line-height: 32px;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .bank-report-type {
+    margin-left: 16px;
   }
 
   .bank-report-action {

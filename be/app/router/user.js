@@ -1,5 +1,6 @@
 "use strict";
 
+// 用户
 module.exports = (app) => {
   const { router, controller } = app;
   const routerNamespace = router.namespace("/api/user");

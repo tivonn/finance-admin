@@ -163,6 +163,7 @@ const deleteUser = async (user: UserRes) => {
 <template>
   <div class="manage-user-view">
     <div class="manage-user-header">
+      <div class="manage-user-title">{{ $t('route.manages.manageUser') }}</div>
       <div class="manage-user-action">
         <a-button type="primary" @click="addUser">{{
           $t('manageUserView.actions.addUser')
@@ -260,6 +261,10 @@ const deleteUser = async (user: UserRes) => {
     padding: 0 16px;
     display: flex;
     align-items: center;
+  }
+  .manage-user-title {
+    font-size: 16px;
+    font-weight: bold;
   }
   .manage-user-action {
     margin-left: auto;

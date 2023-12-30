@@ -501,6 +501,7 @@ const downloadDeliveryBill = async () => {
 <template>
   <div class="order-view">
     <div class="order-header">
+      <div class="order-title">{{ $t('route.order') }}</div>
       <div class="order-action">
         <a-button type="primary" class="download-template-button" @click="downloadTemplate">{{
           $t('orderView.actions.downloadTemplate')
@@ -618,6 +619,10 @@ const downloadDeliveryBill = async () => {
     padding: 0 16px;
     display: flex;
     align-items: center;
+  }
+  .order-title {
+    font-size: 16px;
+    font-weight: bold;
   }
   .order-action {
     margin-left: auto;

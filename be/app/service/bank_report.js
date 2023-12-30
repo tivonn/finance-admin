@@ -3,7 +3,7 @@
 const Service = require("egg").Service;
 const lodash = require("lodash");
 const dayjs = require("dayjs");
-const { getFirstLevelClassify, getSecondLevelDetail, getProject } = require('../utils/bank_report')
+const { getFirstLevelClassify, getSecondLevelDetail, getBankReportProject } = require('../utils/bank_report')
 const math = require('math.js')
 
 class BankReportService extends Service {
@@ -75,7 +75,7 @@ class BankReportService extends Service {
             description,
             first_level_classify: firstLevelClassify,
             second_level_detail: secondLevelDetail,
-            project: getProject(firstLevelClassify, secondLevelDetail),
+            project: getBankReportProject(firstLevelClassify, secondLevelDetail),
             pay_currency: payCurrency
         }, payCurrency === 'CNY' ? {} : {
             exchange_rate: exchangeRate,
