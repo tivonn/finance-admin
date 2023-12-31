@@ -357,11 +357,11 @@ const canUpsertOrder = (order: OrderRes): boolean => {
   let safeRoles: Array<string> = []
   switch (order.status) {
     case 'client_cost_to_be_record': {
-      safeRoles = ['admin', 'staff']
+      safeRoles = ['admin', 'finance', 'staff']
       break
     }
     case 'warehouse_cost_to_be_record': {
-      safeRoles = ['admin', 'staff']
+      safeRoles = ['admin', 'finance', 'staff']
       break
     }
     case 'finance_cost_to_be_record': {

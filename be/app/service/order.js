@@ -16,7 +16,7 @@ class OrderService extends Service {
   async createOrders() {
     const { ctx } = this;
     // 权限校验
-    const safeRoles = ["admin", "staff"];
+    const safeRoles = ["admin", "finance", "staff"];
     if (!safeRoles.includes(ctx.state.user.role)) {
       ctx.throw(403, "无权限");
     }
@@ -87,12 +87,12 @@ class OrderService extends Service {
     // 状态后移一个节点
     switch (params.status) {
       case "client_cost_to_be_record": {
-        safeRoles = ["admin", "staff"];
+        safeRoles = ["admin", "finance", "staff"];
         status = "warehouse_cost_to_be_record";
         break;
       }
       case "warehouse_cost_to_be_record": {
-        safeRoles = ["admin", "staff"];
+        safeRoles = ["admin", "finance", "staff"];
         status = "finance_cost_to_be_record";
         break;
       }
@@ -216,7 +216,7 @@ class OrderService extends Service {
   async downloadDeliveryBill(params) {
     const { ctx, app } = this;
     // 权限校验
-    const safeRoles = ["admin", "finance"];
+    const safeRoles = ["admin", "finance", "staff"];
     if (!safeRoles.includes(ctx.state.user.role)) {
       ctx.throw(403, "noAuth");
     }
