@@ -29,7 +29,7 @@ module.exports = app => {
       allowNull: true
     },
     first_level_classify: {
-      type: DataTypes.ENUM('manage_cost', 'business_cost', 'finance_cost', 'bonus', 'cost_receivable', 'cost_payable', 'other_cost_receivable', 'cost_allot', 'cost_real_in', 'short_borrow_cost', 'other_cost_in', 'accrual_in', 'bonus_payable', 'other_cost_payable', 'other_cost_out'),
+      type: DataTypes.ENUM('manage_cost', 'business_cost', 'finance_cost', 'bonus', 'cost_receivable', 'cost_payable', 'other_cost_receivable', 'cost_allot', 'cost_real_in', 'short_borrow_cost', 'bank_save_cost', 'other_cost_in'),
       allowNull: true
     },
     second_level_detail: {
