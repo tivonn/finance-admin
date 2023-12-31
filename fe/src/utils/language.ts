@@ -80,11 +80,6 @@ export default createI18n({
           loginFailed: '登录失败'
         }
       },
-      overviewView: {
-        info: {
-          empty: '总览页开发中'
-        }
-      },
       orderView: {
         info: {
           user_code: '用户代号',
@@ -224,10 +219,6 @@ export default createI18n({
           viewInBankReport: "只看进账",
           viewOutBankReport: "只看支出"
         },
-        message: {
-          // deleteUserSuccess: '删除用户成功',
-          // deleteUserFailed: '删除用户失败'
-        }
       },
       upsertBankReportModal: {
         info: {
@@ -285,10 +276,6 @@ export default createI18n({
           deleteBankReport: "删除",
           viewInBankReport: "只看进账",
           viewOutBankReport: "只看支出"
-        },
-        message: {
-          // deleteUserSuccess: '删除用户成功',
-          // deleteUserFailed: '删除用户失败'
         }
       },
       manageUserView: {
@@ -330,17 +317,23 @@ export default createI18n({
     },
     th: {
       common: {
-        info: {},
-        action: {
+        info: {
+          action: 'การดำเนินการ'
+        },
+        actions: {
           confirm: 'ยืนยัน',
           cancel: 'ยกเลิก',
           reset: 'รีเซ็ต',
+          search: 'ค้นหา',
+          monthSelectPlaceholder: 'เลือกเดือน',
+          updateUser: 'แก้ไขข้อมูล',
           logout: 'ออกจากระบบ'
         },
         message: {
           netError: 'ข้อผิดพลาดของระบบ',
           noAuth: 'ไม่มีสิทธิ์',
-          logoutFailed: 'ออกจากระบบไม่สำเร็จ'
+          logoutFailed: 'ล้มเหลวในการออกจากระบบ',
+          noModifiedPassword: 'กรุณาเปลี่ยนรหัสผ่านเมื่อเข้าสู่ระบบครั้งแรก'
         }
       },
       commonBiz: {
@@ -348,81 +341,285 @@ export default createI18n({
           username: 'ชื่อผู้ใช้',
           account: 'บัญชี',
           password: 'รหัสผ่าน',
+          confirmPassword: 'ยืนยันรหัสผ่าน',
           role: 'บทบาท',
           roles: {
             admin: 'ผู้ดูแลระบบ',
-            staff: 'พนักงานภายใน',
-            finance: 'การเงิน',
+            staff: 'พนักงานในองค์กร',
+            finance: 'บัญชีภาษี',
             external: 'ผู้ใช้ภายนอก'
-          }
+          },
+          phoneNumber: 'เบอร์โทรศัพท์'
         }
       },
       route: {
         overview: 'ภาพรวม',
-        order: 'รายละเอียดการสั่งซื้อ',
+        order: 'รายละเอียดของคำสั่งซื้อ',
         report: 'รายงานการเงิน',
+        reports: { bankReport: 'บัญชีธนาคาร', subjectCollect: "รวมบัญชีหมวด", profit: "กำไร", subjectRemain: "ยอดคงเหลือบัญชีหมวด", debt: "สินทรัพย์และหนี้สิน" },
         manage: 'การจัดการ',
         manages: { manageUser: 'การจัดการผู้ใช้' }
       },
+      updateUserModal: {
+        info: {
+          updateUser: 'แก้ไขข้อมูล',
+          phoneNumberPlaceholder: 'โปรดป้อนเบอร์โทรศัพท์',
+          passwordPlaceholder: 'โปรดป้อนรหัสผ่านใหม่ (กรุณากรอกเมื่อต้องการเปลี่ยนรหัสผ่าที่)',
+          confirmPasswordPlaceholder: 'โปรดกรอกรหัสผ่านใหม่อีกครั้ง (กรุณากรอกเมื่อต้องการเปลี่ยนรหัสผ่าที่)'
+        },
+        message: {
+          passwordInvalid: 'รหัสผ่านจำเป็น',
+          passwordPatternInvalid: 'รหัสผ่านต้องมีอักษรและตัวเลขอย่างน้อย 8 ตัวอักษรและ 20 ตัว',
+          confirmPasswordInvalid: 'รหัสผ่านทั้งสองครั้งต้องตรงกัน',
+          updateUserSuccess: 'แก้ไขข้อมูลสำเร็จ',
+          updateUserFailed: 'แก้ไขข้อมูลล้มเหลว'
+        }
+      },
       loginView: {
         info: {
-          accountPlaceholder: 'กรุณาใส่บัญชีผู้ใช้',
-          passwordPlaceholder: 'กรุณาใส่รหัสผ่าน'
+          accountPlaceholder: 'โปรดป้อนบัญชี',
+          passwordPlaceholder: 'โปรดป้อนรหัสผ่าน'
         },
         actions: {
           login: 'เข้าสู่ระบบ'
         },
         message: {
-          formInValid: 'กรุณาใส่บัญชีผู้ใช้และรหัสผ่านที่ถูกต้อง',
-          loginFailed: 'เข้าสู่ระบบไม่สำเร็จ'
-        }
-      },
-      overviewView: {
-        info: {
-          empty: 'หน้าภาพรวมกำลังพัฒนา'
+          formInValid: 'โปรดป้อนรหัสผ่านและชื่อบัญชีที่ถูกต้อง',
+          loginFailed: 'การเข้าสู่ระบบล้มเหลว'
         }
       },
       orderView: {
         info: {
-          empty: 'หน้ารายละเอียดการสั่งซื้อกำลังพัฒนา'
+          user_code: 'รหัสผู้ใช้',
+          receive_goods_date: 'วันที่รับสินค้า',
+          waybill_number: 'เลขที่สัญญา',
+          goods_number: 'เลขที่สินค้า',
+          goods_name: 'ชื่อสินค้า',
+          transport_mode: 'รูปแบบการขนส่ง',
+          count: 'จำนวน',
+          number: 'จำนวน',
+          description: 'หมายเหตุ',
+          weight: 'น้ำหนัก/กก',
+          inner_size_length: 'ขนาดภายใน/CM (ยาว)',
+          inner_size_width: 'ขนาดภายใน/CM (กว้าง)',
+          inner_size_height: 'ขนาดภายใน/CM (สูง)',
+          volume: 'ปริมาณ/CBM',
+          unit_price: 'ราคาต่อหน่วย',
+          good_value: 'มูลค่าสินค้า',
+          rate: 'อัตรา',
+          insurance: 'ประกัน',
+          packing_cost: 'ค่าแพ็ค',
+          disbursements: 'ค่าใช้จ่ายที่ชำระเครื่อง',
+          compensate: 'การเสียหาย',
+          client_freight: 'ค่าขนส่งของลูกค้า',
+          stuffing_number: 'เลขที่การเก็บของ',
+          warehouse_size_length: 'ขนาดของคลัง/CM (ยาว)',
+          warehouse_size_width: 'ขนาดของคลัง/CM (กว้าง)',
+          warehouse_size_height: 'ขนาดของคลัง/CM (สูง)',
+          warehouse_volumn: 'ปริมาณของคลัง/CBM',
+          cost_unit_price: 'ราคาต่อหน่วยค่าใช้จ่าย',
+          cost_packing_cost: 'ค่าแพ็คค่าใช้จ่าย',
+          warehouse_freight: 'ค่าขนส่งคลัง',
+          payed_date: 'วันที่ชำระเงิน',
+          pay_currency: 'สกุลเงินที่ชำระ',
+          bank_out: 'ธนาคารที่ออก',
+          CNY: 'หยวน',
+          THB: 'บาท',
+          status: 'สถานะ',
+          client_cost_to_be_record: 'ค่าใช้จ่ายของลูกค้าที่ต้องบันทึก',
+          warehouse_cost_to_be_record: 'ค่าใช้จ่ายของคลังที่ต้องบันทึก',
+          finance_cost_to_be_record: 'ค่าใช้จ่ายทางการเงินที่ต้องบันทึก',
+          cost_to_be_pay: 'ค่าใช้จ่ายที่ต้องชำระ',
+          cost_has_payed: 'ค่าใช้จ่ายที่ได้ชำระแล้ว'
+        },
+        actions: {
+          downloadTemplate: 'ดาวน์โหลดเทมเพลต',
+          uploadExcel: 'อัปโหลดไฟล์ Excel',
+          downloadDeliveryBill: 'ดาวน์โหลดใบส่งของ',
+          confirmDeleteOrder: 'ยืนยันการลบคำสั่ง'
+        },
+        message: {
+          downloadTemplateFailed: 'การดาวน์โหลดเทมเพลตล้มเหลว',
+          uploadSuccess: 'อัปโหลดไฟล์เสร็จสมบูรณ์',
+          excelInvalid: 'ไฟล์ Excel ไม่ตรงกับเงื่อนไขของเทมเพลต',
+          uploadFailed: 'อัปโหลดไฟล์ล้มเหลว',
+          deleteOrderSuccess: 'ลบคำสั่งลบสำเร็จ',
+          deleteOrderFailed: 'ลบคำสั่งล้มเหลว',
+          downloadDeliveryBillSuccess: 'ดาวน์โหลดใบส่งของสำเร็จ',
+          downloadDeliveryBillNoOrderFailed: 'ไม่มีคำสั่งเลือก',
+          downloadDeliveryBillStatusFailed: 'สถานะคำสั่งต้องเป็น "เงินสด/ชำระแล้ว"',
+          downloadDeliveryBillUserCodeFailed: 'รหัสผู้ใช้งานต้องเหมือนกัน',
+          downloadDeliveryBillStuffingNumberFailed: 'เลขที่ของกล่องต้องเหมือนกัน',
+          downloadDeliveryBillFailed: 'ดาวน์โหลดใบส่งของล้มเหลว'
+        }
+      },
+      upsertOrderModal: {
+        info: {
+          updateOrder: 'แก้ไขคำสั่ง',
+          unitPricePlaceholder: 'กรุณากรอกราคาต่อหน่วย',
+          goodValuePlaceholder: 'กรุณากรอกมูลค่าสินค้า',
+          ratePlaceholder: 'กรุณากรอกอัตรา',
+          packingCostPlaceholder: 'กรุณากรอกค่าจัดส่ง',
+          disbursementsPlaceholder: 'กรุณากรอกค่าใช้จ่ายที่โอนเงินล่วงหน้า',
+          compensatePlaceholder: 'กรุณากรอกค่ายอดเสีย',
+          stuffingNumberPlaceholder: 'กรุณากรอกเลขที่ของกล่อง',
+          warehouseSizeLengthPlaceholder: 'กรุณากรอกขนาดของที่ระเบียบสินค้า/CM (ยาว)',
+          warehouseSizeWidthPlaceholder: 'กรุณากรอกขนาดของที่ระเบียบสินค้า/CM (กว้าง)',
+          warehouseSizeHeightPlaceholder: 'กรุณากรอกขนาดของที่ระเบียบสินค้า/CM (สูง)',
+          costUnitPricePlaceholder: 'กรุณากรอกราคาต่อหน่วยสินค้า',
+          costPackingCostPlaceholder: 'กรุณากรอกค่าจัดส่งสินค้า',
+          paidDatePlaceholder: 'กรุณากรอกวันที่ที่จ่ายเงิน',
+          bankOutPlaceholder: 'กรุณากรอกภาษีที่ออกจากธนาคาร',
+          descriptionPlaceholder: 'กรุณากรอกหมายเหตุ',
+          CNY: 'หยวน',
+          THB: 'บาท'
+        },
+        message: {
+          unitPriceInvalid: 'ราคาต่อหน่วยต้องกรอก',
+          packingCostInvalid: 'ค่าเก็บแช่เก็บต้องกรอก',
+          disbursementsInvalid: 'การชำระเงินล่วงหน้าต้องกรอก',
+          compensateInvalid: 'การประนีนค่าต้องกรอก',
+          stuffingNumberInvalid: 'เลขที่ของกลุ่มต้องกรอก',
+          warehouseSizeLengthInvalid: 'ขนาดของคลังสินค้า/CM (ยาว) ต้องกรอก',
+          warehouseSizeWidthInvalid: 'ขนาดของคลังสินค้า/CM (กว้าง) ต้องกรอก',
+          warehouseSizeHeightInvalid: 'ขนาดของคลังสินค้า/CM (สูง) ต้องกรอก',
+          costUnitPriceInvalid: 'ราคาต่อหน่วยความสูงต้องกรอก',
+          costPackingCostInvalid: 'ค่าเก็บแช่เก็บความสูงต้องกรอก',
+          payedDateInvalid: 'วันที่ชำระเงินต้องกรอก',
+          payCurrencyInvalid: 'สกุลเงินที่ชำระเงินต้องกรอก',
+          bankOutInvalid: 'การใช้จ่ายทางธนาคารต้องกรอก',
+          updateOrderSuccess: 'แก้ไขคำสั่งซื้อสำเร็จ',
+          updateOrderFailed: 'แก้ไขคำสั่งซื้อล้มเหลว',
+          orderCanNotUpdate: 'คำสั่งซื้อไม่สามารถแก้ไขได้',
+          rateAndInsuranceShouldTogether: 'มูลค่าและประกันต้องกรอกพร้อมกัน'
         }
       },
       reportView: {
         info: {
-          empty: 'หน้ารายงานการเงินกำลังพัฒนา'
+          empty: 'เพิ่มข้อมูลในหน้ารายงานการเงินอยู่ระหว่างการพัฒนา'
+        }
+      },
+      bankReportView: {
+        info: {
+          bankReportDate: 'วันที่รายงานธนาคาร',
+          bankIn: 'เงินเข้าธนาคาร',
+          bankOut: 'เงินออกธนาคาร',
+          remain: 'ยอดเหลือ',
+          description: 'หมายเหตุ',
+          firstLevelClassify: 'ประเภทหนัก',
+          secondLevelDetail: 'รายละเอียดย่อย',
+          project: "โครงการ",
+          exchangeRate: 'อัตราแลกเปลี่ยน',
+          rmbIn: 'เงินรัมบีลเข้าธนาคาร',
+          rmbOut: 'เงินรัมบีลออกธนาคาร',
+          rmbRemain: 'ยอดเหลือรัมบีล',
+          firstLevelClassifyFilter: { 'manage_cost': 'ค่าบริการการจัดการ', 'business_cost': 'ค่าใช้จ่ายในการประมวลผลงาน', 'finance_cost': 'ค่าใช้จ่ายทางการเงิน', 'bonus': 'ค่าเดินเงินปันผล', 'cost_receivable': 'ค่าออกบัญชีค้า', 'cost_payable': 'ค่าบัญชีค้าที่ต้องจ่าย', 'other_cost_receivable': 'ค่าอื่นที่ได้รับ', 'cost_allot': 'การกำหรับผลกำไร', 'cost_real_in': 'ผลกำไรจากการเงินต้น', 'short_borrow_cost': 'ค่าขยายเพื่อลงทุนงาน', 'other_cost_in': 'ค่าอื่นที่เข้า', 'accrual_in': 'ค่าเงินดอกเบี้ย', 'bonus_payable': 'ค่าเงินปันผลที่ต้องจ่าย', 'other_cost_payable': 'ค่าอื่นที่ต้องจ่าย', 'other_cost_out': 'ค่าอื่นที่ออก' },
+          secondLevelDetailFilter: {
+            'work_cost': 'ค่าใช้จ่ายในการทำงาน', 'tel_cost': 'ค่าใช้จ่ายโทรศัพท์', 'salary_cost': 'ค่าเงินเดือน', 'social_security_cost': 'ค่าประกันสังคม', 'rent_cost': 'ค่าเช่าที่พัก', 'packing_cost': 'ค่าผงแบบ', 'royalty_cost': 'ค่าความช่วยเหลือ', 'cash': 'เงินสด', 'middle_cost': 'ค่าธรรมเนียม', 'accrual_cost': 'ค่าดอกเบี้ย', 'service_cost': 'ค่าบริการ', 'all_profit_cost': 'กำไรทั้งหมดที่ไม่ได้กำหรับผลกำไร', 'accrual_in_cost': 'รวมดอกเบี้ย', 'bonus': 'สิทธิปันสังคม', 'th_cost': 'บาทไทย', 'freight_cost': 'ค่าขนส่ง', 'cash_pledge': 'เงินมัดจำ', 'last_not_pay': 'ค่ายังไม่ได้ชำระจากผู้ขายที่เก่า', 'not_allot_profit': 'กำไรที่ไม่ได้แบ่ง', 'other': 'อื่นๆ'
+          }
+        },
+        actions: {
+          selectCNYBankReport: 'ธนาคารจีน',
+          selectTHBBankReport: 'ธนาคารไทย',
+          addBankReport: "เพิ่ม",
+          downloadBankReport: "ดาวน์โหลด",
+          deleteBankReport: "ลบ",
+          viewInBankReport: "ดูเฉพาะรายการเข้า",
+          viewOutBankReport: "ดูเฉพาะรายการออก"
+        }
+      },
+      upsertBankReportModal: {
+        info: {
+          createBankReport: 'สร้างบัญชีธนาคาร',
+          updateBankReport: 'แก้ไขบัญชีธนาคาร',
+          bankReportDatePlaceholder: 'กรุณาใส่วันที่ชำระเงิน',
+          bankInPlaceholder: 'กรุณาใส่การเข้าธนาคาร',
+          bankOutPlaceholder: 'กรุณาใส่การออกธนาคาร',
+          descriptionPlaceholder: 'กรุณาใส่หมายเหตุ',
+          firstLevelClassifyPlaceholder: 'กรุณาเลือกประเภทชั้นหนึ่ง',
+          secondLevelDetailPlaceholder: 'กรุณาเลือกรายละเอียดชั้นสอง',
+        },
+        message: {
+          bankReportDateInvalid: 'กรุณาใส่วันที่ชำระเงิน',
+          bankInInvalid: 'กรุณาใส่การเข้าธนาคาร',
+          bankOutInvalid: 'กรุณาใส่การออกธนาคาร',
+          firstLevelClassifyInvalid: 'กรุณาใส่ประเภทชั้นหนึ่ง',
+          secondLevelDetailInvalid: 'กรุณาใส่รายละเอียดชั้นสอง',
+          createBankReportSuccess: 'สร้างบัญชีธนาคารสำเร็จ',
+          createBankReportFailed: 'สร้างบัญชีธนาคารล้มเหลว',
+        }
+      },
+      subjectCollectView: {
+        info: {
+          bankReportDate: 'วันที่รับเงิน',
+          subjectCollectProject: 'โครงการ',
+          accountingSubject: 'หัวข้อบัญชี',
+          detail: 'รายละเอียด',
+          inPrice: 'รับเงิน',
+          outPrice: 'จ่ายเงิน',
+          subjectCollectProjectFilters: {
+            'manage_cost': 'ค่าบริการการจัดการ',
+            'business_cost': 'ค่าใช้จ่ายในการดำเนินธุรกิจ',
+            'finance_cost': 'ค่าใช้จ่ายทางการเงิน',
+            'bonus': 'ผลกำไรทุน',
+            'cost_receivable': 'ค่าออุดัม',
+            'cost_payable': 'ค่าใช้จ่ายที่ต้องชำระ',
+            'other_cost_receivable': 'ค่าอื่นที่รับเงิน',
+            'cost_allot': 'การแบ่งกำไร',
+            'cost_real_in': 'สิทธิปันสังคม',
+            'short_borrow_cost': 'ค่ากู้สั้น',
+            'other_cost_in': 'รายได้ที่เกิดจากงานอื่น',
+            'accrual_in': 'รายได้ดอกเบี้ย',
+            'bonus_payable': 'ผลกำไรที่ต้องจ่าย',
+            'other_cost_payable': 'ค่าใช้จ่ายอื่นที่ต้องชำระ',
+            'other_cost_out': 'ค่าใช้จ่ายอื่น',
+          },
+          total: 'รวม'
+        },
+        actions: {
+          selectCNYBankReport: 'ธนาคารจีน',
+          selectTHBBankReport: 'ธนาคารไทย',
+          addBankReport: "เพิ่ม",
+          downloadBankReport: "ดาวน์โหลด",
+          deleteBankReport: "ลบ",
+          viewInBankReport: "ดูเฉพาะรายการเข้า',
+          viewOutBankReport: "ดูเฉพาะรายการออก"
         }
       },
       manageUserView: {
         info: {
-          action: 'ดำเนินการ'
+          action: 'การดำเนินงาน'
         },
         actions: {
           addUser: 'เพิ่มผู้ใช้',
-          search: 'ค้นหา',
-          reset: 'รีเซ็ต',
-          confirmDeleteUser: 'คุณแน่ใจหรือไม่ว่าต้องการลบผู้ใช้?'
+          confirmDeleteUser: 'ยืนยันการลบผู้ใช้'
         },
         message: {
           deleteUserSuccess: 'ลบผู้ใช้สำเร็จ',
-          deleteUserFailed: 'ลบผู้ใช้ไม่สำเร็จ'
+          deleteUserFailed: 'ลบผู้ใช้ล้มเหลว'
         }
       },
       upsertUserModal: {
         info: {
           createUser: 'สร้างผู้ใช้',
-          updateUser: 'แก้ไขผู้ใช้'
+          updateUser: 'แก้ไขผู้ใช้',
+          usernamePlaceholder: 'กรุณาใส่ชื่อผู้ใช้',
+          accountPlaceholder: 'กรุณาใส่บัญชี',
+          phoneNumberPlaceholder: 'กรุณาใส่เบอร์โทรศัพท์'
         },
         message: {
-          usernameInvalid: 'กรุณาใส่ชื่อผู้ใช้',
-          accountInvalid: 'กรุณาใส่บัญชี',
-          roleInvalid: 'กรุณาเลือกบทบาท',
-          accountIsExist: 'บัญชีนี้มีอยู่แล้ว',
+          usernameInvalid: 'ชื่อผู้ใช้จำเป็น',
+          accountInvalid: 'บัญชีจำเป็น',
+          accountPatternInvalid: 'บัญชีต้องเป็นอักขระ ตัวเลข และลงค์ อย่างน้อย 6-20 ตัวอักขระ',
+          roleInvalid: 'ตำแหน่งจำเป็น',
+          phoneNumberInvalid: 'เบอร์โทรศัพท์จำเป็น',
+          phoneNumberPatternInvalid: 'กรุณาใส่เบอร์โทรศัพท์ที่ถูกต้อง',
+          accountIsExist: 'บัญชีมีอยู่แล้ว',
           createUserSuccess: 'สร้างผู้ใช้สำเร็จ',
-          createUserFailed: 'สร้างผู้ใช้ไม่สำเร็จ',
+          createUserFailed: 'สร้างผู้ใช้ล้มเหลว',
           updateUserSuccess: 'แก้ไขผู้ใช้สำเร็จ',
-          updateUserFailed: 'แก้ไขผู้ใช้ไม่สำเร็จ',
-          userNotFount: 'ไม่พบผู้ใช้',
-          accountCanNotUpdate: 'ไม่สามารถแก้ไขบัญชีได้'
+          updateUserFailed: 'แก้ไขผู้ใช้ล้มเหลว',
+          accountCanNotUpdate: 'บัญชีไม่สามารถแก้ไขได้'
         }
       }
     }
