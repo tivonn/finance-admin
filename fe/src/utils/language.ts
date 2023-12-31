@@ -582,7 +582,7 @@ export default createI18n({
           addBankReport: "เพิ่ม",
           downloadBankReport: "ดาวน์โหลด",
           deleteBankReport: "ลบ",
-          viewInBankReport: "ดูเฉพาะรายการเข้า',
+          viewInBankReport: "ดูเฉพาะรายการเข้า",
           viewOutBankReport: "ดูเฉพาะรายการออก"
         }
       },
