@@ -2,7 +2,7 @@ module.exports = {
     apps: [
         {
             name: '智能后端接口', // 项目名
-            script: './server.js', // 执行文件
+            script: './start.js', // 执行文件
             cwd: './', // 根目录
             args: 'one two', // 传递给脚本的参数
             interpreter: '', // 指定的脚本解释器
