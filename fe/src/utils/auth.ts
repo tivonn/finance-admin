@@ -24,6 +24,12 @@ export const auth: Auth = {
   bankReport: { required: true, allows: ['admin', 'finance'] },
   // 科目汇总
   subjectCollect: { required: true, allows: ['admin', 'finance'] },
+  // 利润表
+  profit: { required: true, allows: ['admin', 'finance'] },
+  // 科目余额
+  subjectRemain: { required: true, allows: ['admin', 'finance'] },
+  // 资产负债
+  debt: { required: true, allows: ['admin', 'finance'] },
   // 管理
   manage: { required: true, allows: ['admin'] },
   // 员工管理

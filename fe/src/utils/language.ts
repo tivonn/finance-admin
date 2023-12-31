@@ -48,7 +48,7 @@ export default createI18n({
         overview: '总览',
         order: '订单详情',
         report: '财务报表',
-        reports: { bankReport: '银行账', subjectCollect: "科目汇总" },
+        reports: { bankReport: '银行账', subjectCollect: "科目汇总", profit: "利润", subjectRemain: "科目余额", debt: "资产负债" },
         manage: '管理',
         manages: { manageUser: '用户管理' }
       },

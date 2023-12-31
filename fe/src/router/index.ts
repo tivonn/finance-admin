@@ -51,19 +51,40 @@ const router = createRouter({
           name: 'report',
           meta: { auth: auth['report'] },
           children: [
-            // 银行账
+            // 银行账表
             {
               path: 'bank',
               name: 'bankReport',
               component: () => import('@/views/main/report/bank/BankReportView.vue'),
               meta: { auth: auth['bankReport'] }
             },
-            // 科目汇总
+            // 科目汇总表
             {
               path: 'subject',
               name: 'subjectCollect',
               component: () => import('@/views/main/report/subject/SubjectCollectView.vue'),
               meta: { auth: auth['subjectCollect'] }
+            },
+            // 利润表
+            {
+              path: 'profit',
+              name: 'profit',
+              component: () => import('@/views/main/report/ProfitView.vue'),
+              meta: { auth: auth['profit'] }
+            },
+            // 科目余额表
+            {
+              path: 'subjectRemain',
+              name: 'subjectRemain',
+              component: () => import('@/views/main/report/subject/SubjectRemainView.vue'),
+              meta: { auth: auth['subjectRemain'] }
+            },
+            // 资产负债表
+            {
+              path: 'debt',
+              name: 'debt',
+              component: () => import('@/views/main/report/DebtView.vue'),
+              meta: { auth: auth['debt'] }
             }
 
           ]
