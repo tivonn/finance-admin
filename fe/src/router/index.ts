@@ -65,27 +65,27 @@ const router = createRouter({
               component: () => import('@/views/main/report/subject/SubjectCollectView.vue'),
               meta: { auth: auth['subjectCollect'] }
             },
-            // 利润表
-            {
-              path: 'profit',
-              name: 'profit',
-              component: () => import('@/views/main/report/ProfitView.vue'),
-              meta: { auth: auth['profit'] }
-            },
-            // 科目余额表
-            {
-              path: 'subjectRemain',
-              name: 'subjectRemain',
-              component: () => import('@/views/main/report/subject/SubjectRemainView.vue'),
-              meta: { auth: auth['subjectRemain'] }
-            },
-            // 资产负债表
-            {
-              path: 'debt',
-              name: 'debt',
-              component: () => import('@/views/main/report/DebtView.vue'),
-              meta: { auth: auth['debt'] }
-            }
+            // // 利润表
+            // {
+            //   path: 'profit',
+            //   name: 'profit',
+            //   component: () => import('@/views/main/report/ProfitView.vue'),
+            //   meta: { auth: auth['profit'] }
+            // },
+            // // 科目余额表
+            // {
+            //   path: 'subjectRemain',
+            //   name: 'subjectRemain',
+            //   component: () => import('@/views/main/report/subject/SubjectRemainView.vue'),
+            //   meta: { auth: auth['subjectRemain'] }
+            // },
+            // // 资产负债表
+            // {
+            //   path: 'debt',
+            //   name: 'debt',
+            //   component: () => import('@/views/main/report/DebtView.vue'),
+            //   meta: { auth: auth['debt'] }
+            // }
 
           ]
         },
