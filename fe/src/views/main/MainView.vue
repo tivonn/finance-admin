@@ -65,27 +65,27 @@ const navigations = ref<
           name: 'subjectCollect'
         }
       },
-      {
-        key: '/report/profit',
-        text: t('route.reports.profit'),
-        route: {
-          name: 'profit'
-        }
-      },
-      {
-        key: '/report/subject/remain',
-        text: t('route.reports.subjectRemain'),
-        route: {
-          name: 'subjectRemain'
-        }
-      },
-      {
-        key: '/report/debt',
-        text: t('route.reports.debt'),
-        route: {
-          name: 'debt'
-        }
-      }
+      // {
+      //   key: '/report/profit',
+      //   text: t('route.reports.profit'),
+      //   route: {
+      //     name: 'profit'
+      //   }
+      // },
+      // {
+      //   key: '/report/subject/remain',
+      //   text: t('route.reports.subjectRemain'),
+      //   route: {
+      //     name: 'subjectRemain'
+      //   }
+      // },
+      // {
+      //   key: '/report/debt',
+      //   text: t('route.reports.debt'),
+      //   route: {
+      //     name: 'debt'
+      //   }
+      // }
     ]
   },
   {
