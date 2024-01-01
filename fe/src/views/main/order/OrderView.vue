@@ -2,7 +2,12 @@
 import { usePagination } from 'vue-request'
 import { computed, ref } from 'vue'
 import axios from '@/api/axios'
-import { SearchOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons-vue'
+import {
+  SearchOutlined,
+  EditOutlined,
+  DownloadOutlined,
+  DeleteOutlined
+} from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
 import UpsertOrderModal from '@/views/main/order/UpsertOrderModal.vue'
 import { message } from 'ant-design-vue'
@@ -442,6 +447,12 @@ const uploadExcel = (info: UploadChangeParam) => {
 }
 
 // 导出送货单
+const canDownloadDeliveryBill = (order: OrderRes): boolean => {
+  const safeRoles = ['admin', 'finance', 'staff']
+  const safeStatus = ['cost_to_be_pay', 'cost_has_payed']
+  return safeRoles.includes(store.user.role) && safeStatus.includes(order.status)
+}
+
 const selectedRowKeys = ref<Array<number>>([])
 
 const rowSelection: TableProps['rowSelection'] = {
@@ -453,11 +464,11 @@ const rowSelection: TableProps['rowSelection'] = {
   })
 }
 
-const downloadDeliveryBill = async () => {
+const downloadDeliveryBill = async (order: OrderRes) => {
   try {
     const res = await axios.post(
       `/order/download_delivery_bills`,
-      { ids: selectedRowKeys.value },
+      { ids: [order.id] },
       { responseType: 'blob' }
     )
     downloadFile(res.data, '送货单.xls')
@@ -519,16 +530,15 @@ const downloadDeliveryBill = async () => {
             <span> {{ $t('orderView.actions.uploadExcel') }}</span>
           </a-button>
         </a-upload>
-        <a-button type="primary" class="download-bills-button" @click="downloadDeliveryBill">{{
+        <!-- <a-button type="primary" class="download-bills-button" @click="downloadDeliveryBill">{{
           $t('orderView.actions.downloadDeliveryBill')
-        }}</a-button>
+        }}</a-button> -->
       </div>
     </div>
     <a-table
       :columns="columns"
       :row-key="(row: OrderRes) => row.id"
       :data-source="dataSource?.data.rows"
-      :row-selection="rowSelection"
       :locale="{
         filterConfirm: $t('common.actions.confirm'),
         filterReset: $t('common.actions.reset')
@@ -587,6 +597,12 @@ const downloadDeliveryBill = async () => {
               <edit-outlined class="edit-action" @click="() => updateOrder(record)" />
               <a-divider type="vertical"
             /></template>
+            <template v-if="canDownloadDeliveryBill(record)">
+              <download-outlined
+                class="download-action"
+                @click="() => downloadDeliveryBill(record)" />
+              <a-divider type="vertical"
+            /></template>
             <a-popconfirm
               v-if="canDeleteOrder()"
               :title="$t('orderView.actions.confirmDeleteOrder')"
@@ -597,7 +613,12 @@ const downloadDeliveryBill = async () => {
             >
               <delete-outlined class="delete-action" />
             </a-popconfirm>
-            <span v-if="!canUpsertOrder(record) && !canDeleteOrder()">-</span>
+            <span
+              v-if="
+                !canUpsertOrder(record) && !canDownloadDeliveryBill(record) && !canDeleteOrder()
+              "
+              >-</span
+            >
           </span>
         </template>
       </template>
@@ -634,12 +655,14 @@ const downloadDeliveryBill = async () => {
   }
   .action {
     .edit-action,
+    .download-action,
     .delete-action {
       &:hover {
         cursor: pointer;
       }
     }
-    .edit-action {
+    .edit-action,
+    .download-action {
       &:hover {
         color: @--color-success;
       }
