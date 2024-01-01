@@ -60,6 +60,9 @@ class OrderService extends Service {
       const inner_size_length = item[10];
       const inner_size_width = item[11];
       const inner_size_height = item[12];
+      const originVolume = (inner_size_length * inner_size_width * inner_size_height) / 1000000
+      let volume = +Number(originVolume).toFixed(3)
+      if (volume == 0) volume = 0.001 // 体积过小，会被约成 0
       await this.ordersModel.create({
         user_code,
         receive_goods_date,
@@ -74,8 +77,7 @@ class OrderService extends Service {
         inner_size_length,
         inner_size_width,
         inner_size_height,
-        volume:
-          (inner_size_length * inner_size_width * inner_size_height) / 1000000,
+        volume, // 保留三位小数
       });
     }
     ctx.status = 200;
@@ -133,7 +135,9 @@ class OrderService extends Service {
     switch (params.status) {
       case "client_cost_to_be_record": {
         const client_freight = math.format(
-          (order.number * order.volume * params.unit_price + params.packing_cost), { precision: 14 })
+          (order.number * order.volume * params.unit_price + params.packing_cost),
+          { precision: 14 }
+        )
         data = { client_freight };
         break;
       }
