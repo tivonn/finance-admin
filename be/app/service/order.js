@@ -276,7 +276,7 @@ class OrderService extends Service {
     const dateStrs = new Date().toDateString().split(" ");
     const worksheet = xlsx.utils.aoa_to_sheet([
       ["HTX", "", "", "送货单ใบสงของ", "", "", "", "", "", "NO:", orders[0]?.waybill_number || ''],
-      ["", "宏泰兴国际货运", "", "", "", "", "", "", "", "", `${orders[0]?.warehouse} ${orders[0]?.goods_number || ''}`],
+      ["", "宏泰兴国际货运", "", "", "", "", "", "", "", "", `${orders[0]?.warehouse}${orders[0]?.warehouse ? ' ' : ''}${orders[0]?.goods_number || ''}`],
       ["", "", "", "", "", "", "", "", "", "", ""],
       [
         "HONGTAIXING International Freight",

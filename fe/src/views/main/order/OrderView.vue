@@ -453,10 +453,9 @@ const uploadExcel = (info: UploadChangeParam) => {
 }
 
 // 导出送货单
-const canDownloadDeliveryBill = (order: OrderRes): boolean => {
+const canDownloadDeliveryBill = (): boolean => {
   const safeRoles = ['admin', 'finance', 'staff']
-  const safeStatus = ['cost_to_be_pay', 'cost_has_payed']
-  return safeRoles.includes(store.user.role) && safeStatus.includes(order.status)
+  return safeRoles.includes(store.user.role)
 }
 
 const selectedRowKeys = ref<Array<number>>([])
@@ -470,15 +469,27 @@ const rowSelection: TableProps['rowSelection'] = {
   })
 }
 
-const downloadDeliveryBill = async (order: OrderRes) => {
+const generateDeliveryBill = async (id: number) => {
+  const res = await axios.post(
+    `/order/download_delivery_bills`,
+    { ids: [id] },
+    { responseType: 'blob' }
+  )
+  downloadFile(res.data, '送货单.xls')
+}
+
+const downloadDeliveryBill = async () => {
   try {
-    const res = await axios.post(
-      `/order/download_delivery_bills`,
-      { ids: [order.id] },
-      { responseType: 'blob' }
-    )
-    downloadFile(res.data, '送货单.xls')
-    message.success(t('orderView.message.downloadDeliveryBillSuccess'))
+    selectedRowKeys.value.forEach((id) => {
+      generateDeliveryBill(id)
+    })
+    // // const res = await axios.post(
+    // //   `/order/download_delivery_bills`,
+    // //   { ids: selectedRowKeys.value },
+    // //   { responseType: 'blob' }
+    // // )
+    // // downloadFile(res.data, '送货单.xls')
+    // message.success(t('orderView.message.downloadDeliveryBillSuccess'))
   } catch (error: any) {
     // blob 类型，适配
     var reader = new FileReader()
@@ -536,15 +547,20 @@ const downloadDeliveryBill = async (order: OrderRes) => {
             <span> {{ $t('orderView.actions.uploadExcel') }}</span>
           </a-button>
         </a-upload>
-        <!-- <a-button type="primary" class="download-bills-button" @click="downloadDeliveryBill">{{
-          $t('orderView.actions.downloadDeliveryBill')
-        }}</a-button> -->
+        <a-button
+          v-if="canDownloadDeliveryBill()"
+          type="primary"
+          class="download-bills-button"
+          @click="downloadDeliveryBill"
+          >{{ $t('orderView.actions.downloadDeliveryBill') }}</a-button
+        >
       </div>
     </div>
     <a-table
       :columns="columns"
       :row-key="(row: OrderRes) => row.id"
       :data-source="dataSource?.data.rows"
+      :row-selection="rowSelection"
       :locale="{
         filterConfirm: $t('common.actions.confirm'),
         filterReset: $t('common.actions.reset')
@@ -603,12 +619,12 @@ const downloadDeliveryBill = async (order: OrderRes) => {
               <edit-outlined class="edit-action" @click="() => updateOrder(record)" />
               <a-divider type="vertical"
             /></template>
-            <template v-if="canDownloadDeliveryBill(record)">
+            <!-- <template v-if="canDownloadDeliveryBill(record)">
               <download-outlined
                 class="download-action"
                 @click="() => downloadDeliveryBill(record)" />
               <a-divider type="vertical"
-            /></template>
+            /></template> -->
             <a-popconfirm
               v-if="canDeleteOrder()"
               :title="$t('orderView.actions.confirmDeleteOrder')"
@@ -619,12 +635,7 @@ const downloadDeliveryBill = async (order: OrderRes) => {
             >
               <delete-outlined class="delete-action" />
             </a-popconfirm>
-            <span
-              v-if="
-                !canUpsertOrder(record) && !canDownloadDeliveryBill(record) && !canDeleteOrder()
-              "
-              >-</span
-            >
+            <span v-if="!canUpsertOrder(record) && !canDeleteOrder()">-</span>
           </span>
         </template>
       </template>
