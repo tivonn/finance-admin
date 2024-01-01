@@ -55,6 +55,12 @@ const columns = [
     }
   },
   {
+    dataIndex: 'warehouse',
+    key: 'warehouse',
+    title: t('orderView.info.warehouse'),
+    width: 150
+  },
+  {
     dataIndex: 'waybill_number',
     key: 'waybill_number',
     title: t('orderView.info.waybill_number'),

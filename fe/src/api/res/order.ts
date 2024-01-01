@@ -1,6 +1,7 @@
 export interface OrderRes {
   id: number
   user_code: string
+  warehouse: string
   receive_goods_date: string
   waybill_number: string
   goods_number: string

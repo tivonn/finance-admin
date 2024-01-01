@@ -159,6 +159,10 @@ module.exports = app => {
     bank_out: {
       type: "DOUBLE",
       allowNull: true
+    },
+    warehouse: {
+      type: DataTypes.STRING(64),
+      allowNull: false
     }
   }, {
     tableName: 'orders'

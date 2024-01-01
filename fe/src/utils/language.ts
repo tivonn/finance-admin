@@ -90,6 +90,7 @@ export default createI18n({
         info: {
           user_code: '用户代号',
           receive_goods_date: '收货日期',
+          warehouse: '仓库',
           waybill_number: '运单号',
           goods_number: '货号',
           goods_name: '货物名称',
@@ -398,6 +399,7 @@ export default createI18n({
         info: {
           user_code: 'รหัสผู้ใช้',
           receive_goods_date: 'วันที่รับสินค้า',
+          warehoust: 'โกดัง',
           waybill_number: 'เลขที่สัญญา',
           goods_number: 'เลขที่สินค้า',
           goods_name: 'ชื่อสินค้า',

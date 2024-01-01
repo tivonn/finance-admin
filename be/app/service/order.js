@@ -27,6 +27,7 @@ class OrderService extends Service {
     const defaultHeader = [
       "客户代号",
       "收货日期",
+      '仓库',
       "运单号",
       "货号",
       "货物名称",
@@ -49,22 +50,24 @@ class OrderService extends Service {
       const receive_goods_date = dayjs("1900-01-01")
         .add(Number(item[1]) - 2, "day")
         .format("YYYY-MM-DD");
-      const waybill_number = item[2];
-      const goods_number = item[3];
-      const goods_name = item[4];
-      const transport_mode = item[5];
-      const count = item[6];
-      const number = item[7];
-      const description = item[8];
-      const weight = item[9];
-      const inner_size_length = item[10];
-      const inner_size_width = item[11];
-      const inner_size_height = item[12];
+      const warehouse = item[2]
+      const waybill_number = item[3];
+      const goods_number = item[4];
+      const goods_name = item[5];
+      const transport_mode = item[6];
+      const count = item[7];
+      const number = item[8];
+      const description = item[9];
+      const weight = item[10];
+      const inner_size_length = item[11];
+      const inner_size_width = item[12];
+      const inner_size_height = item[13];
       const originVolume = (inner_size_length * inner_size_width * inner_size_height) / 1000000
       let volume = +(Number(originVolume).toFixed(3))
       if (volume == 0) volume = 0.001 // 体积过小，会被约成 0
       await this.ordersModel.create({
         user_code,
+        warehouse,
         receive_goods_date,
         waybill_number,
         goods_number,
@@ -273,7 +276,7 @@ class OrderService extends Service {
     const dateStrs = new Date().toDateString().split(" ");
     const worksheet = xlsx.utils.aoa_to_sheet([
       ["HTX", "", "", "送货单ใบสงของ", "", "", "", "", "", "NO:", orders[0]?.waybill_number || ''],
-      ["", "宏泰兴国际货运", "", "", "", "", "", "", "", "", `YW${orders[0]?.goods_number || ''}`],
+      ["", "宏泰兴国际货运", "", "", "", "", "", "", "", "", `${orders[0]?.warehouse} ${orders[0]?.goods_number || ''}`],
       ["", "", "", "", "", "", "", "", "", "", ""],
       [
         "HONGTAIXING International Freight",
