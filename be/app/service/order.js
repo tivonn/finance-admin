@@ -257,12 +257,19 @@ class OrderService extends Service {
       ctx.throw(422, "downloadDeliveryBillStuffingNumberFailed");
     }
 
+    // 获取订单用户
+    const user = await this.app.model.Users.findOne({
+      where: {
+        username: orders[0].user_code,
+      }
+    });
+
     // 导出 Excel
     const workbook = xlsx.utils.book_new();
     const dateStrs = new Date().toDateString().split(" ");
     const worksheet = xlsx.utils.aoa_to_sheet([
-      ["HTX", "", "", "送货单ใบสงของ", "", "", "", "", "", "NO:", "8820230"],
-      ["", "宏泰兴国际货运", "", "", "", "", "", "", "", "", "YW H502"],
+      ["HTX", "", "", "送货单ใบสงของ", "", "", "", "", "", "NO:", orders[0]?.waybill_number || ''],
+      ["", "宏泰兴国际货运", "", "", "", "", "", "", "", "", `YW${orders[0]?.goods_number || ''}`],
       ["", "", "", "", "", "", "", "", "", "", ""],
       [
         "HONGTAIXING International Freight",
@@ -288,7 +295,7 @@ class OrderService extends Service {
         "",
         "",
         "电话โทร：",
-        "087-0539-630",
+        user?.phone_number || '',
       ],
       [
         "序号หมายเลข",
@@ -339,10 +346,22 @@ class OrderService extends Service {
         "",
         "",
         "",
-        "BY AIR",
-        "",
+        "BU SEA",
+        (orders[0]?.transport_mode || "").toLowerCase().includes('sea') ? "√" : ""
       ],
-      ["", "", "", "", "", "", "", "", "", "EK", ""],
+      [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "EK",
+        (orders[0]?.transport_mode || "").toLowerCase().includes('ek') ? "√" : ""
+      ],
       [
         "联系电话ตดตอ：15989894077 中国จน  0948629770 ไทย",
         "",
@@ -353,7 +372,7 @@ class OrderService extends Service {
         "",
         "",
         "",
-        "BU SEA",
+        "",
         "",
       ],
       [
