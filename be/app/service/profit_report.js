@@ -103,10 +103,10 @@ class ProfitReportService extends Service {
         }
         // 二、营业利润
         const businessIn = (month) => {
-            return mainBizIn(month) - mainBizOut(month) - append(month)
+            return ctx.helper.calculateMoney(mainBizIn(month) - mainBizOut(month) - append(month))
         }
         const businessInYear = () => {
-            return mainBizInYear() - mainBizOutYear() - appendYear()
+            return ctx.helper.calculateMoney(mainBizInYear() - mainBizOutYear() - appendYear())
         }
         // 营业费用
         const businessOut = async (month) => {
@@ -169,14 +169,14 @@ class ProfitReportService extends Service {
         }
         // 三、营业利润总额
         const businessInTotal = async (month) => {
-            return businessIn(month) - (await businessOut(month)) - (await manageOut(month)) - (await financeOut(month))
+            return ctx.helper.calculateMoney(businessIn(month) - (await businessOut(month)) - (await manageOut(month)) - (await financeOut(month)))
         }
         const businessInTotalYear = async () => {
-            return businessInYear() - (await businessOutYear()) - (await manageOutYear()) - (await financeOutYear())
+            return ctx.helper.calculateMoney(businessInYear() - (await businessOutYear()) - (await manageOutYear()) - (await financeOutYear()))
         }
         // 其它业务利润
         const otherBizIn = async (month) => {
-            return (await getSubjectCollectsMoney(false, month, '其他业务收入')) - (await getSubjectCollectsMoney(true, month, '其他业务收入'))
+            return ctx.helper.calculateMoney((await getSubjectCollectsMoney(false, month, '其他业务收入')) - (await getSubjectCollectsMoney(true, month, '其他业务收入')))
         }
         const otherBizInYear = async () => {
             return ctx.helper.calculateMoney(
@@ -230,10 +230,10 @@ class ProfitReportService extends Service {
         }
         // 四、利润总额
         const inTotal = async (month) => {
-            return (await businessInTotal(month)) + (await otherBizIn(month)) + (await investIn(month)) + (await businessBesidesIn(month)) - (await businessBesidesOut(month))
+            return ctx.helper.calculateMoney((await businessInTotal(month)) + (await otherBizIn(month)) + (await investIn(month)) + (await businessBesidesIn(month)) - (await businessBesidesOut(month)))
         }
         const inTotalYear = async () => {
-            return (await businessInTotalYear()) + (await otherBizInYear()) + (await investInYear()) + (await businessBesidesInYear()) - (await businessBesidesOutYear())
+            return ctx.helper.calculateMoney((await businessInTotalYear()) + (await otherBizInYear()) + (await investInYear()) + (await businessBesidesInYear()) - (await businessBesidesOutYear()))
         }
         // 所得税
         const income = (month) => {
@@ -244,10 +244,17 @@ class ProfitReportService extends Service {
         }
         // 净利润
         const remainIn = async (month) => {
-            return (await inTotal(month)) - income(month)
+            return ctx.helper.calculateMoney((await inTotal(month)) - income(month))
         }
         const remainInYear = async () => {
-            return (await inTotalYear()) - incomeYear()
+            return ctx.helper.calculateMoney((await inTotalYear()) - incomeYear())
+        }
+        // 毛利率
+        const grossProfitRate = async (month) => {
+            return ctx.helper.calculateMoney(businessIn(month) / mainBizIn(month))
+        }
+        const grossProfitRateYear = async () => {
+            return ctx.helper.calculateMoney(businessInYear() / mainBizInYear())
         }
 
         // 科目汇总表
@@ -539,6 +546,23 @@ class ProfitReportService extends Service {
                     november: await remainIn(10),
                     december: await remainIn(11),
                     total: await remainInYear()
+                },
+                {
+                    id: 16,
+                    project: isLanguageCN ? '毛利率' : 'ความกำไรสูงสุด',
+                    january: await grossProfitRate(0),
+                    february: await grossProfitRate(1),
+                    march: await grossProfitRate(2),
+                    april: await grossProfitRate(3),
+                    may: await grossProfitRate(4),
+                    june: await grossProfitRate(5),
+                    july: await grossProfitRate(6),
+                    august: await grossProfitRate(7),
+                    september: await grossProfitRate(8),
+                    october: await grossProfitRate(9),
+                    november: await grossProfitRate(10),
+                    december: await grossProfitRate(11),
+                    total: await grossProfitRateYear()
                 }
             ]
         }
