@@ -7,26 +7,6 @@ const math = require('mathjs')
 const { exchangeRate } = require('../data/common')
 const { calculateMoney } = require('../extend/helper')
 
-const getTotalMonthMoney = (list, datekey, currentMonth, moneyKey) => {
-    let sum = 0
-    list.forEach(item => {
-        if (dayjs(item[datekey]).month() === currentMonth) {
-            const itemMoney = item.pay_currency === 'CNY' ? item[moneyKey] : calculateMoney((item[moneyKey] / exchangeRate))
-            sum = calculateMoney(sum + itemMoney)
-        }
-    })
-    return sum
-}
-
-const getTotalYearMoney = (list, moneyKey) => {
-    let sum = 0
-    list.forEach(item => {
-        const itemMoney = item.pay_currency === 'CNY' ? item[moneyKey] : calculateMoney((item[moneyKey] / exchangeRate))
-        sum = calculateMoney(sum + itemMoney)
-    })
-    return sum
-}
-
 class ProfitReportService extends Service {
     // get profitReportsModel() {
     //     return this.app.model.ProfitReports;
@@ -60,6 +40,26 @@ class ProfitReportService extends Service {
             ),
         });
         const orders = originOrders.filter(order => dayjs(order.payed_date).year() === currentYear)
+
+        const getTotalMonthMoney = (list, datekey, currentMonth, moneyKey) => {
+            let sum = 0
+            list.forEach(item => {
+                if (dayjs(item[datekey]).month() === currentMonth) {
+                    const itemMoney = item.pay_currency === 'CNY' ? item[moneyKey] : calculateMoney((item[moneyKey] / exchangeRate))
+                    sum = calculateMoney(sum + itemMoney)
+                }
+            })
+            return sum
+        }
+
+        const getTotalYearMoney = (list, moneyKey) => {
+            let sum = 0
+            list.forEach(item => {
+                const itemMoney = item.pay_currency === 'CNY' ? item[moneyKey] : calculateMoney((item[moneyKey] / exchangeRate))
+                sum = calculateMoney(sum + itemMoney)
+            })
+            return sum
+        }
         // 一、主营业务收入
         const mainBizIn = (month) => {
             return getTotalMonthMoney(orders, 'payed_date', month, 'client_freight')
@@ -81,18 +81,18 @@ class ProfitReportService extends Service {
         }
         const businessOutYear = async () => {
             return ctx.helper.calculateMoney(
-                await businessOut(0) +
-                await businessOut(1) +
-                await businessOut(2) +
-                await businessOut(3) +
-                await businessOut(4) +
-                await businessOut(5) +
-                await businessOut(6) +
-                await businessOut(7) +
-                await businessOut(8) +
-                await businessOut(9) +
-                await businessOut(10) +
-                await businessOut(11)
+                (await businessOut(0)) +
+                (await businessOut(1)) +
+                (await businessOut(2)) +
+                (await businessOut(3)) +
+                (await businessOut(4)) +
+                (await businessOut(5)) +
+                (await businessOut(6)) +
+                (await businessOut(7)) +
+                (await businessOut(8)) +
+                (await businessOut(9)) +
+                (await businessOut(10)) +
+                (await businessOut(11))
             )
         }
         // 管理费用
@@ -101,37 +101,78 @@ class ProfitReportService extends Service {
         }
         const manageOutYear = async () => {
             return ctx.helper.calculateMoney(await manageOut(0) +
-                await manageOut(1) +
-                await manageOut(2) +
-                await manageOut(3) +
-                await manageOut(4) +
-                await manageOut(5) +
-                await manageOut(6) +
-                await manageOut(7) +
-                await manageOut(8) +
-                await manageOut(9) +
-                await manageOut(10) +
-                await manageOut(11)
+                (await manageOut(1)) +
+                (await manageOut(2)) +
+                (await manageOut(3)) +
+                (await manageOut(4)) +
+                (await manageOut(5)) +
+                (await manageOut(6)) +
+                (await manageOut(7)) +
+                (await manageOut(8)) +
+                (await manageOut(9)) +
+                (await manageOut(10)) +
+                (await manageOut(11))
             )
         }
         // 财务费用
         const financeOut = async (month) => {
-            return ctx.helper.calculateMoney(await getSubjectCollectsMoney(true, month, '财务费用') - await getSubjectCollectsMoney(false, month, '财务费用'))
+            return ctx.helper.calculateMoney((await getSubjectCollectsMoney(true, month, '财务费用')) - (await getSubjectCollectsMoney(false, month, '财务费用')))
         }
         const financeOutYear = async () => {
             return ctx.helper.calculateMoney(
-                await financeOut(0) +
-                await financeOut(1) +
-                await financeOut(2) +
-                await financeOut(3) +
-                await financeOut(4) +
-                await financeOut(5) +
-                await financeOut(6) +
-                await financeOut(7) +
-                await financeOut(8) +
-                await financeOut(9) +
-                await financeOut(10) +
-                await financeOut(11)
+                (await financeOut(0)) +
+                (await financeOut(1)) +
+                (await financeOut(2)) +
+                (await financeOut(3)) +
+                (await financeOut(4)) +
+                (await financeOut(5)) +
+                (await financeOut(6)) +
+                (await financeOut(7)) +
+                (await financeOut(8)) +
+                (await financeOut(9)) +
+                (await financeOut(10)) +
+                (await financeOut(11))
+            )
+        }
+
+        // 其它业务利润
+        const otherBizIn = async (month) => {
+            return (await getSubjectCollectsMoney(false, month, '其他业务收入')) - (await getSubjectCollectsMoney(true, month, '其他业务收入'))
+        }
+        const otherBizInYear = async () => {
+            return ctx.helper.calculateMoney(
+                (await otherBizIn(0)) +
+                (await otherBizIn(1)) +
+                (await otherBizIn(2)) +
+                (await otherBizIn(3)) +
+                (await otherBizIn(4)) +
+                (await otherBizIn(5)) +
+                (await otherBizIn(6)) +
+                (await otherBizIn(7)) +
+                (await otherBizIn(8)) +
+                (await otherBizIn(9)) +
+                (await otherBizIn(10)) +
+                (await otherBizIn(11))
+            )
+        }
+        // 投资收益
+        const investIn = async (month) => {
+            return await getSubjectCollectsMoney(false, month, '投资收益')
+        }
+        const investInYear = async () => {
+            return ctx.helper.calculateMoney(
+                (await investIn(0)) +
+                (await investIn(1)) +
+                (await investIn(2)) +
+                (await investIn(3)) +
+                (await investIn(4)) +
+                (await investIn(5)) +
+                (await investIn(6)) +
+                (await investIn(7)) +
+                (await investIn(8)) +
+                (await investIn(9)) +
+                (await investIn(10)) +
+                (await investIn(11))
             )
         }
 
@@ -309,36 +350,36 @@ class ProfitReportService extends Service {
                 {
                     id: 9,
                     project: isLanguageCN ? '加：其他业务利润' : 'บวก：ผลกำไรจากธุรกิจอื่น ๆ',
-                    january: '1月',
-                    february: '2月',
-                    march: '3月',
-                    april: '4月',
-                    may: '5月',
-                    june: '6月',
-                    july: '7月',
-                    august: '8月',
-                    september: '9月',
-                    october: '10月',
-                    november: '11月',
-                    december: '12月',
-                    total: '合计金额'
+                    january: await otherBizIn(0),
+                    february: await otherBizIn(1),
+                    march: await otherBizIn(2),
+                    april: await otherBizIn(3),
+                    may: await otherBizIn(4),
+                    june: await otherBizIn(5),
+                    july: await otherBizIn(6),
+                    august: await otherBizIn(7),
+                    september: await otherBizIn(8),
+                    october: await otherBizIn(9),
+                    november: await otherBizIn(10),
+                    december: await otherBizIn(11),
+                    total: await otherBizInYear()
                 },
                 {
                     id: 10,
                     project: isLanguageCN ? '加：投资收益' : 'บวก：ผลกำไรจากการลงทุน',
-                    january: '1月',
-                    february: '2月',
-                    march: '3月',
-                    april: '4月',
-                    may: '5月',
-                    june: '6月',
-                    july: '7月',
-                    august: '8月',
-                    september: '9月',
-                    october: '10月',
-                    november: '11月',
-                    december: '12月',
-                    total: '合计金额'
+                    january: await investIn(0),
+                    february: await investIn(1),
+                    march: await investIn(2),
+                    april: await investIn(3),
+                    may: await investIn(4),
+                    june: await investIn(5),
+                    july: await investIn(6),
+                    august: await investIn(7),
+                    september: await investIn(8),
+                    october: await investIn(9),
+                    november: await investIn(10),
+                    december: await investIn(11),
+                    total: await investInYear()
                 },
                 {
                     id: 11,
