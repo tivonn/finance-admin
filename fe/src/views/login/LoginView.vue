@@ -19,7 +19,7 @@ const loginForm = ref<{ account: string; password: string }>({
 
 const login = async () => {
   // 校验表单
-  if (lodash.isNull(loginForm.value.account) || lodash.isNull(loginForm.value.password)) {
+  if (lodash.isEmpty(loginForm.value.account) || lodash.isEmpty(loginForm.value.password)) {
     message.error(t('loginView.message.formInValid'))
     return
   }

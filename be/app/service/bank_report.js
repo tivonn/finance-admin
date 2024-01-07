@@ -58,6 +58,7 @@ class BankReportService extends Service {
 
     // 获取要创建银行账的数据，可复用
     async getCreateBankReportData(params) {
+        const { ctx } = this;
         const { payCurrency, bankReportDate, bankIn, bankOut, description, firstLevelClassify, secondLevelDetail } = params
         // 取最新的一条银行账，找余额
         const bankReports = await this.bankReportsModel.findAll({ where: { pay_currency: payCurrency } })

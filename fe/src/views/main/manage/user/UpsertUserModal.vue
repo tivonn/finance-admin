@@ -13,7 +13,7 @@ const props = defineProps({
 })
 const emit = defineEmits(['closeModal'])
 
-const isCreate = computed(() => lodash.isNull(props.upsertUser))
+const isCreate = computed(() => lodash.isEmpty(props.upsertUser))
 
 const formRef = ref<FormInstance>()
 
