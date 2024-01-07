@@ -10,6 +10,7 @@ import { message } from 'ant-design-vue'
 import { auth } from '@/utils/auth'
 import { useStore } from '@/stores'
 import UpdateUserModal from '@/components/UpdateUserModal.vue'
+import { isDev } from '@/utils/common'
 
 const { t } = useI18n()
 const store = useStore()
@@ -145,6 +146,7 @@ const logout = () => {
 <template>
   <a-layout class="main-view">
     <a-layout-header class="main-header">
+      <a-tag v-if="isDev()" color="blue" class="local-tag">本地开发</a-tag>
       <a-menu
         v-model:selectedKeys="selectedKeys"
         theme="dark"
@@ -221,6 +223,12 @@ const logout = () => {
     top: 0;
     display: flex;
     flex-direction: row;
+  }
+  .local-tag {
+    position: relative;
+    top: 14px;
+    height: 20px;
+    line-height: 20px;
   }
   .main-navigation {
     line-height: 48px;
