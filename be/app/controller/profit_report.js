@@ -17,6 +17,31 @@ const getProfitReportsRules = {
     },
 };
 
+const updateProfitReportsRules = {
+    year: {
+        type: "number",
+        required: true,
+    },
+    month: {
+        type: "number",
+        required: true,
+    },
+    money: {
+        type: "number",
+        required: true,
+    },
+    project: {
+        type: "enum",
+        required: true,
+        values: [
+            "append",
+            "business_besides_in",
+            "business_besides_out",
+            "income",
+        ],
+    },
+}
+
 class ProfitReportController extends Controller {
     get profitReportService() {
         return this.ctx.service.profitReport;
@@ -31,6 +56,18 @@ class ProfitReportController extends Controller {
         );
         ctx.validate(getProfitReportsRules, params);
         const res = await this.profitReportService.getProfitReports(params);
+        ctx.body = res;
+    }
+
+    // 更新利润表
+    async updateProfitReports() {
+        const { ctx } = this;
+        const params = ctx.helper.filterParams(
+            updateProfitReportsRules,
+            Object.assign({}, ctx.params, ctx.request.body)
+        );
+        ctx.validate(updateProfitReportsRules, params);
+        const res = await this.profitReportService.updateProfitReports(params);
         ctx.body = res;
     }
 }

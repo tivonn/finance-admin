@@ -286,7 +286,7 @@ export default createI18n({
           viewOutBankReport: "只看支出"
         }
       },
-      ProfitView: {
+      profitView: {
         info: {
           project: "项目",
           row: "行次",
@@ -306,7 +306,42 @@ export default createI18n({
           total: '合计金额'
         },
         actions: {
-
+          upsertProfitReport: '编辑'
+        }
+      },
+      upsertProfitReportModal: {
+        info: {
+          updateProfitReport: '编辑利润表',
+          year: '年份',
+          month: '月份',
+          monthPlaceholder: '请选择月份',
+          project: '项目',
+          projectPlaceholder: '请选择项目',
+          money: '金额',
+          moneyPlaceholder: '请填写金额',
+          january: '1月',
+          february: '2月',
+          march: '3月',
+          april: '4月',
+          may: '5月',
+          june: '6月',
+          july: '7月',
+          august: '8月',
+          september: '9月',
+          october: '10月',
+          november: '11月',
+          december: '12月',
+          append: '附加',
+          business_besides_in: '营业外收入',
+          business_besides_out: "营业外支出",
+          income: '所得税'
+        },
+        message: {
+          monthInvalid: '月份必填',
+          projectInvalid: '项目必填',
+          moneyInvalid: '金额必填',
+          updateProfitReportSuccess: '编辑利润表成功',
+          updateProfitReportFailed: '编辑利润表失败'
         }
       },
       manageUserView: {

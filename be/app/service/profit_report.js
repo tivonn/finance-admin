@@ -8,9 +8,9 @@ const { exchangeRate } = require('../data/common')
 const { calculateMoney } = require('../extend/helper')
 
 class ProfitReportService extends Service {
-    // get profitReportsModel() {
-    //     return this.app.model.ProfitReports;
-    // }
+    get profitReportsModel() {
+        return this.app.model.ProfitReports;
+    }
 
     get ordersModel() {
         return this.app.model.Orders;
@@ -486,6 +486,38 @@ class ProfitReportService extends Service {
             ]
         }
         return profitReports;
+    }
+
+    async updateProfitReports(params) {
+        const { ctx } = this;
+        // 权限校验
+        const safeRoles = ["admin", 'finance'];
+        if (!safeRoles.includes(ctx.state.user.role)) {
+            ctx.throw(403, "无权限");
+        }
+        // 业务逻辑
+        // 编辑利润表
+        const profitItem = await this.profitReportsModel.findOne({
+            where: {
+                year: params.year,
+                month: params.month,
+                project: params.project,
+            }
+        })
+        if (profitItem) {
+            const data = await profitItem.update({
+                money: params.money
+            })
+            return data
+        } else {
+            const data = await this.profitReportsModel.create({
+                year: params.year,
+                month: params.month,
+                project: params.project,
+                money: params.money
+            })
+            return data
+        }
     }
 }
 

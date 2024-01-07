@@ -4,7 +4,7 @@ import { computed, ref } from 'vue'
 import axios from '@/api/axios'
 import { SearchOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
-import UpsertBankReportModal from '@/views/main/report/bank/UpsertBankReportModal.vue'
+import UpsertProfitReportModal from '@/views/main/report/profit/UpsertProfitReportModal.vue'
 import { message } from 'ant-design-vue'
 import { useStore } from '@/stores'
 import { getLocalStorage, keepTwoDecimalStr, setLocalStorage } from '@/utils/common'
@@ -32,20 +32,20 @@ const columns = [
   {
     dataIndex: 'project',
     key: 'project',
-    title: t('ProfitView.info.project')
+    title: t('profitView.info.project')
   },
   {
     dataIndex: 'id',
     key: 'id',
-    title: t('ProfitView.info.row')
+    title: t('profitView.info.row')
   },
   {
-    title: t('ProfitView.info.money'),
+    title: t('profitView.info.money'),
     children: [
       {
         dataIndex: 'january',
         key: 'january',
-        title: t('ProfitView.info.january'),
+        title: t('profitView.info.january'),
         customRender: ({ text }: { text: string }) => {
           return keepTwoDecimalStr(text)
         }
@@ -53,7 +53,7 @@ const columns = [
       {
         dataIndex: 'february',
         key: 'february',
-        title: t('ProfitView.info.february'),
+        title: t('profitView.info.february'),
         customRender: ({ text }: { text: string }) => {
           return keepTwoDecimalStr(text)
         }
@@ -61,7 +61,7 @@ const columns = [
       {
         dataIndex: 'march',
         key: 'march',
-        title: t('ProfitView.info.march'),
+        title: t('profitView.info.march'),
         customRender: ({ text }: { text: string }) => {
           return keepTwoDecimalStr(text)
         }
@@ -69,7 +69,7 @@ const columns = [
       {
         dataIndex: 'april',
         key: 'april',
-        title: t('ProfitView.info.april'),
+        title: t('profitView.info.april'),
         customRender: ({ text }: { text: string }) => {
           return keepTwoDecimalStr(text)
         }
@@ -77,7 +77,7 @@ const columns = [
       {
         dataIndex: 'may',
         key: 'may',
-        title: t('ProfitView.info.may'),
+        title: t('profitView.info.may'),
         customRender: ({ text }: { text: string }) => {
           return keepTwoDecimalStr(text)
         }
@@ -85,7 +85,7 @@ const columns = [
       {
         dataIndex: 'june',
         key: 'june',
-        title: t('ProfitView.info.june'),
+        title: t('profitView.info.june'),
         customRender: ({ text }: { text: string }) => {
           return keepTwoDecimalStr(text)
         }
@@ -93,7 +93,7 @@ const columns = [
       {
         dataIndex: 'july',
         key: 'july',
-        title: t('ProfitView.info.july'),
+        title: t('profitView.info.july'),
         customRender: ({ text }: { text: string }) => {
           return keepTwoDecimalStr(text)
         }
@@ -101,7 +101,7 @@ const columns = [
       {
         dataIndex: 'august',
         key: 'august',
-        title: t('ProfitView.info.august'),
+        title: t('profitView.info.august'),
         customRender: ({ text }: { text: string }) => {
           return keepTwoDecimalStr(text)
         }
@@ -110,7 +110,7 @@ const columns = [
       {
         dataIndex: 'september',
         key: 'september',
-        title: t('ProfitView.info.september'),
+        title: t('profitView.info.september'),
         customRender: ({ text }: { text: string }) => {
           return keepTwoDecimalStr(text)
         }
@@ -118,7 +118,7 @@ const columns = [
       {
         dataIndex: 'october',
         key: 'october',
-        title: t('ProfitView.info.october'),
+        title: t('profitView.info.october'),
         customRender: ({ text }: { text: string }) => {
           return keepTwoDecimalStr(text)
         }
@@ -126,7 +126,7 @@ const columns = [
       {
         dataIndex: 'november',
         key: 'november',
-        title: t('ProfitView.info.november'),
+        title: t('profitView.info.november'),
         customRender: ({ text }: { text: string }) => {
           return keepTwoDecimalStr(text)
         }
@@ -134,7 +134,7 @@ const columns = [
       {
         dataIndex: 'december',
         key: 'december',
-        title: t('ProfitView.info.december'),
+        title: t('profitView.info.december'),
         customRender: ({ text }: { text: string }) => {
           return keepTwoDecimalStr(text)
         }
@@ -142,7 +142,7 @@ const columns = [
       {
         dataIndex: 'total',
         key: 'total',
-        title: t('ProfitView.info.total'),
+        title: t('profitView.info.total'),
         customRender: ({ text }: { text: string }) => {
           return keepTwoDecimalStr(text)
         }
@@ -221,31 +221,31 @@ const handleReset = (clearFilters: Function) => {
 }
 
 // 修改数据
-const showUpsertBankReportModal = ref<boolean>(false)
-const upsertBankReport = ref<{}>({})
+const showUpsertProfitReportModal = ref<boolean>(false)
+const upsertProfitReport = ref<{}>({})
 
 // const canEditUser = (): boolean => {
 //   const safeRoles = ['admin']
 //   return safeRoles.includes(store.user.role)
 // }
-const toggleUpsertBankReportModal = (isShow: boolean) => {
-  showUpsertBankReportModal.value = isShow
+const toggleUpsertProfitReportModal = (isShow: boolean) => {
+  showUpsertProfitReportModal.value = isShow
   if (!isShow) {
-    upsertBankReport.value = {}
+    upsertProfitReport.value = {}
   }
 }
 
-const addBankReport = () => {
-  upsertBankReport.value = {}
-  toggleUpsertBankReportModal(true)
+const addProfitReport = () => {
+  upsertProfitReport.value = {}
+  toggleUpsertProfitReportModal(true)
 }
 
-// const updateUser = (user) => {
-//   upsertBankReport.value = user
-//   toggleUpsertBankReportModal(true)
-// }
+const updateProfitReport = () => {
+  upsertProfitReport.value = {}
+  toggleUpsertProfitReportModal(true)
+}
 
-const deleteBankReport = async (subjectCollect) => {
+const deleteProfitReport = async (subjectCollect) => {
   // try {
   //   await axios.delete(`/user/${user.id}`)
   //   message.success(t('subjectCollectView.message.deleteUserSuccess'))
@@ -255,9 +255,9 @@ const deleteBankReport = async (subjectCollect) => {
   // }
 }
 
-const downloadBankReport = () => {}
-const viewInBankReport = () => {}
-const viewOutBankReport = () => {}
+const downloadProfitReport = () => {}
+const viewInProfitReport = () => {}
+const viewOutProfitReport = () => {}
 </script>
 
 <template>
@@ -278,9 +278,9 @@ const viewOutBankReport = () => {}
       </div>
 
       <div class="profit-action">
-        <!-- <a-button type="primary" style="margin-left: 16px" @click="downloadBankReport" disabled>{{
-          $t('subjectCollectView.actions.downloadBankReport')
-        }}</a-button> -->
+        <a-button type="primary" style="margin-left: 16px" @click="updateProfitReport">{{
+          $t('profitView.actions.upsertProfitReport')
+        }}</a-button>
       </div>
     </div>
     <a-table
@@ -348,7 +348,7 @@ const viewOutBankReport = () => {}
                 :title="$t('subjectCollectView.actions.confirmDeleteUser')"
                 :ok-text="$t('common.actions.confirm')"
                 :cancel-text="$t('common.actions.cancel')"
-                @confirm="() => deleteBankReport(record)"
+                @confirm="() => deleteProfitReport(record)"
               >
                 <delete-outlined class="delete-action" />
               </a-popconfirm>
@@ -360,6 +360,13 @@ const viewOutBankReport = () => {}
       -->
     </a-table>
   </div>
+  <UpsertProfitReportModal
+    v-if="showUpsertProfitReportModal"
+    :upsertProfitReport="upsertProfitReport"
+    :currentYear="currentYear"
+    @closeModal="() => toggleUpsertProfitReportModal(false)"
+  >
+  </UpsertProfitReportModal>
 </template>
 
 <style lang="less">

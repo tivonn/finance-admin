@@ -69,7 +69,7 @@ const router = createRouter({
             {
               path: 'profit',
               name: 'profit',
-              component: () => import('@/views/main/report/ProfitView.vue'),
+              component: () => import('@/views/main/report/profit/ProfitView.vue'),
               meta: { auth: auth['profit'] }
             },
             // // 科目余额表
