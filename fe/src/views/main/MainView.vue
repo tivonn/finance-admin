@@ -65,13 +65,13 @@ const navigations = ref<
           name: 'subjectCollect'
         }
       },
-      // {
-      //   key: '/report/profit',
-      //   text: t('route.reports.profit'),
-      //   route: {
-      //     name: 'profit'
-      //   }
-      // },
+      {
+        key: '/report/profit',
+        text: t('route.reports.profit'),
+        route: {
+          name: 'profit'
+        }
+      }
       // {
       //   key: '/report/subject/remain',
       //   text: t('route.reports.subjectRemain'),
@@ -243,6 +243,7 @@ const logout = () => {
   }
   .main-content {
     min-height: calc(100% - 48px);
+    overflow: auto;
     background-color: #fff;
   }
 }

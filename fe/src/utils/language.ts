@@ -18,6 +18,7 @@ export default createI18n({
           reset: '重置',
           search: '搜索',
           monthSelectPlaceholder: '请选择月份',
+          yearSelectPlaceholder: '请选择年份',
           updateUser: '编辑资料',
           logout: '退出登录'
         },
@@ -285,6 +286,29 @@ export default createI18n({
           viewOutBankReport: "只看支出"
         }
       },
+      ProfitView: {
+        info: {
+          project: "项目",
+          row: "行次",
+          money: '金额',
+          january: '1月',
+          february: '2月',
+          march: '3月',
+          april: '4月',
+          may: '5月',
+          june: '6月',
+          july: '7月',
+          august: '8月',
+          september: '9月',
+          october: '10月',
+          november: '11月',
+          december: '12月',
+          total: '合计金额'
+        },
+        actions: {
+
+        }
+      },
       manageUserView: {
         info: {
           action: '操作'
@@ -333,6 +357,7 @@ export default createI18n({
           reset: 'รีเซ็ต',
           search: 'ค้นหา',
           monthSelectPlaceholder: 'เลือกเดือน',
+          yearSelectPlaceholder: 'โปรดเลือกปี',
           updateUser: 'แก้ไขข้อมูล',
           logout: 'ออกจากระบบ'
         },

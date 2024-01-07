@@ -65,13 +65,13 @@ const router = createRouter({
               component: () => import('@/views/main/report/subject/SubjectCollectView.vue'),
               meta: { auth: auth['subjectCollect'] }
             },
-            // // 利润表
-            // {
-            //   path: 'profit',
-            //   name: 'profit',
-            //   component: () => import('@/views/main/report/ProfitView.vue'),
-            //   meta: { auth: auth['profit'] }
-            // },
+            // 利润表
+            {
+              path: 'profit',
+              name: 'profit',
+              component: () => import('@/views/main/report/ProfitView.vue'),
+              meta: { auth: auth['profit'] }
+            },
             // // 科目余额表
             // {
             //   path: 'subjectRemain',

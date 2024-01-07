@@ -22,114 +22,100 @@ interface APIParams {
   [key: string]: any
 }
 interface APIResult {
-  counts: number
+  count: number
   rows: Array<{}>
 }
-
-const subjectCollectProjectFilters = [
-  {
-    text: t('subjectCollectView.info.subjectCollectProjectFilters.manage_cost'),
-    value: 'manage_cost'
-  },
-  {
-    text: t('subjectCollectView.info.subjectCollectProjectFilters.business_cost'),
-    value: 'business_cost'
-  },
-  {
-    text: t('subjectCollectView.info.subjectCollectProjectFilters.finance_cost'),
-    value: 'finance_cost'
-  },
-  {
-    text: t('subjectCollectView.info.subjectCollectProjectFilters.bonus'),
-    value: 'bonus'
-  },
-  {
-    text: t('subjectCollectView.info.subjectCollectProjectFilters.cost_receivable'),
-    value: 'cost_receivable'
-  },
-  {
-    text: t('subjectCollectView.info.subjectCollectProjectFilters.cost_payable'),
-    value: 'cost_payable'
-  },
-  {
-    text: t('subjectCollectView.info.subjectCollectProjectFilters.other_cost_receivable'),
-    value: 'other_cost_receivable'
-  },
-  {
-    text: t('subjectCollectView.info.subjectCollectProjectFilters.cost_allot'),
-    value: 'cost_allot'
-  },
-  {
-    text: t('subjectCollectView.info.subjectCollectProjectFilters.cost_real_in'),
-    value: 'cost_real_in'
-  },
-  {
-    text: t('subjectCollectView.info.subjectCollectProjectFilters.short_borrow_cost'),
-    value: 'short_borrow_cost'
-  },
-  {
-    text: t('subjectCollectView.info.subjectCollectProjectFilters.other_cost_in'),
-    value: 'other_cost_in'
-  },
-  {
-    text: t('subjectCollectView.info.subjectCollectProjectFilters.accrual_in'),
-    value: 'accrual_in'
-  },
-  {
-    text: t('subjectCollectView.info.subjectCollectProjectFilters.bonus_payable'),
-    value: 'bonus_payable'
-  },
-  {
-    text: t('subjectCollectView.info.subjectCollectProjectFilters.other_cost_payable'),
-    value: 'other_cost_payable'
-  },
-  {
-    text: t('subjectCollectView.info.subjectCollectProjectFilters.other_cost_out'),
-    value: 'other_cost_out'
-  }
-]
 
 // 自定义
 const columns = [
   {
-    dataIndex: 'bank_report_date',
-    key: 'bank_report_date',
-    title: t('subjectCollectView.info.bankReportDate'),
-    customFilterDropdown: true
+    dataIndex: 'project',
+    key: 'project',
+    title: t('ProfitView.info.project')
   },
   {
-    dataIndex: 'subject_collect_project',
-    key: 'subject_collect_project',
-    title: t('subjectCollectView.info.subjectCollectProject'),
-    filters: subjectCollectProjectFilters
+    dataIndex: 'id',
+    key: 'id',
+    title: t('ProfitView.info.row')
   },
   {
-    dataIndex: 'accounting_subject',
-    key: 'accounting_subject',
-    title: t('subjectCollectView.info.accountingSubject')
-  },
-  {
-    dataIndex: 'detail',
-    key: 'detail',
-    title: t('subjectCollectView.info.detail')
-  },
-  {
-    dataIndex: 'in_price',
-    key: 'in_price',
-    title: t('subjectCollectView.info.inPrice')
-  },
-  {
-    dataIndex: 'out_price',
-    key: 'out_price',
-    title: t('subjectCollectView.info.outPrice')
+    title: t('ProfitView.info.money'),
+    children: [
+      {
+        dataIndex: 'january',
+        key: 'january',
+        title: t('ProfitView.info.january')
+      },
+      {
+        dataIndex: 'february',
+        key: 'february',
+        title: t('ProfitView.info.february')
+      },
+      {
+        dataIndex: 'march',
+        key: 'march',
+        title: t('ProfitView.info.march')
+      },
+      {
+        dataIndex: 'april',
+        key: 'april',
+        title: t('ProfitView.info.april')
+      },
+      {
+        dataIndex: 'may',
+        key: 'may',
+        title: t('ProfitView.info.may')
+      },
+      {
+        dataIndex: 'june',
+        key: 'june',
+        title: t('ProfitView.info.june')
+      },
+      {
+        dataIndex: 'july',
+        key: 'july',
+        title: t('ProfitView.info.july')
+      },
+      {
+        dataIndex: 'august',
+        key: 'august',
+        title: t('ProfitView.info.august')
+      },
+      ,
+      {
+        dataIndex: 'september',
+        key: 'september',
+        title: t('ProfitView.info.september')
+      },
+      {
+        dataIndex: 'october',
+        key: 'october',
+        title: t('ProfitView.info.october')
+      },
+      {
+        dataIndex: 'november',
+        key: 'november',
+        title: t('ProfitView.info.november')
+      },
+      {
+        dataIndex: 'december',
+        key: 'december',
+        title: t('ProfitView.info.december')
+      },
+      {
+        dataIndex: 'total',
+        key: 'total',
+        title: t('ProfitView.info.total')
+      }
+    ]
   }
 ]
 
-// 当前月份
+// 当前年份
 const currentYear = ref<Dayjs>(
   getLocalStorage('profit-year') ? dayjs(getLocalStorage('profit-year')) : dayjs()
 )
-const selectMonth = (year: Dayjs) => {
+const selectYear = (year: Dayjs) => {
   currentYear.value = year
   setLocalStorage('profit-year', dayjs(year).format('YYYY'))
   window.location.reload()
@@ -137,9 +123,9 @@ const selectMonth = (year: Dayjs) => {
 
 const queryData = (params: APIParams) => {
   // 自定义
-  return axios.post<APIResult>('/subject/collect/get_list', {
-    pay_currency: currentPayCurrency.value,
-    month: currentMonth.value,
+  return axios.post<APIResult>('/profit/report/get_list', {
+    year: currentYear.value,
+    language: getLocalStorage('language') || 'zh-cn',
     ...params
   })
 }
@@ -175,15 +161,7 @@ const handleTableChange: any = (
   sorter: any
 ) => {
   // 自定义
-  const _filters = Object.assign(
-    {},
-    filters,
-    filters.bank_report_date
-      ? {
-          bank_report_date: filters.bank_report_date[0]
-        }
-      : {}
-  )
+  const _filters = Object.assign({}, filters)
   run({
     page_index: pag.current,
     page_size: pag.pageSize,
@@ -249,20 +227,20 @@ const viewOutBankReport = () => {}
         <div class="profit-title">{{ $t('route.reports.profit') }}</div>
         <div class="profit-type">
           <a-date-picker
-            v-model:value="currentMonth"
-            picker="month"
-            :placeholder="$t('common.actions.monthSelectPlaceholder')"
+            v-model:value="currentYear"
+            picker="year"
+            :placeholder="$t('common.actions.yearSelectPlaceholder')"
             style="margin-left: 16px"
             :allowClear="false"
-            @change="selectMonth"
+            @change="selectYear"
           />
         </div>
       </div>
 
       <div class="profit-action">
-        <a-button type="primary" style="margin-left: 16px" @click="downloadBankReport" disabled>{{
+        <!-- <a-button type="primary" style="margin-left: 16px" @click="downloadBankReport" disabled>{{
           $t('subjectCollectView.actions.downloadBankReport')
-        }}</a-button>
+        }}</a-button> -->
       </div>
     </div>
     <a-table
@@ -273,7 +251,7 @@ const viewOutBankReport = () => {}
         filterConfirm: $t('common.actions.confirm'),
         filterReset: $t('common.actions.reset')
       }"
-      :pagination="pagination"
+      :pagination="false"
       :loading="loading"
       @change="handleTableChange"
     >
@@ -340,20 +318,6 @@ const viewOutBankReport = () => {}
         </template>
       </template>
       -->
-      <template v-if="dataSource?.data.count" #summary>
-        <a-table-summary-row>
-          <a-table-summary-cell
-            ><span style="font-weight: bold">{{
-              $t('subjectCollectView.info.total')
-            }}</span></a-table-summary-cell
-          >
-          <a-table-summary-cell> </a-table-summary-cell>
-          <a-table-summary-cell> </a-table-summary-cell>
-          <a-table-summary-cell> </a-table-summary-cell>
-          <a-table-summary-cell>{{ dataSource?.data.in_total }}</a-table-summary-cell>
-          <a-table-summary-cell>{{ dataSource?.data.out_total }}</a-table-summary-cell>
-        </a-table-summary-row>
-      </template>
     </a-table>
   </div>
 </template>

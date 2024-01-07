@@ -21,7 +21,7 @@ interface APIParams {
   [key: string]: any
 }
 interface APIResult {
-  counts: number
+  count: number
   rows: Array<UserRes>
 }
 

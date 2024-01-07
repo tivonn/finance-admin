@@ -1,0 +1,38 @@
+"use strict";
+
+const { Controller } = require("egg");
+
+const getProfitReportsRules = {
+    year: {
+        type: "date",
+        required: true
+    },
+    language: {
+        type: "enum",
+        required: true,
+        values: [
+            "zh-cn",
+            "th",
+        ]
+    },
+};
+
+class ProfitReportController extends Controller {
+    get profitReportService() {
+        return this.ctx.service.profitReport;
+    }
+
+    // 获取利润表
+    async getProfitReports() {
+        const { ctx } = this;
+        const params = ctx.helper.filterParams(
+            getProfitReportsRules,
+            Object.assign({}, ctx.request.body)
+        );
+        ctx.validate(getProfitReportsRules, params);
+        const res = await this.profitReportService.getProfitReports(params);
+        ctx.body = res;
+    }
+}
+
+module.exports = ProfitReportController;
