@@ -30,6 +30,7 @@ class ProfitReportService extends Service {
         const currentYear = dayjs(params.year).year()
 
         // 订单表
+        // 一、主营业务收入
         const originOrders = await this.ordersModel.findAll({
             where: Object.assign(
                 {},
@@ -40,8 +41,7 @@ class ProfitReportService extends Service {
             ),
         });
         const orders = originOrders.filter(order => dayjs(order.payed_date).year() === currentYear)
-
-        const getTotalMonthMoney = (list, datekey, currentMonth, moneyKey) => {
+        const getOrderTotalMonthMoney = (list, datekey, currentMonth, moneyKey) => {
             let sum = 0
             list.forEach(item => {
                 if (dayjs(item[datekey]).month() === currentMonth) {
@@ -51,8 +51,7 @@ class ProfitReportService extends Service {
             })
             return sum
         }
-
-        const getTotalYearMoney = (list, moneyKey) => {
+        const getOrderTotalYearMoney = (list, moneyKey) => {
             let sum = 0
             list.forEach(item => {
                 const itemMoney = item.pay_currency === 'CNY' ? item[moneyKey] : calculateMoney((item[moneyKey] / exchangeRate))
@@ -60,21 +59,55 @@ class ProfitReportService extends Service {
             })
             return sum
         }
-        // 一、主营业务收入
         const mainBizIn = (month) => {
-            return getTotalMonthMoney(orders, 'payed_date', month, 'client_freight')
+            return getOrderTotalMonthMoney(orders, 'payed_date', month, 'client_freight')
         }
         const mainBizInYear = () => {
-            return getTotalYearMoney(orders, 'client_freight')
+            return getOrderTotalYearMoney(orders, 'client_freight')
         }
         // 减、主营业务成本
         const mainBizOut = (month) => {
-            return getTotalMonthMoney(orders, 'payed_date', month, 'warehouse_freight')
+            return getOrderTotalMonthMoney(orders, 'payed_date', month, 'warehouse_freight')
         }
         const mainBizOutYear = () => {
-            return getTotalYearMoney(orders, 'warehouse_freight')
+            return getOrderTotalYearMoney(orders, 'warehouse_freight')
         }
-
+        // 附加
+        const originProfits = await this.profitReportsModel.findAll()
+        const profits = originProfits.filter(profit => profit.year === currentYear)
+        const getPeopleInTotalMonthMoney = (list, datekey, currentMonth, moneyKey, projectKey) => {
+            let sum = 0
+            list.forEach(item => {
+                if (item[datekey] === currentMonth && item.project === projectKey) {
+                    const itemMoney = item[moneyKey]
+                    sum = calculateMoney(sum + itemMoney)
+                }
+            })
+            return sum
+        }
+        const getPeopleInTotalYearMoney = (list, moneyKey, projectKey) => {
+            let sum = 0
+            list.forEach(item => {
+                if (item.project === projectKey) {
+                    const itemMoney = item[moneyKey]
+                    sum = calculateMoney(sum + itemMoney)
+                }
+            })
+            return sum
+        }
+        const append = (month) => {
+            return getPeopleInTotalMonthMoney(profits, 'month', month, 'money', 'append')
+        }
+        const appendYear = () => {
+            return getPeopleInTotalYearMoney(profits, 'money', 'append')
+        }
+        // 二、营业利润
+        const businessIn = (month) => {
+            return mainBizIn(month) - mainBizOut(month) - append(month)
+        }
+        const businessInYear = () => {
+            return mainBizInYear() - mainBizOutYear() - appendYear()
+        }
         // 营业费用
         const businessOut = async (month) => {
             return await getSubjectCollectsMoney(true, month, '营业费用')
@@ -134,7 +167,13 @@ class ProfitReportService extends Service {
                 (await financeOut(11))
             )
         }
-
+        // 三、营业利润总额
+        const businessInTotal = async (month) => {
+            return businessIn(month) - (await businessOut(month)) - (await manageOut(month)) - (await financeOut(month))
+        }
+        const businessInTotalYear = async () => {
+            return businessInYear() - (await businessOutYear()) - (await manageOutYear()) - (await financeOutYear())
+        }
         // 其它业务利润
         const otherBizIn = async (month) => {
             return (await getSubjectCollectsMoney(false, month, '其他业务收入')) - (await getSubjectCollectsMoney(true, month, '其他业务收入'))
@@ -174,6 +213,41 @@ class ProfitReportService extends Service {
                 (await investIn(10)) +
                 (await investIn(11))
             )
+        }
+        // 营业外收入
+        const businessBesidesIn = (month) => {
+            return getPeopleInTotalMonthMoney(profits, 'month', month, 'money', 'business_besides_in')
+        }
+        const businessBesidesInYear = () => {
+            return getPeopleInTotalYearMoney(profits, 'money', 'business_besides_in')
+        }
+        // 营业外支出
+        const businessBesidesOut = (month) => {
+            return getPeopleInTotalMonthMoney(profits, 'month', month, 'money', 'business_besides_out')
+        }
+        const businessBesidesOutYear = () => {
+            return getPeopleInTotalYearMoney(profits, 'money', 'business_besides_out')
+        }
+        // 四、利润总额
+        const inTotal = async (month) => {
+            return (await businessInTotal(month)) + (await otherBizIn(month)) + (await investIn(month)) + (await businessBesidesIn(month)) - (await businessBesidesOut(month))
+        }
+        const inTotalYear = async () => {
+            return (await businessInTotalYear()) + (await otherBizInYear()) + (await investInYear()) + (await businessBesidesInYear()) - (await businessBesidesOutYear())
+        }
+        // 所得税
+        const income = (month) => {
+            return getPeopleInTotalMonthMoney(profits, 'month', month, 'money', 'income')
+        }
+        const incomeYear = () => {
+            return getPeopleInTotalYearMoney(profits, 'money', 'income')
+        }
+        // 净利润
+        const remainIn = async (month) => {
+            return (await inTotal(month)) - income(month)
+        }
+        const remainInYear = async () => {
+            return (await inTotalYear()) - incomeYear()
         }
 
         // 科目汇总表
@@ -248,36 +322,36 @@ class ProfitReportService extends Service {
                 {
                     id: 3,
                     project: isLanguageCN ? '减：附加' : 'ลดลง、เพิ่มเติม',
-                    january: '',
-                    february: '',
-                    march: '',
-                    april: '',
-                    may: '',
-                    june: '',
-                    july: '',
-                    august: '',
-                    september: '',
-                    october: '',
-                    november: '',
-                    december: '',
-                    total: ''
+                    january: append(0),
+                    february: append(1),
+                    march: append(2),
+                    april: append(3),
+                    may: append(4),
+                    june: append(5),
+                    july: append(6),
+                    august: append(7),
+                    september: append(8),
+                    october: append(9),
+                    november: append(10),
+                    december: append(11),
+                    total: appendYear()
                 },
                 {
                     id: 4,
                     project: isLanguageCN ? '二、营业利润' : '2. ผลกำไรจากการดำเนินธุรกิจ',
-                    january: '',
-                    february: '',
-                    march: '',
-                    april: '',
-                    may: '',
-                    june: '',
-                    july: '',
-                    august: '',
-                    september: '',
-                    october: '',
-                    november: '',
-                    december: '',
-                    total: ''
+                    january: businessIn(0),
+                    february: businessIn(1),
+                    march: businessIn(2),
+                    april: businessIn(3),
+                    may: businessIn(4),
+                    june: businessIn(5),
+                    july: businessIn(6),
+                    august: businessIn(7),
+                    september: businessIn(8),
+                    october: businessIn(9),
+                    november: businessIn(10),
+                    december: businessIn(11),
+                    total: businessInYear()
                 },
                 {
                     id: 5,
@@ -333,19 +407,19 @@ class ProfitReportService extends Service {
                 {
                     id: 8,
                     project: isLanguageCN ? '三、营业利润总额' : '3. รวมผลกำไรจากการดำเนินธุรกิจ',
-                    january: '1月',
-                    february: '2月',
-                    march: '3月',
-                    april: '4月',
-                    may: '5月',
-                    june: '6月',
-                    july: '7月',
-                    august: '8月',
-                    september: '9月',
-                    october: '10月',
-                    november: '11月',
-                    december: '12月',
-                    total: '合计金额'
+                    january: await businessInTotal(0),
+                    february: await businessInTotal(1),
+                    march: await businessInTotal(2),
+                    april: await businessInTotal(3),
+                    may: await businessInTotal(4),
+                    june: await businessInTotal(5),
+                    july: await businessInTotal(6),
+                    august: await businessInTotal(7),
+                    september: await businessInTotal(8),
+                    october: await businessInTotal(9),
+                    november: await businessInTotal(10),
+                    december: await businessInTotal(11),
+                    total: await businessInTotalYear()
                 },
                 {
                     id: 9,
@@ -384,104 +458,87 @@ class ProfitReportService extends Service {
                 {
                     id: 11,
                     project: isLanguageCN ? '营业外收入' : 'รายได้นอกการดำเนินธุรกิจ',
-                    january: '1月',
-                    february: '2月',
-                    march: '3月',
-                    april: '4月',
-                    may: '5月',
-                    june: '6月',
-                    july: '7月',
-                    august: '8月',
-                    september: '9月',
-                    october: '10月',
-                    november: '11月',
-                    december: '12月',
-                    total: '合计金额'
+                    january: await businessBesidesIn(0),
+                    february: await businessBesidesIn(1),
+                    march: await businessBesidesIn(2),
+                    april: await businessBesidesIn(3),
+                    may: await businessBesidesIn(4),
+                    june: await businessBesidesIn(5),
+                    july: await businessBesidesIn(6),
+                    august: await businessBesidesIn(7),
+                    september: await businessBesidesIn(8),
+                    october: await businessBesidesIn(9),
+                    november: await businessBesidesIn(10),
+                    december: await businessBesidesIn(11),
+                    total: await businessBesidesInYear()
                 },
                 {
                     id: 12,
                     project: isLanguageCN ? '减：营业外支出' : 'ลดลง: การใช้จ่ายนอกการดำเนินธุรกิจ',
-                    january: '1月',
-                    february: '2月',
-                    march: '3月',
-                    april: '4月',
-                    may: '5月',
-                    june: '6月',
-                    july: '7月',
-                    august: '8月',
-                    september: '9月',
-                    october: '10月',
-                    november: '11月',
-                    december: '12月',
-                    total: '合计金额'
+                    january: await businessBesidesOut(0),
+                    february: await businessBesidesOut(1),
+                    march: await businessBesidesOut(2),
+                    april: await businessBesidesOut(3),
+                    may: await businessBesidesOut(4),
+                    june: await businessBesidesOut(5),
+                    july: await businessBesidesOut(6),
+                    august: await businessBesidesOut(7),
+                    september: await businessBesidesOut(8),
+                    october: await businessBesidesOut(9),
+                    november: await businessBesidesOut(10),
+                    december: await businessBesidesOut(11),
+                    total: await businessBesidesOutYear()
                 },
                 {
                     id: 13,
                     project: isLanguageCN ? '四、利润总额' : '4. รวมผลกำไร',
-                    january: '1月',
-                    february: '2月',
-                    march: '3月',
-                    april: '4月',
-                    may: '5月',
-                    june: '6月',
-                    july: '7月',
-                    august: '8月',
-                    september: '9月',
-                    october: '10月',
-                    november: '11月',
-                    december: '12月',
-                    total: '合计金额'
-                },
-                {
-                    id: 13,
-                    project: isLanguageCN ? '四、利润总额' : '4. รวมผลกำไร',
-                    january: '1月',
-                    february: '2月',
-                    march: '3月',
-                    april: '4月',
-                    may: '5月',
-                    june: '6月',
-                    july: '7月',
-                    august: '8月',
-                    september: '9月',
-                    october: '10月',
-                    november: '11月',
-                    december: '12月',
-                    total: '合计金额'
+                    january: await inTotal(0),
+                    february: await inTotal(1),
+                    march: await inTotal(2),
+                    april: await inTotal(3),
+                    may: await inTotal(4),
+                    june: await inTotal(5),
+                    july: await inTotal(6),
+                    august: await inTotal(7),
+                    september: await inTotal(8),
+                    october: await inTotal(9),
+                    november: await inTotal(10),
+                    december: await inTotal(11),
+                    total: await inTotalYear()
                 },
                 {
                     id: 14,
                     project: isLanguageCN ? '减：所得税' : 'ลดลง: ภาษีผลกำไร',
-                    january: '1月',
-                    february: '2月',
-                    march: '3月',
-                    april: '4月',
-                    may: '5月',
-                    june: '6月',
-                    july: '7月',
-                    august: '8月',
-                    september: '9月',
-                    october: '10月',
-                    november: '11月',
-                    december: '12月',
-                    total: '合计金额'
+                    january: await income(0),
+                    february: await income(1),
+                    march: await income(2),
+                    april: await income(3),
+                    may: await income(4),
+                    june: await income(5),
+                    july: await income(6),
+                    august: await income(7),
+                    september: await income(8),
+                    october: await income(9),
+                    november: await income(10),
+                    december: await income(11),
+                    total: await incomeYear()
                 },
                 {
                     id: 15,
                     project: isLanguageCN ? '五、净利润' : '5. ผลกำไรสุทธิ',
-                    january: '1月',
-                    february: '2月',
-                    march: '3月',
-                    april: '4月',
-                    may: '5月',
-                    june: '6月',
-                    july: '7月',
-                    august: '8月',
-                    september: '9月',
-                    october: '10月',
-                    november: '11月',
-                    december: '12月',
-                    total: '合计金额'
+                    january: await remainIn(0),
+                    february: await remainIn(1),
+                    march: await remainIn(2),
+                    april: await remainIn(3),
+                    may: await remainIn(4),
+                    june: await remainIn(5),
+                    july: await remainIn(6),
+                    august: await remainIn(7),
+                    september: await remainIn(8),
+                    october: await remainIn(9),
+                    november: await remainIn(10),
+                    december: await remainIn(11),
+                    total: await remainInYear()
                 }
             ]
         }
