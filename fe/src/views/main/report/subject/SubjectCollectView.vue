@@ -7,7 +7,7 @@ import { useI18n } from 'vue-i18n'
 import UpsertBankReportModal from '@/views/main/report/bank/UpsertBankReportModal.vue'
 import { message } from 'ant-design-vue'
 import { useStore } from '@/stores'
-import { getLocalStorage, setLocalStorage } from '@/utils/common'
+import { getLocalStorage, keepTwoDecimalStr, setLocalStorage } from '@/utils/common'
 import dayjs, { Dayjs } from 'dayjs'
 
 const { t } = useI18n()
@@ -116,12 +116,18 @@ const columns = [
   {
     dataIndex: 'in_price',
     key: 'in_price',
-    title: t('subjectCollectView.info.inPrice')
+    title: t('subjectCollectView.info.inPrice'),
+    customRender: ({ text }: { text: string }) => {
+      return keepTwoDecimalStr(text)
+    }
   },
   {
     dataIndex: 'out_price',
     key: 'out_price',
-    title: t('subjectCollectView.info.outPrice')
+    title: t('subjectCollectView.info.outPrice'),
+    customRender: ({ text }: { text: string }) => {
+      return keepTwoDecimalStr(text)
+    }
   }
 ]
 
@@ -369,8 +375,12 @@ const viewOutBankReport = () => {}
           <a-table-summary-cell> </a-table-summary-cell>
           <a-table-summary-cell> </a-table-summary-cell>
           <a-table-summary-cell> </a-table-summary-cell>
-          <a-table-summary-cell>{{ dataSource?.data.in_total }}</a-table-summary-cell>
-          <a-table-summary-cell>{{ dataSource?.data.out_total }}</a-table-summary-cell>
+          <a-table-summary-cell>{{
+            keepTwoDecimalStr(dataSource?.data.in_total)
+          }}</a-table-summary-cell>
+          <a-table-summary-cell>{{
+            keepTwoDecimalStr(dataSource?.data.out_total)
+          }}</a-table-summary-cell>
         </a-table-summary-row>
       </template>
     </a-table>

@@ -4,7 +4,7 @@ const Service = require("egg").Service;
 const lodash = require("lodash");
 const dayjs = require("dayjs");
 const { getFirstLevelClassify, getSecondLevelDetail, getSubjectCollectProject } = require('../utils/bank_report')
-const math = require('math.js')
+const math = require('mathjs')
 
 class SubjectCollectService extends Service {
     get bankReportsModel() {

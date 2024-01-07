@@ -14,7 +14,7 @@ import { message } from 'ant-design-vue'
 import { UploadOutlined } from '@ant-design/icons-vue'
 import type { TableProps, UploadChangeParam } from 'ant-design-vue'
 import { baseURL } from '@/api/axios'
-import { timeout } from '@/utils/common'
+import { keepThreeDecimalStr, keepTwoDecimalStr, timeout } from '@/utils/common'
 import type { OrderRes } from '@/api/res/order'
 import dayjs from 'dayjs'
 import { useStore } from '@/stores'
@@ -107,79 +107,118 @@ const columns = [
     dataIndex: 'weight',
     key: 'weight',
     title: t('orderView.info.weight'),
-    width: 100
+    width: 100,
+    customRender: ({ text }: { text: string }) => {
+      return keepTwoDecimalStr(text)
+    }
   },
   {
     dataIndex: 'inner_size_length',
     key: 'inner_size_length',
     title: t('orderView.info.inner_size_length'),
-    width: 200
+    width: 200,
+    customRender: ({ text }: { text: string }) => {
+      return keepTwoDecimalStr(text)
+    }
   },
   {
     dataIndex: 'inner_size_width',
     key: 'inner_size_width',
     title: t('orderView.info.inner_size_width'),
-    width: 200
+    width: 200,
+    customRender: ({ text }: { text: string }) => {
+      return keepTwoDecimalStr(text)
+    }
   },
   {
     dataIndex: 'inner_size_height',
     key: 'inner_size_height',
     title: t('orderView.info.inner_size_height'),
-    width: 200
+    width: 200,
+    customRender: ({ text }: { text: string }) => {
+      return keepTwoDecimalStr(text)
+    }
   },
   {
     dataIndex: 'volume',
     key: 'volume',
     title: t('orderView.info.volume'),
-    width: 150
+    width: 150,
+    customRender: ({ text }: { text: string }) => {
+      return keepThreeDecimalStr(text)
+    }
   },
   {
     dataIndex: 'unit_price',
     key: 'unit_price',
     title: t('orderView.info.unit_price'),
-    width: 100
+    width: 100,
+    customRender: ({ text }: { text: string }) => {
+      return keepTwoDecimalStr(text)
+    }
   },
   {
     dataIndex: 'good_value',
     key: 'good_value',
     title: t('orderView.info.good_value'),
-    width: 100
+    width: 100,
+    customRender: ({ text }: { text: string }) => {
+      return keepTwoDecimalStr(text)
+    }
   },
   {
     dataIndex: 'rate',
     key: 'rate',
     title: t('orderView.info.rate'),
-    width: 100
+    width: 100,
+    customRender: ({ text }: { text: string }) => {
+      return keepTwoDecimalStr(text)
+    }
   },
   {
     dataIndex: 'insurance',
     key: 'insurance',
     title: t('orderView.info.insurance'),
-    width: 100
+    width: 100,
+    customRender: ({ text }: { text: string }) => {
+      return keepTwoDecimalStr(text)
+    }
   },
   {
     dataIndex: 'packing_cost',
     key: 'packing_cost',
     title: t('orderView.info.packing_cost'),
-    width: 100
+    width: 100,
+    customRender: ({ text }: { text: string }) => {
+      return keepTwoDecimalStr(text)
+    }
   },
   {
     dataIndex: 'disbursements',
     key: 'disbursements',
     title: t('orderView.info.disbursements'),
-    width: 100
+    width: 100,
+    customRender: ({ text }: { text: string }) => {
+      return keepTwoDecimalStr(text)
+    }
   },
   {
     dataIndex: 'compensate',
     key: 'compensate',
     title: t('orderView.info.compensate'),
-    width: 100
+    width: 100,
+    customRender: ({ text }: { text: string }) => {
+      return keepTwoDecimalStr(text)
+    }
   },
   {
     dataIndex: 'client_freight',
     key: 'client_freight',
     title: t('orderView.info.client_freight'),
-    width: 150
+    width: 150,
+    customRender: ({ text }: { text: string }) => {
+      return keepTwoDecimalStr(text)
+    }
   },
   {
     dataIndex: 'stuffing_number',
@@ -192,43 +231,64 @@ const columns = [
     dataIndex: 'warehouse_size_length',
     key: 'warehouse_size_length',
     title: t('orderView.info.warehouse_size_length'),
-    width: 200
+    width: 200,
+    customRender: ({ text }: { text: string }) => {
+      return keepTwoDecimalStr(text)
+    }
   },
   {
     dataIndex: 'warehouse_size_width',
     key: 'warehouse_size_width',
     title: t('orderView.info.warehouse_size_width'),
-    width: 200
+    width: 200,
+    customRender: ({ text }: { text: string }) => {
+      return keepTwoDecimalStr(text)
+    }
   },
   {
     dataIndex: 'warehouse_size_height',
     key: 'warehouse_size_height',
     title: t('orderView.info.warehouse_size_height'),
-    width: 200
+    width: 200,
+    customRender: ({ text }: { text: string }) => {
+      return keepTwoDecimalStr(text)
+    }
   },
   {
     dataIndex: 'warehouse_volumn',
     key: 'warehouse_volumn',
     title: t('orderView.info.warehouse_volumn'),
-    width: 200
+    width: 200,
+    customRender: ({ text }: { text: string }) => {
+      return keepThreeDecimalStr(text)
+    }
   },
   {
     dataIndex: 'cost_unit_price',
     key: 'cost_unit_price',
     title: t('orderView.info.cost_unit_price'),
-    width: 100
+    width: 100,
+    customRender: ({ text }: { text: string }) => {
+      return keepTwoDecimalStr(text)
+    }
   },
   {
     dataIndex: 'cost_packing_cost',
     key: 'cost_packing_cost',
     title: t('orderView.info.cost_packing_cost'),
-    width: 150
+    width: 150,
+    customRender: ({ text }: { text: string }) => {
+      return keepTwoDecimalStr(text)
+    }
   },
   {
     dataIndex: 'warehouse_freight',
     key: 'warehouse_freight',
     title: t('orderView.info.warehouse_freight'),
-    width: 150
+    width: 150,
+    customRender: ({ text }: { text: string }) => {
+      return keepTwoDecimalStr(text)
+    }
   },
   {
     dataIndex: 'payed_date',

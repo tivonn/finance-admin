@@ -7,7 +7,7 @@ import { useI18n } from 'vue-i18n'
 import UpsertBankReportModal from '@/views/main/report/bank/UpsertBankReportModal.vue'
 import { message } from 'ant-design-vue'
 import { useStore } from '@/stores'
-import { getLocalStorage, setLocalStorage } from '@/utils/common'
+import { getLocalStorage, keepTwoDecimalStr, setLocalStorage } from '@/utils/common'
 
 const { t } = useI18n()
 const store = useStore()
@@ -181,17 +181,26 @@ const columns = [
   {
     dataIndex: 'bank_in',
     key: 'bank_in',
-    title: t('bankReportView.info.bankIn')
+    title: t('bankReportView.info.bankIn'),
+    customRender: ({ text }: { text: string }) => {
+      return keepTwoDecimalStr(text)
+    }
   },
   {
     dataIndex: 'bank_out',
     key: 'bank_out',
-    title: t('bankReportView.info.bankOut')
+    title: t('bankReportView.info.bankOut'),
+    customRender: ({ text }: { text: string }) => {
+      return keepTwoDecimalStr(text)
+    }
   },
   {
     dataIndex: 'remain',
     key: 'remain',
-    title: t('bankReportView.info.remain')
+    title: t('bankReportView.info.remain'),
+    customRender: ({ text }: { text: string }) => {
+      return keepTwoDecimalStr(text)
+    }
   },
   {
     dataIndex: 'description',
@@ -226,17 +235,26 @@ const columns = [
         {
           dataIndex: 'rmb_in',
           key: 'rmb_in',
-          title: t('bankReportView.info.rmbIn')
+          title: t('bankReportView.info.rmbIn'),
+          customRender: ({ text }: { text: string }) => {
+            return keepTwoDecimalStr(text)
+          }
         },
         {
           dataIndex: 'rmb_out',
           key: 'rmb_out',
-          title: t('bankReportView.info.rmbOut')
+          title: t('bankReportView.info.rmbOut'),
+          customRender: ({ text }: { text: string }) => {
+            return keepTwoDecimalStr(text)
+          }
         },
         {
           dataIndex: 'rmb_remain',
           key: 'rmb_remain',
-          title: t('bankReportView.info.rmbRemain')
+          title: t('bankReportView.info.rmbRemain'),
+          customRender: ({ text }: { text: string }) => {
+            return keepTwoDecimalStr(text)
+          }
         }
       ]
     : []

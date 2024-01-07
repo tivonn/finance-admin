@@ -3,12 +3,29 @@
 const Service = require("egg").Service;
 const lodash = require("lodash");
 const dayjs = require("dayjs");
-const math = require('math.js')
+const math = require('mathjs')
+const { exchangeRate } = require('../data/common')
+const { calculateMoney } = require('../extend/helper')
+
+const getTotalMonthMoney = (list, datekey, month, moneyKey) => {
+    let sum = 0
+    list.forEach(item => {
+        if (dayjs(item[datekey]).month() === month) {
+            const itemMoney = item.pay_currency === 'CNY' ? item[moneyKey] : calculateMoney((item[moneyKey] / exchangeRate))
+            sum = calculateMoney(sum + itemMoney)
+        }
+    })
+    return sum
+}
 
 class ProfitReportService extends Service {
     // get profitReportsModel() {
     //     return this.app.model.ProfitReports;
     // }
+
+    get ordersModel() {
+        return this.app.model.Orders;
+    }
 
     async getProfitReports(params) {
         const { ctx, app } = this;
@@ -20,6 +37,21 @@ class ProfitReportService extends Service {
         // 业务逻辑
         // 查询数据
         const { Op } = app.Sequelize;
+
+        const currentYear = dayjs(params.year).year()
+
+        // 一、主营业务收入
+        // const mainBizIns = 
+        const originOrders = await this.ordersModel.findAll({
+            where: Object.assign(
+                {},
+                {
+                    is_delete: false,
+                    status: "cost_has_payed"
+                },
+            ),
+        });
+        const orders = originOrders.filter(order => dayjs(order.payed_date).year() === currentYear)
         const isLanguageCN = params.language === 'zh-cn'
         const profitReports = {
             count: null,
@@ -27,18 +59,18 @@ class ProfitReportService extends Service {
                 {
                     id: 1,
                     project: isLanguageCN ? '一、主营业务收入' : '1.รายได้จากหลักธุรกิจ',
-                    january: '1月',
-                    february: '2月',
-                    march: '3月',
-                    april: '4月',
-                    may: '5月',
-                    june: '6月',
-                    july: '7月',
-                    august: '8月',
-                    september: '9月',
-                    october: '10月',
-                    november: '11月',
-                    december: '12月',
+                    january: getTotalMonthMoney(orders, 'payed_date', 0, 'client_freight'),
+                    february: getTotalMonthMoney(orders, 'payed_date', 1, 'client_freight'),
+                    march: getTotalMonthMoney(orders, 'payed_date', 2, 'client_freight'),
+                    april: getTotalMonthMoney(orders, 'payed_date', 3, 'client_freight'),
+                    may: getTotalMonthMoney(orders, 'payed_date', 4, 'client_freight'),
+                    june: getTotalMonthMoney(orders, 'payed_date', 5, 'client_freight'),
+                    july: getTotalMonthMoney(orders, 'payed_date', 6, 'client_freight'),
+                    august: getTotalMonthMoney(orders, 'payed_date', 7, 'client_freight'),
+                    september: getTotalMonthMoney(orders, 'payed_date', 8, 'client_freight'),
+                    october: getTotalMonthMoney(orders, 'payed_date', 9, 'client_freight'),
+                    november: getTotalMonthMoney(orders, 'payed_date', 10, 'client_freight'),
+                    december: getTotalMonthMoney(orders, 'payed_date', 11, 'client_freight'),
                     total: '合计金额'
                 },
                 {

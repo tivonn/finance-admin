@@ -4,7 +4,7 @@ const Service = require("egg").Service;
 const lodash = require("lodash");
 const dayjs = require("dayjs");
 const { getFirstLevelClassify, getSecondLevelDetail, getBankReportProject } = require('../utils/bank_report')
-const math = require('math.js')
+const { exchangeRate } = require('../data/common')
 
 class BankReportService extends Service {
     get bankReportsModel() {
@@ -59,13 +59,11 @@ class BankReportService extends Service {
     // 获取要创建银行账的数据，可复用
     async getCreateBankReportData(params) {
         const { payCurrency, bankReportDate, bankIn, bankOut, description, firstLevelClassify, secondLevelDetail } = params
-        // 泰币汇率，先写死
-        const exchangeRate = 5
         // 取最新的一条银行账，找余额
         const bankReports = await this.bankReportsModel.findAll({ where: { pay_currency: payCurrency } })
         const originRemain = bankReports.length ? bankReports[bankReports.length - 1].remain : 0
         // 计算新的余额，新余额 = 旧余额 + 银行进账 - 银行支出
-        const newRemain = math.format((originRemain + bankIn - bankOut), { precision: 14 })
+        const newRemain = ctx.helper.calculateMoney(ctx.helper.calculateMoney(originRemain + bankIn - bankOut))
         // 生成银行账数据
         const data = Object.assign({}, {
             bank_report_date: bankReportDate,

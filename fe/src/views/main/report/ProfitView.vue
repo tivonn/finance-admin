@@ -7,8 +7,9 @@ import { useI18n } from 'vue-i18n'
 import UpsertBankReportModal from '@/views/main/report/bank/UpsertBankReportModal.vue'
 import { message } from 'ant-design-vue'
 import { useStore } from '@/stores'
-import { getLocalStorage, setLocalStorage } from '@/utils/common'
+import { getLocalStorage, keepTwoDecimalStr, setLocalStorage } from '@/utils/common'
 import dayjs, { Dayjs } from 'dayjs'
+import lodash from 'lodash'
 
 const { t } = useI18n()
 const store = useStore()
@@ -44,68 +45,107 @@ const columns = [
       {
         dataIndex: 'january',
         key: 'january',
-        title: t('ProfitView.info.january')
+        title: t('ProfitView.info.january'),
+        customRender: ({ text }: { text: string }) => {
+          return keepTwoDecimalStr(text)
+        }
       },
       {
         dataIndex: 'february',
         key: 'february',
-        title: t('ProfitView.info.february')
+        title: t('ProfitView.info.february'),
+        customRender: ({ text }: { text: string }) => {
+          return keepTwoDecimalStr(text)
+        }
       },
       {
         dataIndex: 'march',
         key: 'march',
-        title: t('ProfitView.info.march')
+        title: t('ProfitView.info.march'),
+        customRender: ({ text }: { text: string }) => {
+          return keepTwoDecimalStr(text)
+        }
       },
       {
         dataIndex: 'april',
         key: 'april',
-        title: t('ProfitView.info.april')
+        title: t('ProfitView.info.april'),
+        customRender: ({ text }: { text: string }) => {
+          return keepTwoDecimalStr(text)
+        }
       },
       {
         dataIndex: 'may',
         key: 'may',
-        title: t('ProfitView.info.may')
+        title: t('ProfitView.info.may'),
+        customRender: ({ text }: { text: string }) => {
+          return keepTwoDecimalStr(text)
+        }
       },
       {
         dataIndex: 'june',
         key: 'june',
-        title: t('ProfitView.info.june')
+        title: t('ProfitView.info.june'),
+        customRender: ({ text }: { text: string }) => {
+          return keepTwoDecimalStr(text)
+        }
       },
       {
         dataIndex: 'july',
         key: 'july',
-        title: t('ProfitView.info.july')
+        title: t('ProfitView.info.july'),
+        customRender: ({ text }: { text: string }) => {
+          return keepTwoDecimalStr(text)
+        }
       },
       {
         dataIndex: 'august',
         key: 'august',
-        title: t('ProfitView.info.august')
+        title: t('ProfitView.info.august'),
+        customRender: ({ text }: { text: string }) => {
+          return keepTwoDecimalStr(text)
+        }
       },
       ,
       {
         dataIndex: 'september',
         key: 'september',
-        title: t('ProfitView.info.september')
+        title: t('ProfitView.info.september'),
+        customRender: ({ text }: { text: string }) => {
+          return keepTwoDecimalStr(text)
+        }
       },
       {
         dataIndex: 'october',
         key: 'october',
-        title: t('ProfitView.info.october')
+        title: t('ProfitView.info.october'),
+        customRender: ({ text }: { text: string }) => {
+          return keepTwoDecimalStr(text)
+        }
       },
       {
         dataIndex: 'november',
         key: 'november',
-        title: t('ProfitView.info.november')
+        title: t('ProfitView.info.november'),
+        customRender: ({ text }: { text: string }) => {
+          return keepTwoDecimalStr(text)
+        }
       },
       {
         dataIndex: 'december',
         key: 'december',
-        title: t('ProfitView.info.december')
+        title: t('ProfitView.info.december'),
+        customRender: ({ text }: { text: string }) => {
+          return keepTwoDecimalStr(text)
+        }
       },
       {
         dataIndex: 'total',
         key: 'total',
-        title: t('ProfitView.info.total')
+        title: t('ProfitView.info.total'),
+        customRender: ({ text }: { text: string }) => {
+          return keepTwoDecimalStr(text)
+        }
       }
     ]
   }

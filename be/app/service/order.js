@@ -6,7 +6,7 @@ const dayjs = require("dayjs");
 const nodeXlsx = require("node-xlsx");
 const xlsx = require("xlsx");
 const xlsxStyle = require("xlsx-style");
-const math = require('math.js')
+const math = require('mathjs')
 
 class OrderService extends Service {
   get ordersModel() {
@@ -62,8 +62,8 @@ class OrderService extends Service {
       const inner_size_length = item[11];
       const inner_size_width = item[12];
       const inner_size_height = item[13];
-      const originVolume = (inner_size_length * inner_size_width * inner_size_height) / 1000000
-      let volume = +(Number(originVolume).toFixed(3))
+      const originVolume = ctx.helper.calculate((inner_size_length * inner_size_width * inner_size_height) / 1000000)
+      let volume = Number((originVolume.toFixed(3)))
       if (volume == 0) volume = 0.001 // 体积过小，会被约成 0
       await this.ordersModel.create({
         user_code,
@@ -137,10 +137,8 @@ class OrderService extends Service {
     let data = {};
     switch (params.status) {
       case "client_cost_to_be_record": {
-        const client_freight = math.format(
-          (order.number * order.volume * params.unit_price + params.packing_cost),
-          { precision: 14 }
-        )
+        const client_freight = ctx.helper.calculate(
+          (order.number * order.volume * params.unit_price + params.packing_cost))
         data = { client_freight };
         break;
       }
@@ -150,9 +148,9 @@ class OrderService extends Service {
             params.warehouse_size_width *
             params.warehouse_size_height) /
           1000000;
-        const warehouse_freight = math.format((
+        const warehouse_freight = ctx.helper.calculate(
           order.number * warehouse_volumn * params.cost_unit_price +
-          params.cost_packing_cost), { precision: 14 });
+          params.cost_packing_cost);
         data = {
           warehouse_volumn,
           warehouse_freight,
@@ -170,7 +168,7 @@ class OrderService extends Service {
           lodash.isNumber(params.good_value) &&
           lodash.isNumber(params.rate)
         ) {
-          const insurance = params.good_value * params.rate;
+          const insurance = ctx.helper.calculate(params.good_value * params.rate);
           data = { insurance };
         }
         break;

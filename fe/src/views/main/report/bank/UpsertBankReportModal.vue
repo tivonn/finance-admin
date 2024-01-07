@@ -15,7 +15,7 @@ const props = defineProps({
 })
 const emit = defineEmits(['closeModal'])
 
-const isCreate = computed(() => lodash.isEmpty(props.upsertBankReport))
+const isCreate = computed(() => lodash.isNull(props.upsertBankReport))
 
 const formRef = ref<FormInstance>()
 

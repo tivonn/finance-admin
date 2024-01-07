@@ -2,6 +2,7 @@
 
 const lodash = require("lodash");
 const dayjs = require("dayjs");
+const math = require('mathjs')
 
 module.exports = {
   // 中间件判断 safeUrl
@@ -68,5 +69,15 @@ module.exports = {
       offset: (pageIndex - 1) * pageSize,
       limit: pageSize,
     };
+  },
+
+  // 精度计算，返回 number 类型
+  calculate(number) {
+    return Number(math.format(number, { precision: 14 }))
+  },
+
+  // 精度计算，返回 number 类型。位数多时保留两位小数，若尾部为 0 则舍去
+  calculateMoney(number) {
+    return Number(Number(math.format(number, { precision: 14 })).toFixed(2))
   },
 };
