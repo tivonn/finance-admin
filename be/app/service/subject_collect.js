@@ -37,7 +37,6 @@ class SubjectCollectService extends Service {
                     }
                     : {}
             ),
-            // ...ctx.helper.getPageParams(params.page_index, params.page_size),
         });
         // 计算科目汇总
 

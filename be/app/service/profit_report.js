@@ -7,13 +7,22 @@ const math = require('mathjs')
 const { exchangeRate } = require('../data/common')
 const { calculateMoney } = require('../extend/helper')
 
-const getTotalMonthMoney = (list, datekey, month, moneyKey) => {
+const getTotalMonthMoney = (list, datekey, currentMonth, moneyKey) => {
     let sum = 0
     list.forEach(item => {
-        if (dayjs(item[datekey]).month() === month) {
+        if (dayjs(item[datekey]).month() === currentMonth) {
             const itemMoney = item.pay_currency === 'CNY' ? item[moneyKey] : calculateMoney((item[moneyKey] / exchangeRate))
             sum = calculateMoney(sum + itemMoney)
         }
+    })
+    return sum
+}
+
+const getTotalYearMoney = (list, moneyKey) => {
+    let sum = 0
+    list.forEach(item => {
+        const itemMoney = item.pay_currency === 'CNY' ? item[moneyKey] : calculateMoney((item[moneyKey] / exchangeRate))
+        sum = calculateMoney(sum + itemMoney)
     })
     return sum
 }
@@ -40,8 +49,7 @@ class ProfitReportService extends Service {
 
         const currentYear = dayjs(params.year).year()
 
-        // 一、主营业务收入
-        // const mainBizIns = 
+        // 订单表
         const originOrders = await this.ordersModel.findAll({
             where: Object.assign(
                 {},
@@ -52,6 +60,10 @@ class ProfitReportService extends Service {
             ),
         });
         const orders = originOrders.filter(order => dayjs(order.payed_date).year() === currentYear)
+
+        // 科目汇总表
+
+
         const isLanguageCN = params.language === 'zh-cn'
         const profitReports = {
             count: null,
@@ -71,58 +83,58 @@ class ProfitReportService extends Service {
                     october: getTotalMonthMoney(orders, 'payed_date', 9, 'client_freight'),
                     november: getTotalMonthMoney(orders, 'payed_date', 10, 'client_freight'),
                     december: getTotalMonthMoney(orders, 'payed_date', 11, 'client_freight'),
-                    total: '合计金额'
+                    total: getTotalYearMoney(orders, 'client_freight')
                 },
                 {
                     id: 2,
                     project: isLanguageCN ? '减、主营业务成本' : 'ลดลง、ต้นทุนหลักธุรกิจ',
-                    january: '1月',
-                    february: '2月',
-                    march: '3月',
-                    april: '4月',
-                    may: '5月',
-                    june: '6月',
-                    july: '7月',
-                    august: '8月',
-                    september: '9月',
-                    october: '10月',
-                    november: '11月',
-                    december: '12月',
-                    total: '合计金额'
+                    january: getTotalMonthMoney(orders, 'payed_date', 0, 'warehouse_freight'),
+                    february: getTotalMonthMoney(orders, 'payed_date', 1, 'warehouse_freight'),
+                    march: getTotalMonthMoney(orders, 'payed_date', 2, 'warehouse_freight'),
+                    april: getTotalMonthMoney(orders, 'payed_date', 3, 'warehouse_freight'),
+                    may: getTotalMonthMoney(orders, 'payed_date', 4, 'warehouse_freight'),
+                    june: getTotalMonthMoney(orders, 'payed_date', 5, 'warehouse_freight'),
+                    july: getTotalMonthMoney(orders, 'payed_date', 6, 'warehouse_freight'),
+                    august: getTotalMonthMoney(orders, 'payed_date', 7, 'warehouse_freight'),
+                    september: getTotalMonthMoney(orders, 'payed_date', 8, 'warehouse_freight'),
+                    october: getTotalMonthMoney(orders, 'payed_date', 9, 'warehouse_freight'),
+                    november: getTotalMonthMoney(orders, 'payed_date', 10, 'warehouse_freight'),
+                    december: getTotalMonthMoney(orders, 'payed_date', 11, 'warehouse_freight'),
+                    total: getTotalYearMoney(orders, 'warehouse_freight')
                 },
                 {
                     id: 3,
                     project: isLanguageCN ? '减：附加' : 'ลดลง、เพิ่มเติม',
-                    january: '1月',
-                    february: '2月',
-                    march: '3月',
-                    april: '4月',
-                    may: '5月',
-                    june: '6月',
-                    july: '7月',
-                    august: '8月',
-                    september: '9月',
-                    october: '10月',
-                    november: '11月',
-                    december: '12月',
-                    total: '合计金额'
+                    january: '',
+                    february: '',
+                    march: '',
+                    april: '',
+                    may: '',
+                    june: '',
+                    july: '',
+                    august: '',
+                    september: '',
+                    october: '',
+                    november: '',
+                    december: '',
+                    total: ''
                 },
                 {
                     id: 4,
                     project: isLanguageCN ? '二、营业利润' : '2. ผลกำไรจากการดำเนินธุรกิจ',
-                    january: '1月',
-                    february: '2月',
-                    march: '3月',
-                    april: '4月',
-                    may: '5月',
-                    june: '6月',
-                    july: '7月',
-                    august: '8月',
-                    september: '9月',
-                    october: '10月',
-                    november: '11月',
-                    december: '12月',
-                    total: '合计金额'
+                    january: '',
+                    february: '',
+                    march: '',
+                    april: '',
+                    may: '',
+                    june: '',
+                    july: '',
+                    august: '',
+                    september: '',
+                    october: '',
+                    november: '',
+                    december: '',
+                    total: ''
                 },
                 {
                     id: 5,
